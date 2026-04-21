@@ -1,1 +1,58 @@
-<p>inventory-data-post works!</p>
+<div class="page-container">
+
+  <div class="content">
+
+    <h2 class="title">Create Inventory</h2>
+
+    @if(error){
+      <div class="error-box">
+        {{ error }}
+      </div>
+    }
+
+    <div class="card">
+
+      <form [formGroup]="inventoryForm" (ngSubmit)="handleSubmit()" class="form">
+
+        <div class="form-group">
+          <label>Store ID *</label>
+          <input type="number" formControlName="storeId" placeholder="Enter Store ID">
+
+          @if(inventoryForm.controls.storeId.touched && inventoryForm.controls.storeId.errors){
+            <p class="error">*Store ID is required and must be greater than 0</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Product ID *</label>
+          <input type="number" formControlName="productId" placeholder="Enter Product ID">
+
+          @if(inventoryForm.controls.productId.touched && inventoryForm.controls.productId.errors){
+            <p class="error">*Product ID is required and must be greater than 0</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Product Inventory (Quantity) *</label>
+          <input type="number" formControlName="productInventory" placeholder="Enter product quantity">
+
+          @if(inventoryForm.controls.productInventory.touched && inventoryForm.controls.productInventory.errors){
+            <p class="error">*Product inventory is required and must be >= 0</p>
+          }
+        </div>
+
+        <div class="button-group">
+          <button type="submit" [disabled]="inventoryForm.invalid" class="btn-primary">
+            Create
+          </button>
+
+          <button type="button" class="btn-secondary">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
