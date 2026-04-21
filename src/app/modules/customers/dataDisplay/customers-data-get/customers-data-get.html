@@ -1,1 +1,22 @@
-<p>customers-data-get works!</p>
+<h2>Customer List</h2>
+
+<div>
+  <button (click)="getAllCustomers()">Get All Customers</button>
+@for (c of customers; track c.customerId) {
+  <li>
+    {{ c.customerId }} | {{ c.fullName }} | {{ c.emailAddress}}
+  </li>
+}
+  </div>
+  <h2>Get Customer By ID</h2>
+
+<input type="number" [(ngModel)]="customerId" placeholder="Enter Customer ID">
+
+<button (click)="getCustomerById()">Search</button>
+
+<div >
+    @for (customers of customers; track $index) {}
+  <p>ID: {{ customer.customerId }}</p>
+  <p>Name: {{ customer.fullName }}</p>
+  <p>Email: {{ customer.email }}</p>
+</div>
