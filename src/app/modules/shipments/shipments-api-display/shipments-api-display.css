@@ -1,0 +1,85 @@
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.api-display {
+  width: 100%;
+  max-width: 1200px;
+  padding: 48px 24px;
+}
+
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.card {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.348);
+  transition: transform 0.3s ease;
+  min-height: 168px;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.method-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 6px;
+  color: white;
+  background: #334155;
+}
+
+.card-title {
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+  color: #334155;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 16px 0;
+  flex-grow: 1;
+}
+
+.card-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background: #334155;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.card-btn:hover {
+  background: #0f172a;
+}
