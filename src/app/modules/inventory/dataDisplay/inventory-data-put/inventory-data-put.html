@@ -1,0 +1,66 @@
+<div class="page-container">
+
+	<div class="content">
+
+		<h2 class="title">Update Inventory</h2>
+
+		<!-- Toast Notification -->
+		@if(showToast) {
+			<div [ngClass]="['toast', toastType]">
+				{{ toastMessage }}
+			</div>
+		}
+
+		<div class="card">
+
+			<form [formGroup]="inventoryForm" (ngSubmit)="handleUpdate()" class="form">
+
+				<!-- Inventory ID -->
+				<div class="form-group">
+					<label>Inventory ID *</label>
+					<input type="number" formControlName="inventoryId" placeholder="Enter inventory ID">
+				</div>
+
+				<!-- Store and Product -->
+				<div class="form-row">
+					<div class="form-group half">
+						<label>Store *</label>
+						<input type="number" formControlName="storeId" placeholder="Enter store ID">
+					</div>
+
+					<div class="form-group half">
+						<label>Product *</label>
+						<input type="number" formControlName="productId" placeholder="Enter product ID">
+					</div>
+				</div>
+
+				<!-- Quantity -->
+				<div class="form-group">
+					<label>Quantity On Hand *</label>
+					<input type="number" formControlName="quantityOnHand" placeholder="Enter quantity">
+				</div>
+
+				<!-- Reorder Level and Reorder Quantity -->
+				<div class="form-row">
+					<div class="form-group half">
+						<label>Reorder Level</label>
+						<input type="number" formControlName="reorderLevel" placeholder="0">
+					</div>
+
+					<div class="form-group half">
+						<label>Reorder Quantity</label>
+						<input type="number" formControlName="reorderQuantity" placeholder="0">
+					</div>
+				</div>
+
+				<!-- Buttons -->
+				<div class="button-group">
+					<button type="submit" [disabled]="inventoryForm.invalid" class="btn-primary">Update</button>
+					<button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
+				</div>
+
+			</form>
+		</div>
+
+	</div>
+</div>
