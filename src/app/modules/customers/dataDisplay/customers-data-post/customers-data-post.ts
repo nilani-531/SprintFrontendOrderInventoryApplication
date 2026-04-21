@@ -29,7 +29,14 @@ export class CustomersDataPost {
           },
           error:(err)=>{
             console.error(err);
-            this.error=err.error?.message || "An error occurred while creating the customer.";
+             if (err.error && err.error.msg) {
+            this.error = err.error.msg;  
+           } else if (err.status === 0) {
+            this.error = "Cannot connect to server";
+           } else {
+             this.error = "Something went wrong";
+        }
+            
           }
         })
     }
