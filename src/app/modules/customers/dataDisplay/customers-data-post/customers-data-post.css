@@ -125,3 +125,11 @@ textarea:focus {
   margin-bottom: 15px;
   font-size: 14px;
 }
+.success-box {
+  background-color: #e6ffed;
+  color: #2d662d;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
