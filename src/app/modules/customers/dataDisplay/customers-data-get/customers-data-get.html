@@ -1,1 +1,58 @@
-<p>customers-data-get works!</p>
+<h2>Customer Operations</h2>
+
+<div class="container">
+
+  <!-- Get All -->
+  
+    <button (click)="getAllCustomers()">Get All Customers</button>
+
+    <ul>
+      <li *ngFor="let c of customers">
+        {{ c.customerId }} | {{ c.fullName }} | {{ c.emailAddress }}
+      </li>
+    </ul>
+  
+
+  <!-- Get By ID -->
+
+    <input type="number" placeholder="Enter ID" [(ngModel)]="customerId">
+    <button (click)="getCustomerById()">Get By ID</button>
+ 
+
+  <!-- Get By Email -->
+  
+    <input type="text" placeholder="Enter Email" [(ngModel)]="emailAddress">
+    <button (click)="getCustomerByEmail()">Get By Email</button>
+ 
+<!-- Get Orders -->
+ <input type="text" placeholder="Enter id" [(ngModel)]="customerId">
+  <button (click)="getOrders()">Get Orders</button>
+
+<!-- Get Shipments -->
+  <input type="text" placeholder="Enter id" [(ngModel)]="customerId">
+  <button (click)="getShipments()">Get Shipments</button>
+
+  <!-- Result -->
+  <div *ngIf="customer" class="result">
+    <h3>Customer Found</h3>
+    <p>{{ customer.customerId }} | {{ customer.fullName }} | {{ customer.emailAddress }}</p>
+  </div>
+
+  <div *ngIf="orders.length > 0" class="result">
+    <h3>Orders for Customer ID: {{ customerId }}</h3>
+    <ul>
+      <li *ngFor="let o of orders">
+        {{ o.orderId }} 
+      </li>
+    </ul>
+
+</div>
+
+<div *ngIf="shipments.length > 0" class="result">
+    <h3>Shipments for Customer ID: {{ customerId }}</h3>
+    <ul>
+      <li *ngFor="let s of shipments">
+        {{ s.shipmentId }} |{{s.shipmentStatus}}|{{s.deliveryAddress}}
+      </li>
+    </ul>
+    </div>
