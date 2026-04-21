@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 export class Login {
 
   loginError: string = '';
+  loginSuccess: string = '';
   isLoading: boolean = false;
 
   /**
@@ -31,12 +32,12 @@ export class Login {
    * - admin   → products (full access, ADMIN role)
    */
   private readonly userRouteMap: { [key: string]: string } = {
-    'karthi':  '/products',
-    'nilani':  '/home',
-    'pooja':   '/home',
+    'karthi': '/home',
+    'nilani': '/home',
+    'pooja': '/home',
     'abinaya': '/home',
-    'yamini':  '/home',
-    'admin':   '/products'
+    'yamini': '/home',
+    'admin': '/products'
   };
 
   /**
@@ -46,13 +47,13 @@ export class Login {
    * - 403          → credentials valid but resource-specific 403; still accepted
    * - 401          → invalid credentials
    */
-  private readonly userEndpointMap: { [key: string]: string } = {
-    'karthi':  'http://localhost:9090/products',
-    'nilani':  'http://localhost:9090/orders',
-    'pooja':   'http://localhost:9090/stores',
-    'abinaya': 'http://localhost:9090/customers',
-    'yamini':  'http://localhost:9090/shipments',
-    'admin':   'http://localhost:9090/products'
+  private readonly userEndpointMap: { [key: string]: string[] } = {
+    'karthi': ['http://localhost:9090/products', 'http://localhost:9090/inventory'],
+    'nilani': ['http://localhost:9090/orders', 'http://localhost:9090/api/order-items'],
+    'pooja': ['http://localhost:9090/stores'],
+    'abinaya': ['http://localhost:9090/customers'],
+    'yamini': ['http://localhost:9090/shipments'],
+    'admin': ['http://localhost:9090/products', 'http://localhost:9090/inventory', 'http://localhost:9090/orders', 'http://localhost:9090/api/order-items', 'http://localhost:9090/stores', 'http://localhost:9090/customers', 'http://localhost:9090/shipments']
   };
 
   loginForm = new FormGroup({
@@ -67,7 +68,7 @@ export class Login {
     ])
   });
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   /** Validator: reject values that contain spaces. */
   noSpace(control: AbstractControl): ValidationErrors | null {
@@ -88,12 +89,15 @@ export class Login {
     const encoded = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({ 'Authorization': `Basic ${encoded}` });
 
-    // Choose the probe URL; fall back to /products if user is unknown
-    const probeUrl =
-      this.userEndpointMap[username] ?? 'http://localhost:9090/products';
+    // Choose the probe URL (first accessible endpoint); fall back to /products if user is unknown
+    const userEndpoints = this.userEndpointMap[username];
+    const probeUrl = (userEndpoints && userEndpoints.length > 0)
+      ? userEndpoints[0]
+      : 'http://localhost:9090/products';
 
     this.isLoading = true;
     this.loginError = '';
+    this.loginSuccess = '';
 
     this.http.get<any>(probeUrl, { headers }).subscribe({
       next: () => {
@@ -124,9 +128,18 @@ export class Login {
     // Store under a predictable key so HTTP services can pick them up
     sessionStorage.setItem('authCredentials', encodedCredentials);
     sessionStorage.setItem('loggedInUser', username);
-    this.isLoading = false;
-    const route = this.userRouteMap[username] ?? '/home';
-    this.router.navigate([route]);
+    
+    // Store allowed endpoints 
+    const endpoints = this.userEndpointMap[username] || [];
+    sessionStorage.setItem('allowedEndpoints', JSON.stringify(endpoints));
+
+    this.loginSuccess = 'Login successful! Redirecting...';
+
+    setTimeout(() => {
+      this.isLoading = false;
+      const route = this.userRouteMap[username] ?? '/home';
+      this.router.navigate([route]);
+    }, 1500);
   }
 }
 
