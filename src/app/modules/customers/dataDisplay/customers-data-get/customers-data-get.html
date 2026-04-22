@@ -1,58 +1,113 @@
-<h2>Customer Operations</h2>
+<div class="page">
+  <div class="container">
 
-<div class="container">
+    <h2 class="title">Customer Data Dashboard</h2>
 
-  <!-- Get All -->
-  
-    <button (click)="getAllCustomers()">Get All Customers</button>
+    <!-- 🔹 Input Section -->
+    <div class="card">
+      <div class="input-row">
+        <input
+          type="number"
+          [(ngModel)]="customerId"
+          placeholder="Enter Customer ID"
+          class="input-box"
+        />
 
-    <ul>
-      <li *ngFor="let c of customers">
-        {{ c.customerId }} | {{ c.fullName }} | {{ c.emailAddress }}
-      </li>
-    </ul>
-  
+        <input
+          type="email"
+          [(ngModel)]="emailAddress"
+          placeholder="Enter Email"
+          class="input-box"
+        />
+      </div>
 
-  <!-- Get By ID -->
-
-    <input type="number" placeholder="Enter ID" [(ngModel)]="customerId">
-    <button (click)="getCustomerById()">Get By ID</button>
- 
-
-  <!-- Get By Email -->
-  
-    <input type="text" placeholder="Enter Email" [(ngModel)]="emailAddress">
-    <button (click)="getCustomerByEmail()">Get By Email</button>
- 
-<!-- Get Orders -->
- <input type="text" placeholder="Enter id" [(ngModel)]="customerId">
-  <button (click)="getOrders()">Get Orders</button>
-
-<!-- Get Shipments -->
-  <input type="text" placeholder="Enter id" [(ngModel)]="customerId">
-  <button (click)="getShipments()">Get Shipments</button>
-
-  <!-- Result -->
-  <div *ngIf="customer" class="result">
-    <h3>Customer Found</h3>
-    <p>{{ customer.customerId }} | {{ customer.fullName }} | {{ customer.emailAddress }}</p>
-  </div>
-
-  <div *ngIf="orders.length > 0" class="result">
-    <h3>Orders for Customer ID: {{ customerId }}</h3>
-    <ul>
-      <li *ngFor="let o of orders">
-        {{ o.orderId }} 
-      </li>
-    </ul>
-
-</div>
-
-<div *ngIf="shipments.length > 0" class="result">
-    <h3>Shipments for Customer ID: {{ customerId }}</h3>
-    <ul>
-      <li *ngFor="let s of shipments">
-        {{ s.shipmentId }} |{{s.shipmentStatus}}|{{s.deliveryAddress}}
-      </li>
-    </ul>
+      <div class="input-row" style="margin-top: 10px;">
+        <button class="btn primary" (click)="getAllCustomers()">Get All</button>
+        <button class="btn secondary" (click)="getCustomerById()">Get By ID</button>
+        <button class="btn secondary" (click)="getCustomerByEmail()">Get By Email</button>
+        <button class="btn primary" (click)="getOrders()">Orders</button>
+        <button class="btn primary" (click)="getShipments()">Shipments</button>
+      </div>
     </div>
+
+    <!-- 🔥 Error Message -->
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
+
+    <!-- 🔹 Single Customer -->
+    <div *ngIf="customer" class="card">
+      <h3>Customer Details</h3>
+      <div class="grid">
+        <div><b>ID:</b> {{ customer.customerId }}</div>
+        <div><b>Name:</b> {{ customer.fullName }}</div>
+        <div><b>Email:</b> {{ customer.emailAddress }}</div>
+        
+      </div>
+    </div>
+
+    <!-- 🔹 All Customers -->
+    <div *ngIf="customers.length > 0" class="card">
+      <h3>All Customers</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of customers">
+            <td>{{ c.customerId }}</td>
+            <td>{{ c.fullName }}</td>
+            <td>{{ c.emailAddress }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🔹 Orders -->
+    <div *ngIf="orders.length > 0" class="card">
+      <h3>Orders</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of orders">
+            <td>{{ o.orderId }}</td>
+            <td>{{ o.orderStatusS }}</td>
+          
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🔹 Shipments -->
+    <div *ngIf="shipments.length > 0" class="card">
+      <h3>Shipments</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Shipment ID</th>
+            <th>Status</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of shipments">
+            <td>{{ s.shipmentId }}</td>
+            <td>{{ s.shipmentStatus }}</td>
+            <td>{{ s.deliveryAddress }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

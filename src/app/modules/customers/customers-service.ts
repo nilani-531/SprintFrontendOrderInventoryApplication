@@ -38,4 +38,12 @@ createCustomer(customer: any) {
   return this.http.post("http://localhost:9090/api/customers", customer);
 }
 
+updateCustomer(customerId: number, customer: any) {
+  return this.http.put(`http://localhost:9090/api/customers/${customerId}`, customer);
+}
+
+deleteCustomer(customerId: number) {
+  return this.http.delete(`http://localhost:9090/api/customers/${customerId}`);
+}
+
 }
