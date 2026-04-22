@@ -1,1 +1,89 @@
-<p>stores-data-post works!</p>
+<div class="page-container">
+
+  <div class="content">
+
+    <h2 class="title">Create Store</h2>
+
+    <div class="card">
+
+      <form [formGroup]="storeForm" (ngSubmit)="handleSubmit()" class="form">
+
+        <div class="form-group">
+          <label>Store Name *</label>
+          <input type="text" formControlName="storeName" placeholder="Enter store name">
+
+          @if(storeForm.controls.storeName.touched && storeForm.controls.storeName.errors){
+            <p class="error">*Store name is required</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Web Address *</label>
+          <input type="url" formControlName="webAddress" placeholder="Enter web address (e.g., https://example.com)">
+
+          @if(storeForm.controls.webAddress.touched && storeForm.controls.webAddress.errors){
+            @if(storeForm.get('webAddress')?.errors?.['required']){
+              <p class="error">*Web address is required</p>
+            }
+            @if(storeForm.get('webAddress')?.errors?.['pattern']){
+              <p class="error">*Must start with http:// or https://</p>
+            }
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Physical Address *</label>
+          <textarea formControlName="physicalAddress" placeholder="Enter physical address"></textarea>
+
+          @if(storeForm.controls.physicalAddress.touched && storeForm.controls.physicalAddress.errors){
+            <p class="error">*Physical address is required</p>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Latitude *</label>
+            <input type="number" formControlName="latitude" placeholder="Enter latitude" step="0.0001">
+
+            @if(storeForm.controls.latitude.touched && storeForm.controls.latitude.errors){
+              <p class="error">*Latitude is required</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Longitude *</label>
+            <input type="number" formControlName="longitude" placeholder="Enter longitude" step="0.0001">
+
+            @if(storeForm.controls.longitude.touched && storeForm.controls.longitude.errors){
+              <p class="error">*Longitude is required</p>
+            }
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" [disabled]="storeForm.invalid" class="btn-primary">
+            Create Store
+          </button>
+
+          <button type="button" (click)="storeForm.reset()" class="btn-secondary">
+            Clear
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="error-box">
+      @if(error){
+        {{ error }}
+      }
+    </div>
+
+    <div class="success-box">
+      @if(success){
+        {{ success }}
+      }
+    </div>
+
+  </div>
+</div>
