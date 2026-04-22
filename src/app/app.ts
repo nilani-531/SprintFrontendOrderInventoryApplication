@@ -15,11 +15,12 @@ import { ApiDashboard } from "./modules/api-dashboard/api-dashboard";
 import { Home } from "./home/home";
 import { CustomersDataGet } from "./modules/customers/dataDisplay/customers-data-get/customers-data-get";
 import { CustomerGetNavbar } from "./modules/customers/dataDisplay/customer-get-navbar/customer-get-navbar";
+import { CustomersApiDisplay } from "./modules/customers/customers-api-display/customers-api-display";
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home, CustomersDataGet, CustomerGetNavbar],
+  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home, CustomersDataGet, CustomerGetNavbar, CustomersApiDisplay],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

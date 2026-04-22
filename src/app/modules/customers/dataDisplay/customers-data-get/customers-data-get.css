@@ -11,8 +11,11 @@
 
 .title {
   text-align: center;
-  color: white;
-  margin-bottom: 20px;
+  color: black;
+  padding: 20px;
+  font-size: 20px;
+  text:bold;
+  
 }
 
 .card {
@@ -81,4 +84,110 @@ th {
 td {
   padding: 10px;
   border-bottom: 1px solid #ccc;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.pagination-btn {
+  padding: 8px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-btn:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-info {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  min-width: 150px;
+  text-align: center;
+}
+
+/* Input Section Styles */
+.input-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-container {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.input-field {
+  padding: 8px 12px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  min-width: 200px;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.fetch-btn {
+  padding: 10px 20px;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s ease;
+  font-size: 14px;
+}
+
+.fetch-btn:hover:not(:disabled) {
+  background: #0284c7;
+}
+
+.fetch-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
 }
