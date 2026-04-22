@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './shipments-data-get.html',
   styleUrl: './shipments-data-get.css',
 })
-export class ShipmentsDataGet {}
+export class ShipmentsDataGet {
+  
+}
