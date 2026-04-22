@@ -83,7 +83,7 @@ export class ProductsDataPut implements OnInit  {
       next: () => {
         this.showNotification('Product updated successfully ✅', 'success');
         setTimeout(() => {
-          this.router.navigate(['/products']);
+          this.router.navigate(['/modules/products']);
         }, 1000);
       },
       error: (err) => {
@@ -95,6 +95,6 @@ export class ProductsDataPut implements OnInit  {
 
   // 🔹 Cancel button
   goBack(): void {
-    this.router.navigate(['/products']);
+    this.router.navigate(['/modules/products']);
   }
 }
