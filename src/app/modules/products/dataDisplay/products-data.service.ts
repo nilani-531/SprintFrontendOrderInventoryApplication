@@ -1,32 +1,47 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsDataService {
-  private baseUrl = 'http://localhost:9090/products';
+
+  private baseUrl = 'http://localhost:9090/api/products';
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders() {
+    const username = 'karthi';
+    const password = 'karthi123';
+
+    const auth = btoa(username + ':' + password);
+
+    return {
+      headers: new HttpHeaders({
+        Authorization: 'Basic ' + auth
+      }),
+      withCredentials: true
+    };
+  }
+
   getAllProducts(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}`);
+    return this.http.get(this.baseUrl, this.getHeaders());
   }
 
-  getProduct(id: string | number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  getProduct(id: any): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`, this.getHeaders());
   }
 
-  createProduct(payload: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}`, payload);
+  createProduct(data: any): Observable<any> {
+    return this.http.post(this.baseUrl, data, this.getHeaders());
   }
 
-  updateProduct(id: string | number, payload: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, payload);
+  updateProduct(id: any, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, data, this.getHeaders());
   }
 
-  deleteProduct(id: string | number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${id}`);
+  deleteProduct(id: any): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`, this.getHeaders());
   }
 }

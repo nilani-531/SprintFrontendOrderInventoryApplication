@@ -19,43 +19,44 @@
 				<div class="form-group">
 					<label>Inventory ID *</label>
 					<input type="number" formControlName="inventoryId" placeholder="Enter inventory ID">
+					@if(inventoryForm.get('inventoryId')?.touched && inventoryForm.get('inventoryId')?.errors) {
+						<p class="error">*Inventory ID is required</p>
+					}
 				</div>
 
 				<!-- Store and Product -->
 				<div class="form-row">
 					<div class="form-group half">
-						<label>Store *</label>
+						<label>Store ID *</label>
 						<input type="number" formControlName="storeId" placeholder="Enter store ID">
+						@if(inventoryForm.get('storeId')?.touched && inventoryForm.get('storeId')?.errors) {
+							<p class="error">*Store ID is required</p>
+						}
 					</div>
 
 					<div class="form-group half">
-						<label>Product *</label>
+						<label>Product ID *</label>
 						<input type="number" formControlName="productId" placeholder="Enter product ID">
+						@if(inventoryForm.get('productId')?.touched && inventoryForm.get('productId')?.errors) {
+							<p class="error">*Product ID is required</p>
+						}
 					</div>
 				</div>
 
-				<!-- Quantity -->
+				<!-- Product Inventory -->
 				<div class="form-group">
-					<label>Quantity On Hand *</label>
-					<input type="number" formControlName="quantityOnHand" placeholder="Enter quantity">
-				</div>
-
-				<!-- Reorder Level and Reorder Quantity -->
-				<div class="form-row">
-					<div class="form-group half">
-						<label>Reorder Level</label>
-						<input type="number" formControlName="reorderLevel" placeholder="0">
-					</div>
-
-					<div class="form-group half">
-						<label>Reorder Quantity</label>
-						<input type="number" formControlName="reorderQuantity" placeholder="0">
-					</div>
+					<label>Product Inventory (Quantity) *</label>
+					<input type="number" formControlName="productInventory" placeholder="Enter quantity">
+					@if(inventoryForm.get('productInventory')?.touched && inventoryForm.get('productInventory')?.errors) {
+						<p class="error">*Product inventory is required and must be >= 0</p>
+					}
 				</div>
 
 				<!-- Buttons -->
 				<div class="button-group">
-					<button type="submit" [disabled]="inventoryForm.invalid" class="btn-primary">Update</button>
+					<button type="submit" [disabled]="inventoryForm.invalid || loading" class="btn-primary">
+						{{ loading ? 'Updating...' : 'Update' }}
+					</button>
 					<button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
 				</div>
 

@@ -15,7 +15,7 @@ export class InventoryDataDelete {
   message: string = '';
   error: string = '';
 
-  baseUrl = 'http://localhost:9090/inventory';
+  baseUrl = 'http://localhost:9090/api/inventory';
 
   constructor(
     private fb: FormBuilder,

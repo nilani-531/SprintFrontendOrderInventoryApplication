@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class InventoryDataService {
-  private baseUrl = 'http://localhost:9090/inventory';
+  private baseUrl = 'http://localhost:9090/api/inventory';
 
   constructor(private http: HttpClient) {}
 

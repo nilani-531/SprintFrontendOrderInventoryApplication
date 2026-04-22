@@ -32,12 +32,12 @@ import { OrderItemsDataPost } from './modules/ordeItems/dataDisplay/order-items-
 import { OrderItemsDataPut } from './modules/ordeItems/dataDisplay/order-items-data-put/order-items-data-put';
 import { OrderItemsDataDelete } from './modules/ordeItems/dataDisplay/order-items-data-delete/order-items-data-delete';
 
-// // Stores Imports
-// import { StoresApiDisplay } from './modules/Stores/stores-api-display/stores-api-display';
-// import { StoresDataGet } from './modules/Stores/dataDisplay/stores-data-get/stores-data-get';
-// import { StoresDataPost } from './modules/Stores/dataDisplay/stores-data-post/stores-data-post';
-// import { StoresDataPut } from './modules/Stores/dataDisplay/stores-data-put/stores-data-put';
-// import { StoresDataDelete } from './modules/Stores/dataDisplay/stores-data-delete/stores-data-delete';
+// Stores Imports
+import { StoresApiDisplay } from './modules/Stores/stores-api-display/stores-api-display';
+import { StoresDataGet } from './modules/Stores/dataDisplay/stores-data-get/stores-data-get';
+import { StoresDataPost } from './modules/Stores/dataDisplay/stores-data-post/stores-data-post';
+import { StoresDataPut } from './modules/Stores/dataDisplay/stores-data-put/stores-data-put';
+import { StoresDataDelete } from './modules/Stores/dataDisplay/stores-data-delete/stores-data-delete';
 
 // Customers Imports
 import { CustomersApiDisplay } from './modules/customers/customers-api-display/customers-api-display';
@@ -122,19 +122,19 @@ export const routes: Routes = [
         ]
     },
 
-    // // Stores Module Routes
-    // {
-    //     path: 'modules/stores',
-    //     component: StoresApiDisplay,
-    //     canActivate: [AuthGuard],
-    //     children: [
-    //         { path: 'get-all', component: StoresDataGet },
-    //         { path: 'get-by-id', component: StoresDataGet },
-    //         { path: 'create', component: StoresDataPost },
-    //         { path: 'update', component: StoresDataPut },
-    //         { path: 'delete', component: StoresDataDelete }
-    //     ]
-    // },
+    // Stores Module Routes
+    {
+        path: 'modules/stores',
+        component: StoresApiDisplay,
+        canActivate: [AuthGuard],
+        children: [
+            { path: 'get-all', component: StoresDataGet },
+            { path: 'get-by-id', component: StoresDataGet },
+            { path: 'create', component: StoresDataPost },
+            { path: 'update', component: StoresDataPut },
+            { path: 'delete', component: StoresDataDelete }
+        ]
+    },
 
     // Customers Module Routes
     {
