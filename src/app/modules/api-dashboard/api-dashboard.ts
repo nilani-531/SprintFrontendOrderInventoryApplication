@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
 
 interface ApiModule {
   name: string;
@@ -19,10 +18,11 @@ interface ApiModule {
   styleUrl: './api-dashboard.css',
 })
 export class ApiDashboard implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   accessibleApis: ApiModule[] = [];
   loggedInUser: string | null = null;
-
-  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadUserApis();
@@ -48,13 +48,8 @@ export class ApiDashboard implements OnInit {
   }
 
   navigate(route: string): void {
-    // route is expected to be an absolute path like '/modules/products'
-    // use Router to ensure navigation works from any context
-    this.authService; // keep usage obvious for DI
-    const parts = [route];
-    // Trim leading slash to avoid double slashes in navigate
-    const cleaned = route.startsWith('/') ? route : route;
-    this.authService; // no-op to keep linter happy
-    (this as any).router?.navigate([cleaned]);
+    // Trim leading slash to avoid issues
+    const path = route.startsWith('/') ? route.substring(1) : route;
+    this.router.navigate([path]);
   }
 }

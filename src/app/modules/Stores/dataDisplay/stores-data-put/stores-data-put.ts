@@ -1,88 +1,190 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
+
+interface Store {
+  storeId: number;
+  storeName: string;
+  physicalAddress: string;
+  webAddress: string;
+  latitude: number;
+  longitude: number;
+}
 
 @Component({
   selector: 'app-stores-data-put',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgIf],
   templateUrl: './stores-data-put.html',
-  styleUrl: './stores-data-put.css',
+  styleUrls: ['./stores-data-put.css'],
 })
-export class StoresDataPut implements OnInit  {
+export class StoresDataPut implements OnInit {
 
+  storeForm!: FormGroup;
 
+  error = '';
+  success = '';
+  isLoading = false;
 
-  productForm!: FormGroup;
+  private baseUrl = 'http://localhost:9090/api/stores';
+
+  // IMPORTANT: store resolved id here
+  private storeId: number | null = null;
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
 
-    // Initialize form
-    this.productForm = new FormGroup({
-      productId: new FormControl('', [Validators.required]),
-      productName: new FormControl('', [Validators.required]),
-      unitPrice: new FormControl('', [Validators.required]),
-      brand: new FormControl(''),
-      colour: new FormControl(''),
-      size: new FormControl(''),
-      rating: new FormControl('')
+    this.storeForm = new FormGroup({
+      storeId: new FormControl({ value: '', disabled: true }),
+      storeName: new FormControl('', [Validators.required]),
+      webAddress: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(https?:\/\/)/)
+      ]),
+      physicalAddress: new FormControl('', [Validators.required]),
+      latitude: new FormControl('', [Validators.required]),
+      longitude: new FormControl('', [Validators.required]),
     });
 
-    // Get ID from route
     const id = this.route.snapshot.params['id'];
-    this.productForm.get('productId')?.setValue(id);
 
-    // Load existing product
-    this.loadProduct();
+    if (id) {
+      this.fetchStoreById(+id);
+    }
   }
 
-  // 🔹 Load product by ID
-  loadProduct(): void {
-    const id = this.productForm.get('productId')?.value;
-    if (!id) return;
+  // ---------------------------
+  // GET STORE BY ID
+  // ---------------------------
+  fetchStoreById(id: number) {
 
-    this.http.get<any>(`http://localhost:9090/products/${id}`)
-      .subscribe({
-        next: (res) => {
-          this.productForm.patchValue(res.data);
-          this.productForm.get('productId')?.setValue(id); // Ensure ID stays
-        },
-        error: (err) => {
-          console.error('Error loading product', err);
-          alert('Failed to load product');
-        }
-      });
-  }
+    this.isLoading = true;
+    this.error = '';
+    this.success = '';
 
-  // 🔹 Update product
-  handleUpdate(): void {
-    if (this.productForm.invalid) return;
+    this.http.get<any>(`${this.baseUrl}/${id}`).subscribe({
+      next: (res) => {
 
-    const id = this.productForm.get('productId')?.value;
-    this.http.put(
-      `http://localhost:9090/products/${id}`,
-      this.productForm.value
-    ).subscribe({
-      next: () => {
-        alert('Product updated successfully ✅');
-        this.router.navigate(['/products']);
+        const store: Store = res.data;
+
+        this.storeId = store.storeId;
+
+        this.storeForm.patchValue(store);
+        this.storeForm.get('storeId')?.setValue(store.storeId);
+
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Update failed', err);
-        alert('Update failed');
+
+      error: (err: HttpErrorResponse) => {
+        this.handleError(err);
       }
     });
   }
 
-  // 🔹 Cancel button
-  goBack(): void {
-    this.router.navigate(['/products']);
+  // ---------------------------
+  // GET STORE BY NAME (IMPORTANT FOR YOUR CASE)
+  // ---------------------------
+  fetchByName(name: string) {
+
+    this.isLoading = true;
+    this.error = '';
+    this.success = '';
+
+    this.http.get<any>(`${this.baseUrl}/name/${name}`).subscribe({
+      next: (res) => {
+
+        const store: Store = res.data;
+
+        this.storeId = store.storeId;
+
+        this.storeForm.patchValue(store);
+        this.storeForm.get('storeId')?.setValue(store.storeId);
+
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+
+      error: (err) => this.handleError(err)
+    });
+  }
+
+  // ---------------------------
+  // UPDATE STORE (FIXED)
+  // ---------------------------
+  handleUpdate(): void {
+
+    this.error = '';
+    this.success = '';
+
+    if (this.storeForm.invalid) {
+      this.error = 'Please fill in all required fields';
+      return;
+    }
+
+    // CRITICAL FIX: use stored ID, NOT form
+    if (!this.storeId) {
+      this.error = 'Store ID not loaded. Fetch store first.';
+      return;
+    }
+
+    const payload = this.storeForm.getRawValue();
+
+    this.http.put<any>(`${this.baseUrl}/${this.storeId}`, payload)
+      .subscribe({
+        next: (res) => {
+
+          this.success = res.msg || 'Store updated successfully';
+
+          this.cdr.detectChanges();
+
+          setTimeout(() => {
+            this.success = '';
+            this.cdr.detectChanges();
+          }, 2000);
+        },
+
+        error: (err: HttpErrorResponse) => {
+          this.handleError(err);
+        }
+      });
+  }
+
+  // ---------------------------
+  // CENTRAL ERROR HANDLER
+  // ---------------------------
+  private handleError(err: HttpErrorResponse) {
+
+    this.isLoading = false;
+
+    if (err.status === 404) {
+      this.error = err.error?.msg || 'Store not found';
+    }
+    else if (err.status === 400) {
+      this.error = err.error?.msg || 'Invalid data';
+    }
+    else if (err.status === 409) {
+      this.error = err.error?.msg || 'Duplicate entry';
+    }
+    else if (err.status === 0) {
+      this.error = 'Server is offline or unreachable';
+    }
+    else {
+      this.error = err.error?.msg || 'Something went wrong';
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  goBack() {
+    this.router.navigate(['/stores']);
   }
 }

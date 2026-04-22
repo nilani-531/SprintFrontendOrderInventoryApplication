@@ -1,1 +1,88 @@
-<p>inventory-data-get works!</p>
+<div class="page">
+
+  <div class="container">
+
+    <h2 class="title">Inventory Data Fetch</h2>
+
+    <!-- ✅ FORM -->
+    <form [formGroup]="form" class="card">
+
+      <div class="input-row">
+
+        <input
+          type="number"
+          formControlName="inventoryId"
+          placeholder="Enter Inventory ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getInventoryById()" class="btn primary">
+          Get Inventory
+        </button>
+
+        <button type="button" (click)="getAllInventories()" class="btn secondary">
+          Get All Inventories
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="info">
+      Loading...
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <!-- ✅ Single Inventory -->
+    <div *ngIf="singleInventory" class="card">
+
+      <h3>Inventory Details</h3>
+
+      <div class="grid">
+        <p><strong>Inventory ID:</strong> {{ singleInventory.inventoryId }}</p>
+        <p><strong>Store ID:</strong> {{ singleInventory.stores.storeId }}</p>
+        <p><strong>Store Name:</strong> {{ singleInventory.stores.storeName }}</p>
+        <p><strong>Product ID:</strong> {{ singleInventory.products.productId }}</p>
+        <p><strong>Product Name:</strong> {{ singleInventory.products.productName }}</p>
+        <p><strong>Quantity:</strong> {{ singleInventory.productInventory }}</p>
+      </div>
+
+    </div>
+
+    <!-- ✅ All Inventories -->
+    <div *ngIf="allInventories.length > 0" class="card">
+
+      <h3>All Inventories</h3>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Store</th>
+            <th>Product</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let inventory of allInventories">
+            <td>{{ inventory.inventoryId }}</td>
+            <td>{{ inventory.stores.storeName }}</td>
+            <td>{{ inventory.products.productName }}</td>
+            <td>{{ inventory.productInventory }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,6 +1,7 @@
 <div class="page-container">
 
-  <div class="api-display">
+  <!-- Show cards only when no child route is active -->
+  <div class="api-display" *ngIf="!isRouteActive()">
 
     <h2 class="title"> Products API Dashboard </h2>
 
@@ -22,5 +23,7 @@
 
   </div>
 
+  <!-- Show child component here -->
+  <router-outlet></router-outlet>
+
 </div>
-<router-outlet></router-outlet>

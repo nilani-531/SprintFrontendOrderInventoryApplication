@@ -1,0 +1,83 @@
+/* Main Container */
+.container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #ff4d4d; /* Matches delete button */
+}
+
+.delete-btn {
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #ff4d4d, #bcaaaa);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.delete-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.3);
+}
+
+/* Message Styles - Clean Alerts */
+.message-container {
+  max-width: 400px;
+  margin: 20px auto; /* Centers it below the container */
+  text-align: center;
+}
+
+.success, .error {
+  display: none; /* Hidden by default */
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Angular class trigger */
+.show {
+  display: block;
+}
+
+.success {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+

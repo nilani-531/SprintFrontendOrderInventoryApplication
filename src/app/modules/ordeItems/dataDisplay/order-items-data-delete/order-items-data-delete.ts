@@ -37,15 +37,16 @@ export class OrderItemsDataDelete {
     }
 
     const id = this.deleteForm1.value.orderId;
-
+   
     this.http.delete(`${this.baseUrl}/${id}`).subscribe({
+        
       next: (res: any) => {
         this.message = `ID ${id} is deleted successfully`;
         this.deleteForm1.reset();
         this.cdr.detectChanges(); 
       },
       error: (err: HttpErrorResponse) => {
-        console.error("Delete Error:", err);
+        // console.error("Delete Error:", err);
         this.message = ''; 
 
         if (err.status === 404) {
