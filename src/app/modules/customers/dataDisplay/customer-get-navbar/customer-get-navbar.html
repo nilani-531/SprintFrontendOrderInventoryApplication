@@ -1,18 +1,11 @@
-<nav class="navbar">
+<div class="navbar">
   <div class="nav-container">
-
-    <!-- Logo / Title -->
-    <div class="logo">
-      CustomerApp
-    </div>
-
-    <!-- Menu Links -->
     <ul class="nav-links">
-      <li (click)="getAllCustomers()">All Customers</li>
-      <li (click)="getCustomerById()">Find Customer</li>
-      <li (click)="getOrders()">Orders</li>
-      <li (click)="getShipments()">Shipments</li>
+      <li *ngFor="let endpoint of getEndpoints" 
+          [class.active]="selectedOption === endpoint.id"
+          (click)="selectEndpoint(endpoint.id)">
+        {{ endpoint.label }}
+      </li>
     </ul>
-
   </div>
-</nav>
+</div>

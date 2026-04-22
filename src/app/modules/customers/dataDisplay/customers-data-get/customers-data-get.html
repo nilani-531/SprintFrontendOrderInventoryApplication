@@ -1,54 +1,53 @@
+<h2 class="title">Customer Data Dashboard</h2>
+
 <div class="page">
+  <app-customer-get-navbar (dataFetched)="onDataFetched($event)" (errorChanged)="onErrorChanged($event)"
+    (optionSelected)="onOptionSelected($event)">
+  </app-customer-get-navbar>
+
   <div class="container">
 
-    <h2 class="title">Customer Data Dashboard</h2>
+    <!-- Input Fields and Fetch Button -->
+    <div class="input-section" *ngIf="selectedOption">
+      <div class="input-container">
+        <div *ngIf="selectedOption === 'getById' || selectedOption === 'getOrders' || selectedOption === 'getShipments'"
+          class="input-group">
+          <label for="customerId">Customer ID:</label>
+          <input type="number" id="customerId" [(ngModel)]="customerId" placeholder="Enter customer ID"
+            class="input-field">
+        </div>
 
-    <!-- 🔹 Input Section -->
-    <div class="card">
-      <div class="input-row">
-        <input
-          type="number"
-          [(ngModel)]="customerId"
-          placeholder="Enter Customer ID"
-          class="input-box"
-        />
+        <div *ngIf="selectedOption === 'getByEmail'" class="input-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" [(ngModel)]="emailAddress" placeholder="Enter email address"
+            class="input-field">
+        </div>
 
-        <input
-          type="email"
-          [(ngModel)]="emailAddress"
-          placeholder="Enter Email"
-          class="input-box"
-        />
-      </div>
-
-      <div class="input-row" style="margin-top: 10px;">
-        <button class="btn primary" (click)="getAllCustomers()">Get All</button>
-        <button class="btn secondary" (click)="getCustomerById()">Get By ID</button>
-        <button class="btn secondary" (click)="getCustomerByEmail()">Get By Email</button>
-        <button class="btn primary" (click)="getOrders()">Orders</button>
-        <button class="btn primary" (click)="getShipments()">Shipments</button>
+        <button (click)="fetchData()" [disabled]="!isInputValid() || loading" class="fetch-btn">
+          {{ loading ? 'Loading...' : 'Fetch Data' }}
+        </button>
       </div>
     </div>
 
-    <!-- 🔥 Error Message -->
+
+    <!-- Error Message -->
     <div *ngIf="errorMessage" class="error">
       {{ errorMessage }}
     </div>
 
-    <!-- 🔹 Single Customer -->
+    <!-- Single Customer -->
     <div *ngIf="customer" class="card">
       <h3>Customer Details</h3>
       <div class="grid">
         <div><b>ID:</b> {{ customer.customerId }}</div>
         <div><b>Name:</b> {{ customer.fullName }}</div>
         <div><b>Email:</b> {{ customer.emailAddress }}</div>
-        
       </div>
     </div>
 
-    <!-- 🔹 All Customers -->
+    <!-- All Customers with Pagination -->
     <div *ngIf="customers.length > 0" class="card">
-      <h3>All Customers</h3>
+      <h3>All Customers ({{ customers.length }} total - Page {{ currentCustomerPage }})</h3>
       <table>
         <thead>
           <tr>
@@ -58,39 +57,71 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let c of customers">
+          <tr *ngFor="let c of paginatedCustomers">
             <td>{{ c.customerId }}</td>
             <td>{{ c.fullName }}</td>
             <td>{{ c.emailAddress }}</td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button [disabled]="currentCustomerPage === 1" (click)="goToCustomerPage(currentCustomerPage - 1)"
+          class="pagination-btn">
+          Previous
+        </button>
+        <span class="pagination-info">
+          Page {{ currentCustomerPage }} of {{ getTotalCustomerPages() }}
+        </span>
+        <button [disabled]="currentCustomerPage === getTotalCustomerPages()"
+          (click)="goToCustomerPage(currentCustomerPage + 1)" class="pagination-btn">
+          Next
+        </button>
+      </div>
     </div>
 
-    <!-- 🔹 Orders -->
+    <!-- Orders with Pagination -->
     <div *ngIf="orders.length > 0" class="card">
-      <h3>Orders</h3>
+      <h3>Orders ({{ orders.length }} total - Page {{ currentOrderPage }})</h3>
       <table>
         <thead>
           <tr>
             <th>Order ID</th>
             <th>Status</th>
-            <th>Total</th>
+            <th>Order Date</th>
+            
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let o of orders">
+          <tr *ngFor="let o of paginatedOrders">
             <td>{{ o.orderId }}</td>
             <td>{{ o.orderStatusS }}</td>
-          
+            <td>{{o.orderTms}}</td>
+           
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button [disabled]="currentOrderPage === 1" (click)="goToOrderPage(currentOrderPage - 1)"
+          class="pagination-btn">
+          Previous
+        </button>
+        <span class="pagination-info">
+          Page {{ currentOrderPage }} of {{ getTotalOrderPages() }}
+        </span>
+        <button [disabled]="currentOrderPage === getTotalOrderPages()" (click)="goToOrderPage(currentOrderPage + 1)"
+          class="pagination-btn">
+          Next
+        </button>
+      </div>
     </div>
 
-    <!-- 🔹 Shipments -->
+    <!-- Shipments with Pagination -->
     <div *ngIf="shipments.length > 0" class="card">
-      <h3>Shipments</h3>
+      <h3>Shipments ({{ shipments.length }} total - Page {{ currentShipmentPage }})</h3>
       <table>
         <thead>
           <tr>
@@ -100,13 +131,28 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let s of shipments">
+          <tr *ngFor="let s of paginatedShipments">
             <td>{{ s.shipmentId }}</td>
             <td>{{ s.shipmentStatus }}</td>
             <td>{{ s.deliveryAddress }}</td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button [disabled]="currentShipmentPage === 1" (click)="goToShipmentPage(currentShipmentPage - 1)"
+          class="pagination-btn">
+          Previous
+        </button>
+        <span class="pagination-info">
+          Page {{ currentShipmentPage }} of {{ getTotalShipmentPages() }}
+        </span>
+        <button [disabled]="currentShipmentPage === getTotalShipmentPages()"
+          (click)="goToShipmentPage(currentShipmentPage + 1)" class="pagination-btn">
+          Next
+        </button>
+      </div>
     </div>
 
   </div>
