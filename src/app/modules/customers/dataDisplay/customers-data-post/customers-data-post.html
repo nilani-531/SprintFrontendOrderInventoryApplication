@@ -57,18 +57,16 @@
 
       </form>
     </div>
-
+   @if(error){
       <div class="error-box" >
-        @if(error){
           {{ error }}
-        }
       </div>
-
+    }
+   @else {
       <div class="success-box" >
-        @if(success){
           {{ success }}
-        }
       </div>
+    }
 
   </div>
 </div>

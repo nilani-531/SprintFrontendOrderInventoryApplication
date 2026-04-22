@@ -1,9 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ShipmentsService } from '../../shipments-service';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NgClass, NgIf } from "@angular/common";
 
 @Component({
   selector: 'app-shipments-data-post',
-  imports: [],
+  imports: [ReactiveFormsModule, NgClass, NgIf],
   templateUrl: './shipments-data-post.html',
   styleUrl: './shipments-data-post.css',
-})
-export class ShipmentsDataPost {}
+}) 
+
+export class ShipmentsDataPost {
+
+  shipmentsService: ShipmentsService = inject(ShipmentsService);
+
+  shipmentsForm = new FormGroup({
+    customerId: new FormControl("", [Validators.required]),
+    storeId: new FormControl("", [Validators.required]),
+    deliveryAddress: new FormControl("", [Validators.required])
+  });
+
+  success: any = null;
+  error: any = null;
+
+  handleSubmit() {
+    console.log(this.shipmentsForm.value);
+
+    if (this.shipmentsForm.valid) {
+
+      this.shipmentsService.createShipment(this.shipmentsForm.value).subscribe({
+        next: (response: any) => {
+          this.success = response.msg + " (Shipment ID: " + response.data.shipmentId + ")";
+          this.shipmentsForm.reset();
+        },
+
+        error: (err) => {
+          console.error(err);
+
+          if (err.error && err.error.msg) {
+            this.error = err.error.msg;
+          } else if (err.status === 0) {
+            this.error = "Cannot connect to server";
+          } else {
+            this.error = "Something went wrong";
+          }
+        }
+      });
+
+    }
+  }
+}

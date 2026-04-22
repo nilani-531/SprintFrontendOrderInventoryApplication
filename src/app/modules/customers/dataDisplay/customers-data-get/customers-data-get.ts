@@ -1,18 +1,20 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomersService } from './../../customers-service';
+
 
 @Component({
   selector: 'app-customers-data-get',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './customers-data-get.html',
   styleUrl: './customers-data-get.css',
 })
 export class CustomersDataGet {
 customersService = inject(CustomersService);
 change = inject(ChangeDetectorRef);
+
   customers: any[] = [];
   customer: any = null;
   orders: any[] = [];
@@ -135,5 +137,7 @@ resetListsOnly() {
   this.shipments = [];
   this.errorMessage = '';
 }
+
 }
+
 
