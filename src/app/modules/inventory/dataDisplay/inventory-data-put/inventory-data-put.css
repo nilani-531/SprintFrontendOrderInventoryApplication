@@ -1,0 +1,184 @@
+/* Page background */
+.page-container {
+	min-height: 100vh;
+	background: linear-gradient(to right, #f3f4f6, #e5e7eb);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Main content */
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* Title */
+.title {
+	font-size: 26px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	color: #111827;
+}
+
+/* Card */
+.card {
+	background: white;
+	border-radius: 14px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+	padding: 30px;
+	width: 520px;
+	transition: transform 0.2s ease;
+}
+
+.card:hover {
+	transform: translateY(-2px);
+}
+
+/* Form layout */
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+/* Form group */
+.form-group {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Form row for side-by-side fields */
+.form-row {
+	display: flex;
+	gap: 12px;
+}
+
+/* Half width form group */
+.form-group.half {
+	flex: 1;
+	min-width: 0;
+}
+
+/* Labels */
+label {
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 6px;
+	color: #374151;
+}
+
+/* Inputs & textarea */
+input,
+textarea {
+	padding: 11px;
+	border-radius: 8px;
+	border: 1px solid #d1d5db;
+	outline: none;
+	font-size: 14px;
+	transition: all 0.2s ease;
+}
+
+/* Focus effect */
+input:focus,
+textarea:focus {
+	border-color: #7c3aed;
+	box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+/* Error text */
+.error {
+	color: #dc2626;
+	font-size: 12px;
+	margin-top: 4px;
+}
+
+/* Buttons container */
+.button-group {
+	display: flex;
+	gap: 12px;
+	margin-top: 10px;
+}
+
+/* Primary button (Update) */
+.btn-primary {
+	background-color: #7c3aed;
+	color: white;
+	border: none;
+	padding: 11px 18px;
+	border-radius: 8px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+	background-color: #6d28d9;
+	transform: scale(1.03);
+}
+
+.btn-primary:disabled {
+	background-color: #9ca3af;
+	cursor: not-allowed;
+	transform: none;
+}
+
+/* Secondary button (Cancel) */
+.btn-secondary {
+	background-color: white;
+	border: 1px solid #d1d5db;
+	padding: 11px 18px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+	background-color: #f9fafb;
+	transform: scale(1.02);
+}
+
+/* Toast Notification */
+.toast {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 14px 20px;
+	border-radius: 8px;
+	font-weight: 500;
+	font-size: 14px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	z-index: 9999;
+	animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateX(-50%) translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+}
+
+.toast.success {
+	background-color: #10b981;
+	color: white;
+	border-left: 4px solid #059669;
+}
+
+.toast.error {
+	background-color: #ef4444;
+	color: white;
+	border-left: 4px solid #dc2626;
+}
+
+.toast.info {
+	background-color: #3b82f6;
+	color: white;
+	border-left: 4px solid #2563eb;
+}

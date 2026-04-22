@@ -1,1 +1,74 @@
-<p>customers-data-post works!</p>
+
+<div class="page-container">
+
+  <div class="content">
+
+    <h2 class="title">Create Customer</h2>
+
+    <div class="card">
+
+      <form [formGroup]="customerForm" (ngSubmit)="handleSubmit()" class="form">
+
+        
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" formControlName="fullName" placeholder="Enter full name">
+
+          @if(customerForm.controls.fullName.touched && customerForm.controls.fullName.errors){
+            <p class="error">*Name is required</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" formControlName="emailAddress" placeholder="Enter email">
+
+          @if(customerForm.controls.emailAddress.touched && customerForm.controls.emailAddress.errors){
+            @if(customerForm.get('emailAddress')?.errors?.['required']){
+              <p class="error">*Email is required</p>
+            }
+            @if(customerForm.get('emailAddress')?.errors?.['email']){
+              <p class="error">*Enter valid email</p>
+            }
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" formControlName="phoneNumber" placeholder="Enter phone number">
+        </div>
+
+      
+        <div class="form-group">
+          <label>Address</label>
+          <textarea formControlName="address" placeholder="Enter address"></textarea>
+        </div>
+
+    
+        <div class="button-group">
+          <button type="submit" [disabled]="customerForm.invalid" class="btn-primary">
+            Create
+          </button>
+
+          <button type="button" class="btn-secondary">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+      <div class="error-box" >
+        @if(error){
+          {{ error }}
+        }
+      </div>
+
+      <div class="success-box" >
+        @if(success){
+          {{ success }}
+        }
+      </div>
+
+  </div>
+</div>

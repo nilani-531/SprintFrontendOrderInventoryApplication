@@ -1,0 +1,89 @@
+<div class="page">
+
+  <div class="container">
+
+    <h2 class="title">Stores Data Fetch</h2>
+
+    <!-- ✅ FORM (important change) -->
+    <form [formGroup]="form" class="card">
+
+      <div class="input-row">
+
+        <!-- ✅ changed from ngModel → formControlName -->
+        <input
+          type="number"
+          formControlName="storeId"
+          placeholder="Enter Store ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getStoreById()" class="btn primary">
+          Get Store
+        </button>
+
+        <button type="button" (click)="getAllStores()" class="btn secondary">
+          Get All Stores
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="info">
+      Loading...
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <!-- ✅ Single Store -->
+    <div *ngIf="singleStore" class="card">
+
+      <h3>Store Details</h3>
+
+      <div class="grid">
+        <p><strong>ID:</strong> {{ singleStore.storeId }}</p>
+        <p><strong>Name:</strong> {{ singleStore.storeName }}</p>
+        <p><strong>Address:</strong> {{ singleStore.physicalAddress }}</p>
+        <p><strong>Website:</strong> {{ singleStore.webAddress }}</p>
+        <p><strong>Latitude:</strong> {{ singleStore.latitude }}</p>
+        <p><strong>Longitude:</strong> {{ singleStore.longitude }}</p>
+      </div>
+
+    </div>
+
+    <!-- ✅ All Stores -->
+    <div *ngIf="allStores.length > 0" class="card">
+
+      <h3>All Stores</h3>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Website</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let store of allStores">
+            <td>{{ store.storeId }}</td>
+            <td>{{ store.storeName }}</td>
+            <td>{{ store.physicalAddress }}</td>
+            <td>{{ store.webAddress }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
