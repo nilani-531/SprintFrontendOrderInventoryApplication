@@ -1,1 +1,78 @@
-<p>order-items-data-put works!</p>
+<div class="page-container">
+
+  <div class="content">
+
+    <h2 class="title">Update Line Item</h2>
+
+    <div class="card">
+
+      <form [formGroup]="lineItemForm" class="form">
+
+        <!-- Order ID -->
+        <div class="form-group">
+          <label>Order ID *</label>
+          <input type="number" formControlName="orderId" placeholder="Enter order ID">
+        </div>
+
+        <!-- Line Item ID -->
+        <div class="form-group">
+          <label>Line Item ID *</label>
+
+          <div class="input-with-btn">
+            <input type="number" formControlName="lineItemId" placeholder="Enter line item ID">
+
+            <button type="button" (click)="searchLineItem()" class="btn-search">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <!-- DETAILS -->
+        <div *ngIf="lineItemDetails" class="details-box">
+          <h4>Current Item Details:</h4>
+
+          <div class="details-grid">
+            <p><strong>Product ID:</strong> {{ lineItemDetails.productId }}</p>
+            <p><strong>Quantity:</strong> {{ lineItemDetails.quantity }}</p>
+            <p><strong>Price:</strong> {{ lineItemDetails.unitPrice }}</p>
+          </div>
+        </div>
+
+       
+
+        <!-- UPDATE FIELDS -->
+        <div *ngIf="lineItemDetails">
+
+          <div class="form-group">
+            <label>Quantity *</label>
+            <input type="number" formControlName="quantity">
+          </div>
+
+          <div class="form-group">
+            <label>Unit Price *</label>
+            <input type="number" formControlName="unitPrice">
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn-primary" (click)="handleUpdate()">
+              Update
+            </button>
+
+            <button type="button" class="btn-secondary" (click)="goBack()">
+              Cancel
+            </button>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+  <!-- ✅ TOAST AT BOTTOM -->
+  <div *ngIf="showToast" class="toast" [ngClass]="toastType">
+    {{ toastMessage }}
+  </div>
+
+</div>

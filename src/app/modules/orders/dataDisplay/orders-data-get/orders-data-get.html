@@ -1,1 +1,89 @@
-<p>orders-data-get works!</p>
+<div class="page">
+
+  <div class="container">
+
+    <h2 class="title">Orders Data Fetch</h2>
+
+    <!-- ✅ FORM -->
+    <form [formGroup]="form" class="card">
+
+      <div class="input-row">
+
+        <input
+          type="number"
+          formControlName="orderId"
+          placeholder="Enter Order ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getOrderById()" class="btn primary">
+          Get Order
+        </button>
+
+        <button type="button" (click)="getAllOrders()" class="btn secondary">
+          Get All Orders
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="info">
+      Loading...
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <!-- ✅ Single Order -->
+    <div *ngIf="singleOrder" class="card">
+
+      <h3>Order Details</h3>
+
+      <div class="grid">
+        <p><strong>Order ID:</strong> {{ singleOrder.orderId }}</p>
+        <p><strong>Customer ID:</strong> {{ singleOrder.customerId }}</p>
+        <p><strong>Store ID:</strong> {{ singleOrder.storeId }}</p>
+        <p><strong>Status:</strong> {{ singleOrder.orderStatusS }}</p>
+        <p><strong>Order Time:</strong> {{ singleOrder.orderTms }}</p>
+      </div>
+
+    </div>
+
+    <!-- ✅ All Orders -->
+    <div *ngIf="allOrders.length > 0" class="card">
+
+      <h3>All Orders</h3>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer ID</th>
+            <th>Store ID</th>
+            <th>Status</th>
+            <th>Order Time</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let order of allOrders">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.customerId }}</td>
+            <td>{{ order.storeId }}</td>
+            <td>{{ order.orderStatusS }}</td>
+            <td>{{ order.orderTms }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

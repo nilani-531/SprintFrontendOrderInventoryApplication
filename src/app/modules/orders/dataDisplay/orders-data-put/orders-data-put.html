@@ -1,1 +1,80 @@
-<p>orders-data-put works!</p>
+<div class="page-container">
+  <div class="content">
+
+    <h2 class="title">Update Order Status</h2>
+
+    <!-- Toast -->
+    @if(showToast) {
+      <div [ngClass]="['toast', toastType]">
+        {{ toastMessage }}
+      </div>
+    }
+
+    <div class="card">
+      <form [formGroup]="orderForm" class="form">
+
+        <!-- Order ID -->
+        <div class="form-group">
+          <label>Order ID *</label>
+
+          <div class="input-with-btn">
+            <input type="number" formControlName="orderId" placeholder="Enter Order ID">
+
+            <button type="button" class="btn-search" (click)="searchOrder()">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        @if(loading) {
+          <div class="loading-box">
+            Loading...
+          </div>
+        }
+
+        <!-- Order Details -->
+        @if(orderDetails && !loading) {
+          <div class="details-box">
+            <h4>Order Details</h4>
+            <div class="details-grid">
+              <p><strong>Customer ID:</strong> {{ orderDetails.customerId }}</p>
+              <p><strong>Store ID:</strong> {{ orderDetails.storeId }}</p>
+              <p><strong>Status:</strong> {{ orderDetails.orderStatusS }}</p>
+              <p><strong>Time:</strong> {{ orderDetails.orderTms }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- Status Dropdown -->
+        @if(orderDetails) {
+          <div class="form-group">
+            <label>Update Status</label>
+
+            <select formControlName="orderStatusS">
+              <option value="">Select</option>
+              @for(status of orderStatuses; track status) {
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <!-- Buttons -->
+        @if(orderDetails) {
+          <div class="button-group">
+            <button type="button" class="btn-primary" (click)="handleUpdate()">
+              Update
+            </button>
+
+            <button type="button" class="btn-secondary" (click)="goBack()">
+              Cancel
+            </button>
+          </div>
+        }
+
+      </form>
+    </div>
+
+  </div>
+</div>
