@@ -14,6 +14,7 @@ import { Login } from "./login/login";
 import { ApiDashboard } from "./modules/api-dashboard/api-dashboard";
 import { Home } from "./home/home";
 
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home],
