@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { InventoryDataService } from '../inventory-data.service';
 
 @Component({
   selector: 'app-inventory-data-put',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './inventory-data-put.html',
   styleUrl: './inventory-data-put.css',
 })
@@ -18,13 +18,13 @@ export class InventoryDataPut implements OnInit {
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
+  loading = false;
 
-  constructor(
-    private http: HttpClient,
-    private inventoryService: InventoryDataService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  private inventoryService = inject(InventoryDataService);
+  private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
+
+  constructor() {}
 
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
@@ -35,61 +35,46 @@ export class InventoryDataPut implements OnInit {
 
   ngOnInit(): void {
     this.inventoryForm = new FormGroup({
-      inventoryId: new FormControl('', [Validators.required]),
-      storeId: new FormControl('', [Validators.required]),
-      productId: new FormControl('', [Validators.required]),
-      quantityOnHand: new FormControl(0, [Validators.required]),
-      reorderLevel: new FormControl(0),
-      reorderQuantity: new FormControl(0)
-    });
-
-    const id = this.route.snapshot.params['id'];
-    if (id) {
-      this.inventoryForm.get('inventoryId')?.setValue(id);
-      this.loadInventory();
-    }
-  }
-
-  loadInventory(): void {
-    const id = this.inventoryForm.get('inventoryId')?.value;
-    if (!id) return;
-
-    this.inventoryService.getInventory(id).subscribe({
-      next: (res) => {
-        this.inventoryForm.patchValue(res.data || res);
-        this.inventoryForm.get('inventoryId')?.setValue(id);
-      },
-      error: (err) => {
-        console.error('Error loading inventory', err);
-        this.showNotification('Failed to load inventory', 'error');
-      }
+      inventoryId: new FormControl('', [Validators.required, Validators.min(1)]),
+      storeId: new FormControl('', [Validators.required, Validators.min(1)]),
+      productId: new FormControl('', [Validators.required, Validators.min(1)]),
+      productInventory: new FormControl('', [Validators.required, Validators.min(0)])
     });
   }
 
   handleUpdate(): void {
-    if (this.inventoryForm.invalid) return;
+    if (this.inventoryForm.invalid) {
+      this.showNotification('Please fill all required fields', 'error');
+      return;
+    }
 
+    this.loading = true;
     const inventoryId = this.inventoryForm.get('inventoryId')?.value;
     const storeId = this.inventoryForm.get('storeId')?.value;
     const productId = this.inventoryForm.get('productId')?.value;
 
     const payload = {
-      productInventory: this.inventoryForm.get('quantityOnHand')?.value,
-      reorderLevel: this.inventoryForm.get('reorderLevel')?.value,
-      reorderQuantity: this.inventoryForm.get('reorderQuantity')?.value
+      productInventory: Number(this.inventoryForm.get('productInventory')?.value)
     };
 
     this.inventoryService.updateInventory(inventoryId, storeId, productId, payload).subscribe({
-      next: () => {
-        this.showNotification('Inventory updated successfully', 'success');
-        setTimeout(() => this.router.navigate(['/modules/inventory']), 1000);
+      next: (res) => {
+        this.loading = false;
+        this.showNotification(res?.msg || 'Inventory updated successfully', 'success');
+        this.cdr.detectChanges();
+        setTimeout(() => this.router.navigate(['/modules/inventory']), 1500);
       },
       error: (err) => {
+        this.loading = false;
         console.error('Update failed', err);
-        this.showNotification('Update failed', 'error');
+        const errorMsg = err?.error?.msg || 'Failed to update inventory';
+        this.showNotification(errorMsg, 'error');
+        this.cdr.detectChanges();
       }
     });
   }
 
-  goBack(): void { this.router.navigate(['/modules/inventory']); }
+  goBack(): void { 
+    this.router.navigate(['/modules/inventory']); 
+  }
 }

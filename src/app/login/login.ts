@@ -48,12 +48,12 @@ export class Login {
    * - 401          → invalid credentials
    */
   private readonly userEndpointMap: { [key: string]: string[] } = {
-    'karthi': ['http://localhost:9090/products', 'http://localhost:9090/inventory'],
-    'nilani': ['http://localhost:9090/orders', 'http://localhost:9090/api/order-items'],
-    'pooja': ['http://localhost:9090/stores'],
-    'abinaya': ['http://localhost:9090/customers'],
-    'yamini': ['http://localhost:9090/shipments'],
-    'admin': ['http://localhost:9090/products', 'http://localhost:9090/inventory', 'http://localhost:9090/orders', 'http://localhost:9090/api/order-items', 'http://localhost:9090/stores', 'http://localhost:9090/customers', 'http://localhost:9090/shipments']
+    'karthi': ['http://localhost:9090/api/products', 'http://localhost:9090/api/inventory'],
+    'nilani': ['http://localhost:9090/api/orders', 'http://localhost:9090/api/order-items'],
+    'pooja': ['http://localhost:9090/api/stores'],
+    'abinaya': ['http://localhost:9090/api/customers'],
+    'yamini': ['http://localhost:9090/api/shipments'],
+    'admin': ['http://localhost:9090/api/products', 'http://localhost:9090/api/inventory', 'http://localhost:9090/api/orders', 'http://localhost:9090/api/order-items', 'http://localhost:9090/api/stores', 'http://localhost:9090/api/customers', 'http://localhost:9090/api/shipments']
   };
 
   loginForm = new FormGroup({
@@ -93,7 +93,7 @@ export class Login {
     const userEndpoints = this.userEndpointMap[username];
     const probeUrl = (userEndpoints && userEndpoints.length > 0)
       ? userEndpoints[0]
-      : 'http://localhost:9090/products';
+      : 'http://localhost:9090/api/products';
 
     this.isLoading = true;
     this.loginError = '';

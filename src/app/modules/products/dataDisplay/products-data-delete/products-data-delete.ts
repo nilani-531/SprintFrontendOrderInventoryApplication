@@ -15,7 +15,7 @@ export class ProductsDataDelete {
   message: string = '';
   error: string = '';
 
-  baseUrl = 'http://localhost:9090/products';
+  baseUrl = 'http://localhost:9090/api/products';
 
   constructor(
     private fb: FormBuilder,

@@ -1,1 +1,93 @@
-<p>products-data-get works!</p>
+<div class="page">
+
+  <div class="container">
+
+    <h2 class="title">Products Data Fetch</h2>
+
+    <!-- ✅ FORM -->
+    <form [formGroup]="form" class="card">
+
+      <div class="input-row">
+
+        <input
+          type="number"
+          formControlName="productId"
+          placeholder="Enter Product ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getProductById()" class="btn primary">
+          Get Product
+        </button>
+
+        <button type="button" (click)="getAllProducts()" class="btn secondary">
+          Get All Products
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="info">
+      Loading...
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <!-- ✅ Single Product -->
+    <div *ngIf="singleProduct" class="card">
+
+      <h3>Product Details</h3>
+
+      <div class="grid">
+        <p><strong>ID:</strong> {{ singleProduct.productId }}</p>
+        <p><strong>Name:</strong> {{ singleProduct.productName }}</p>
+        <p><strong>Brand:</strong> {{ singleProduct.brand }}</p>
+        <p><strong>Colour:</strong> {{ singleProduct.colour }}</p>
+        <p><strong>Size:</strong> {{ singleProduct.size }}</p>
+        <p><strong>Unit Price:</strong> ${{ singleProduct.unitPrice }}</p>
+        <p><strong>Rating:</strong> {{ singleProduct.rating }}/5</p>
+      </div>
+
+    </div>
+
+    <!-- ✅ All Products -->
+    <div *ngIf="allProducts.length > 0" class="card">
+
+      <h3>All Products</h3>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Colour</th>
+            <th>Price</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let product of allProducts">
+            <td>{{ product.productId }}</td>
+            <td>{{ product.productName }}</td>
+            <td>{{ product.brand }}</td>
+            <td>{{ product.colour }}</td>
+            <td>${{ product.unitPrice }}</td>
+            <td>{{ product.rating }}/5</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
