@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgIf, NgForOf } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -42,10 +42,21 @@ export class ProductsDataGet {
     });
   }
 
+  // 🔹 Common Auth Header
+  private getHeaders() {
+    const auth = sessionStorage.getItem('authCredentials');
+
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Basic ${auth}`
+      })
+    };
+  }
+
   // 🔹 Get Product by ID
   getProductById() {
     if (this.form.invalid) {
-      this.error = 'Please enter a valid Product ID (greater than 0)';
+      this.error = 'Please enter a valid Product ID';
       return;
     }
 
@@ -54,7 +65,7 @@ export class ProductsDataGet {
     this.resetData();
     this.loading = true;
 
-    this.http.get<any>(`${this.baseUrl}/${id}`)
+    this.http.get<any>(`${this.baseUrl}/${id}`, this.getHeaders())
       .subscribe({
         next: (res) => {
           this.singleProduct = res.data;
@@ -75,7 +86,7 @@ export class ProductsDataGet {
     this.resetData();
     this.loading = true;
 
-    this.http.get<any>(this.baseUrl)
+    this.http.get<any>(this.baseUrl, this.getHeaders())
       .subscribe({
         next: (res) => {
           this.allProducts = res.data;
@@ -91,9 +102,17 @@ export class ProductsDataGet {
       });
   }
 
-  // 🔹 Extract backend error message properly
+  // 🔹 Better Error Message
   private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+
+    if (err.status === 401) return 'Unauthorized - Please Login First';
+    if (err.status === 404) return 'Product Not Found';
+    if (err.status === 0) return 'Backend Server Not Running';
+
+    return err?.error?.msg ||
+           err?.error?.data ||
+           err?.message ||
+           'Something went wrong';
   }
 
   // 🔹 Reset UI
