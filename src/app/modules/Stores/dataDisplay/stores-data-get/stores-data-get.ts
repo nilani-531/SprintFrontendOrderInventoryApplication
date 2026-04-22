@@ -34,22 +34,23 @@ export class StoresDataGet {
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef   // 🔥 IMPORTANT FIX
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
-      storeId: ['', [Validators.required, Validators.min(1)]] // 🔥 VALIDATION
+      storeId: ['', [Validators.min(1)]],
+      storeName: ['']
     });
   }
 
-  // 🔹 Get Store by ID
+  // GET BY ID
   getStoreById() {
 
-    if (this.form.invalid) {
-      this.error = 'Please enter a valid Store ID (greater than 0)';
+    const id = this.form.value.storeId;
+
+    if (!id) {
+      this.error = 'Please enter Store ID';
       return;
     }
-
-    const id = this.form.value.storeId;
 
     this.resetData();
     this.loading = true;
@@ -59,18 +60,37 @@ export class StoresDataGet {
         next: (res) => {
           this.singleStore = res.data;
           this.loading = false;
-          this.cdr.detectChanges(); // 🔥 FORCE UI UPDATE
+          this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges(); // 🔥 FORCE UI UPDATE
-        }
+        error: (err) => this.handleError(err)
       });
   }
 
-  // 🔹 Get All Stores
+  // NEW: GET BY NAME
+  getStoreByName() {
+
+    const name = this.form.value.storeName;
+
+    if (!name) {
+      this.error = 'Please enter Store Name';
+      return;
+    }
+
+    this.resetData();
+    this.loading = true;
+
+    this.http.get<any>(`${this.baseUrl}/name/${name}`)
+      .subscribe({
+        next: (res) => {
+          this.singleStore = res.data;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => this.handleError(err)
+      });
+  }
+
+  // GET ALL
   getAllStores() {
 
     this.resetData();
@@ -81,23 +101,36 @@ export class StoresDataGet {
         next: (res) => {
           this.allStores = res.data;
           this.loading = false;
-          this.cdr.detectChanges(); // 🔥 FIX
+          this.cdr.detectChanges();
         },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges(); // 🔥 FIX
-        }
+        error: (err) => this.handleError(err)
       });
   }
 
-  // 🔹 Extract backend error message properly
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+  // CENTRAL ERROR HANDLER (uses your backend exceptions)
+  private handleError(err: any) {
+
+    this.loading = false;
+
+    if (err.status === 404) {
+      this.error = err.error?.msg || 'Store not found';
+    }
+    else if (err.status === 400) {
+      this.error = err.error?.msg || 'Invalid input';
+    }
+    else if (err.status === 409) {
+      this.error = err.error?.msg || 'Duplicate resource';
+    }
+    else if (err.status === 0) {
+      this.error = 'Backend is not reachable';
+    }
+    else {
+      this.error = err.error?.msg || 'Something went wrong';
+    }
+
+    this.cdr.detectChanges();
   }
 
-  // 🔹 Reset UI
   resetData() {
     this.error = '';
     this.singleStore = null;
