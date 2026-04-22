@@ -2,78 +2,100 @@
 
   <div class="content">
 
-    <h2 class="title">Update Product</h2>
+    <h2 class="title">Update Store</h2>
 
     <div class="card">
 
-      <form [formGroup]="productForm" (ngSubmit)="handleUpdate()" class="form">
+      @if(isLoading) {
+        <div class="loading">Loading store details...</div>
+      } @else {
+        <form [formGroup]="storeForm" (ngSubmit)="handleUpdate()" class="form">
 
-        <!-- Product ID -->
-        <div class="form-group">
-          <label>Product ID *</label>
-          <input type="number" formControlName="productId" placeholder="Enter product ID">
+          <!-- Store ID (Read-only) -->
+          <div class="form-group">
+            <label>Store ID *</label>
+            <input type="number" formControlName="storeId" placeholder="Store ID" readonly>
+          </div>
 
-          @if(productForm.controls['productId'].touched && productForm.controls['productId'].errors){
-            <p class="error">*Product ID is required</p>
-          }
-        </div>
+          <!-- Store Name -->
+          <div class="form-group">
+            <label>Store Name *</label>
+            <input type="text" formControlName="storeName" placeholder="Enter store name">
 
-        <!-- Product Name -->
-        <div class="form-group">
-          <label>Product Name *</label>
-          <input type="text" formControlName="productName" placeholder="Enter product name">
+            @if(storeForm.controls['storeName'].touched && storeForm.controls['storeName'].errors){
+              <p class="error">*Store name is required</p>
+            }
+          </div>
 
-          @if(productForm.controls['productName'].touched && productForm.controls['productName'].errors){
-            <p class="error">*Product name is required</p>
-          }
-        </div>
+          <!-- Web Address -->
+          <div class="form-group">
+            <label>Web Address *</label>
+            <input type="url" formControlName="webAddress" placeholder="Enter web address (e.g., https://example.com)">
 
-        <!-- Price -->
-        <div class="form-group">
-          <label>Unit Price *</label>
-          <input type="number" formControlName="unitPrice" placeholder="Enter price">
+            @if(storeForm.controls['webAddress'].touched && storeForm.controls['webAddress'].errors){
+              @if(storeForm.get('webAddress')?.errors?.['required']){
+                <p class="error">*Web address is required</p>
+              }
+              @if(storeForm.get('webAddress')?.errors?.['pattern']){
+                <p class="error">*Must start with http:// or https://</p>
+              }
+            }
+          </div>
 
-          @if(productForm.controls['unitPrice'].touched && productForm.controls['unitPrice'].errors){
-            <p class="error">*Price is required</p>
-          }
-        </div>
+          <!-- Physical Address -->
+          <div class="form-group">
+            <label>Physical Address *</label>
+            <textarea formControlName="physicalAddress" placeholder="Enter physical address"></textarea>
 
-        <!-- Brand -->
-        <div class="form-group">
-          <label>Brand</label>
-          <input type="text" formControlName="brand" placeholder="Enter brand">
-        </div>
+            @if(storeForm.controls['physicalAddress'].touched && storeForm.controls['physicalAddress'].errors){
+              <p class="error">*Physical address is required</p>
+            }
+          </div>
 
-        <!-- Colour -->
-        <div class="form-group">
-          <label>Colour</label>
-          <input type="text" formControlName="colour" placeholder="Enter colour">
-        </div>
+          <!-- Latitude & Longitude -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Latitude *</label>
+              <input type="number" formControlName="latitude" placeholder="Enter latitude" step="0.0001">
 
-        <!-- Size -->
-        <div class="form-group">
-          <label>Size</label>
-          <input type="text" formControlName="size" placeholder="Enter size">
-        </div>
+              @if(storeForm.controls['latitude'].touched && storeForm.controls['latitude'].errors){
+                <p class="error">*Latitude is required</p>
+              }
+            </div>
 
-        <!-- Rating -->
-        <div class="form-group">
-          <label>Rating</label>
-          <input type="number" formControlName="rating" placeholder="Enter rating">
-        </div>
+            <div class="form-group">
+              <label>Longitude *</label>
+              <input type="number" formControlName="longitude" placeholder="Enter longitude" step="0.0001">
 
-        <!-- Buttons -->
-        <div class="button-group">
-          <button type="submit" [disabled]="productForm.invalid" class="btn-primary">
-            Update
-          </button>
+              @if(storeForm.controls['longitude'].touched && storeForm.controls['longitude'].errors){
+                <p class="error">*Longitude is required</p>
+              }
+            </div>
+          </div>
 
-          <button type="button" class="btn-secondary" (click)="goBack()">
-            Cancel
-          </button>
-        </div>
+          <!-- Buttons -->
+          <div class="button-group">
+            <button type="submit" [disabled]="storeForm.invalid" class="btn-primary">
+              Update Store
+            </button>
 
-      </form>
+            <button type="button" class="btn-secondary" (click)="goBack()">
+              Cancel
+            </button>
+          </div>
+
+        </form>
+      }
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-box" @if(error)>
+      {{ error }}
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-box" @if(success)>
+      {{ success }}
     </div>
 
   </div>

@@ -29,7 +29,7 @@ export class StoresDataGet {
   loading = false;
   error = '';
 
-  private baseUrl = 'http://localhost:9090/stores';
+  private baseUrl = 'http://localhost:9090/api/stores';
 
   constructor(
     private http: HttpClient,
