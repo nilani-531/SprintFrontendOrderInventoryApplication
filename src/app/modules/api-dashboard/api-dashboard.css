@@ -1,0 +1,114 @@
+.selector-container {
+  padding: 50px;
+  text-align: center;
+  color: white;
+  background: #0f172a;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #94a3b8;
+  margin-bottom: 40px;
+}
+
+.user-info {
+  margin-bottom: 30px;
+  padding: 15px 20px;
+  background: #1e293b;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.logged-in-user {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 16px;
+}
+
+.logged-in-user strong {
+  color: #60a5fa;
+  text-transform: capitalize;
+}
+
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.module-card {
+  width: 280px;
+  padding: 30px;
+  background: #1e293b;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.module-card:hover {
+  transform: translateY(-8px);
+  background: #2563eb;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.module-card h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.module-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.module-card:hover p {
+  color: #e2e8f0;
+}
+
+.no-apis-message {
+  padding: 30px;
+  background: #1e293b;
+  border-radius: 15px;
+  color: #f87171;
+  border: 2px solid #ef4444;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.no-apis-message p {
+  margin: 0;
+  color: #f87171;
+}
+
+@media (max-width: 768px) {
+  .selector-container {
+    padding: 30px;
+  }
+  
+  h1 {
+    font-size: 28px;
+  }
+  
+  .card-wrapper {
+    gap: 20px;
+  }
+  
+  .module-card {
+    width: 100%;
+    max-width: 250px;
+  }
+}

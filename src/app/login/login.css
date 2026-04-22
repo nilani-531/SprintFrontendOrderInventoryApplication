@@ -84,3 +84,54 @@
     background-color: #94a3b8;
     cursor: not-allowed;
 }
+
+.submit-button:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+/* ── Server-side error banner ── */
+.server-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 0.375rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+/* ── Server-side success banner ── */
+.server-success {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.375rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+/* ── Spinner shown during loading ── */
+.spinner {
+    display: inline-block;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 0.25rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

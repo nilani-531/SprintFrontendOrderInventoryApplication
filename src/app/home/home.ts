@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
 export class Home {
   constructor(private router: Router) {}
 
-  handleClick() {
-    console.log("Button clicked");
-    
-   this.router.navigate(['/login']);
+  handleClick(user: string) {
+    console.log("Button clicked for user:", user);
+    // Optionally, store the selected user in sessionStorage for pre-filling login
+    sessionStorage.setItem('selectedUser', user);
+    this.router.navigate(['/login']);
   }
 }

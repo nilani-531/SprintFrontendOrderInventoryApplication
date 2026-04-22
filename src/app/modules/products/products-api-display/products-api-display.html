@@ -1,1 +1,26 @@
-<p>products-api-display works!</p>
+<div class="page-container">
+
+  <div class="api-display">
+
+    <h2 class="title"> Products API Dashboard </h2>
+
+    <div class="grid">
+
+      <div class="card" *ngFor="let endpt of endpoints">
+
+        <span class="method-badge"> {{ endpt.method }} </span>
+
+        <h3 class="card-title"> {{ endpt.name }} </h3>
+
+        <p class="card-desc"> {{ endpt.desc }} </p>
+
+        <button class="card-btn" [routerLink]="['/modules/products', endpt.route]"> Open Endpoint </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<router-outlet></router-outlet>

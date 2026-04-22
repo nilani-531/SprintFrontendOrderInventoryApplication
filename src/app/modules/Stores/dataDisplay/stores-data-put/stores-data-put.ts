@@ -2,38 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgClass } from '@angular/common';
-import { ProductsDataService } from '../products-data.service';
 
 @Component({
-  selector: 'app-products-data-put',
+  selector: 'app-stores-data-put',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
-  templateUrl: './products-data-put.html',
-  styleUrl: './products-data-put.css',
+  imports: [ReactiveFormsModule],
+  templateUrl: './stores-data-put.html',
+  styleUrl: './stores-data-put.css',
 })
-export class ProductsDataPut implements OnInit  {
+export class StoresDataPut implements OnInit  {
+
+
 
   productForm!: FormGroup;
-  toastMessage: string = '';
-  toastType: 'success' | 'error' | 'info' = 'info';
-  showToast: boolean = false;
 
   constructor(
     private http: HttpClient,
-    private productService: ProductsDataService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
-
-  showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
-    this.toastMessage = message;
-    this.toastType = type;
-    this.showToast = true;
-    setTimeout(() => {
-      this.showToast = false;
-    }, 3000);
-  }
 
   ngOnInit(): void {
 
@@ -61,7 +48,7 @@ export class ProductsDataPut implements OnInit  {
     const id = this.productForm.get('productId')?.value;
     if (!id) return;
 
-    this.productService.getProduct(id)
+    this.http.get<any>(`http://localhost:9090/products/${id}`)
       .subscribe({
         next: (res) => {
           this.productForm.patchValue(res.data);
@@ -69,7 +56,7 @@ export class ProductsDataPut implements OnInit  {
         },
         error: (err) => {
           console.error('Error loading product', err);
-          this.showNotification('Failed to load product', 'error');
+          alert('Failed to load product');
         }
       });
   }
@@ -79,22 +66,23 @@ export class ProductsDataPut implements OnInit  {
     if (this.productForm.invalid) return;
 
     const id = this.productForm.get('productId')?.value;
-    this.productService.updateProduct(id, this.productForm.value).subscribe({
+    this.http.put(
+      `http://localhost:9090/products/${id}`,
+      this.productForm.value
+    ).subscribe({
       next: () => {
-        this.showNotification('Product updated successfully ✅', 'success');
-        setTimeout(() => {
-          this.router.navigate(['/modules/products']);
-        }, 1000);
+        alert('Product updated successfully ✅');
+        this.router.navigate(['/products']);
       },
       error: (err) => {
         console.error('Update failed', err);
-        this.showNotification('Update failed', 'error');
+        alert('Update failed');
       }
     });
   }
 
   // 🔹 Cancel button
   goBack(): void {
-    this.router.navigate(['/modules/products']);
+    this.router.navigate(['/products']);
   }
 }

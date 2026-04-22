@@ -82,7 +82,7 @@ export class InventoryDataPut implements OnInit {
     this.inventoryService.updateInventory(inventoryId, storeId, productId, payload).subscribe({
       next: () => {
         this.showNotification('Inventory updated successfully', 'success');
-        setTimeout(() => this.router.navigate(['/inventory']), 1000);
+        setTimeout(() => this.router.navigate(['/modules/inventory']), 1000);
       },
       error: (err) => {
         console.error('Update failed', err);
@@ -91,5 +91,5 @@ export class InventoryDataPut implements OnInit {
     });
   }
 
-  goBack(): void { this.router.navigate(['/inventory']); }
+  goBack(): void { this.router.navigate(['/modules/inventory']); }
 }

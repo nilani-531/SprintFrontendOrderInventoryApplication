@@ -1,1 +1,141 @@
+<div class="page">
 
+  <div class="container">
+
+    <h2 class="title">Shipments Data Fetch</h2>
+
+    <!-- FORM -->
+    <form [formGroup]="form" class="card">
+
+      <!-- 🔹 Shipment ID -->
+      <div class="input-row">
+
+        <input
+          type="number"
+          formControlName="shipmentId"
+          placeholder="Enter Shipment ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getShipmentById()" class="btn primary">
+          Get Shipment
+        </button>
+
+        <button type="button" (click)="getAllShipments()" class="btn secondary">
+          Get All Shipments 
+        </button>
+
+      </div>
+      <br>
+
+      <!-- 🔹 Customer ID -->
+      <div class="input-row">
+
+        <input
+          type="number"
+          formControlName="customerId"
+          placeholder="Enter Customer ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getByCustomerId()" class="btn secondary">
+          Get by Customer
+        </button>
+
+      </div>
+      <br>
+
+      <!-- 🔹 Store ID -->
+      <div class="input-row">
+
+        <input
+          type="number"
+          formControlName="storeId"
+          placeholder="Enter Store ID"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getByStoreId()" class="btn secondary">
+          Get by Store
+        </button>
+
+      </div>
+<br>
+
+      <!-- 🔹 Status -->
+      <div class="input-row">
+
+        <input
+          type="text"
+          formControlName="status"
+          placeholder="Enter Shipment Status"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getByStatus()" class="btn secondary">
+          Get by Status
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- 🔹 Loading -->
+    <div *ngIf="loading" class="info">
+      Loading...
+    </div>
+
+    <!-- 🔹 Error -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <!-- 🔹 Single Shipment -->
+    <div *ngIf="singleShipment" class="card">
+
+      <h3>Shipment Details</h3>
+
+      <div class="grid">
+        <p><strong>ID:</strong> {{ singleShipment.shipmentId }}</p>
+        <p><strong>Customer ID:</strong> {{ singleShipment.customerId }}</p>
+        <p><strong>Store ID:</strong> {{ singleShipment.storeId }}</p>
+        <p><strong>Address:</strong> {{ singleShipment.deliveryAddress }}</p>
+        <p><strong>Status:</strong> {{ singleShipment.shipmentStatus || 'N/A' }}</p>
+      </div>
+
+    </div>
+
+    <!-- 🔹 Multiple Shipments -->
+    <div *ngIf="allShipments.length > 0" class="card">
+
+      <h3>Shipments List</h3>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer ID</th>
+            <th>Store ID</th>
+            <th>Address</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let shipment of allShipments">
+            <td>{{ shipment.shipmentId }}</td>
+            <td>{{ shipment.customerId }}</td>
+            <td>{{ shipment.storeId }}</td>
+            <td>{{ shipment.deliveryAddress }}</td>
+            <td>{{ shipment.shipmentStatus || 'N/A' }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
