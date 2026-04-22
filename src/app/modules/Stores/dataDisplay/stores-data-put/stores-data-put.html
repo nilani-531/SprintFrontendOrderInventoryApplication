@@ -6,95 +6,77 @@
 
     <div class="card">
 
-      @if(isLoading) {
-        <div class="loading">Loading store details...</div>
-      } @else {
-        <form [formGroup]="storeForm" (ngSubmit)="handleUpdate()" class="form">
+      <!-- LOADING -->
+      <div *ngIf="isLoading">Loading store...</div>
 
-          <!-- Store ID (Read-only) -->
-          <div class="form-group">
-            <label>Store ID *</label>
-            <input type="number" formControlName="storeId" placeholder="Store ID" readonly>
-          </div>
+      <!-- FORM -->
+      <form [formGroup]="storeForm" (ngSubmit)="handleUpdate()">
 
-          <!-- Store Name -->
-          <div class="form-group">
-            <label>Store Name *</label>
-            <input type="text" formControlName="storeName" placeholder="Enter store name">
+        <!-- STORE NAME (USED FOR SEARCH) -->
+        <div class="form-group">
+          <label>Search by Store Name (optional)</label>
 
-            @if(storeForm.controls['storeName'].touched && storeForm.controls['storeName'].errors){
-              <p class="error">*Store name is required</p>
-            }
-          </div>
+          <input type="text"
+                 placeholder="Enter store name"
+                 #nameInput>
 
-          <!-- Web Address -->
-          <div class="form-group">
-            <label>Web Address *</label>
-            <input type="url" formControlName="webAddress" placeholder="Enter web address (e.g., https://example.com)">
+          <button type="button"
+                  (click)="fetchByName(nameInput.value)">
+            Load by Name
+          </button>
+        </div>
 
-            @if(storeForm.controls['webAddress'].touched && storeForm.controls['webAddress'].errors){
-              @if(storeForm.get('webAddress')?.errors?.['required']){
-                <p class="error">*Web address is required</p>
-              }
-              @if(storeForm.get('webAddress')?.errors?.['pattern']){
-                <p class="error">*Must start with http:// or https://</p>
-              }
-            }
-          </div>
+        <hr />
 
-          <!-- Physical Address -->
-          <div class="form-group">
-            <label>Physical Address *</label>
-            <textarea formControlName="physicalAddress" placeholder="Enter physical address"></textarea>
+        <!-- STORE ID (READ ONLY) -->
+        <div class="form-group">
+          <label>Store ID</label>
+          <input formControlName="storeId" readonly>
+        </div>
 
-            @if(storeForm.controls['physicalAddress'].touched && storeForm.controls['physicalAddress'].errors){
-              <p class="error">*Physical address is required</p>
-            }
-          </div>
+        <!-- NAME -->
+        <div class="form-group">
+          <label>Name</label>
+          <input formControlName="storeName">
+        </div>
 
-          <!-- Latitude & Longitude -->
-          <div class="form-row">
-            <div class="form-group">
-              <label>Latitude *</label>
-              <input type="number" formControlName="latitude" placeholder="Enter latitude" step="0.0001">
+        <!-- WEB -->
+        <div class="form-group">
+          <label>Web Address</label>
+          <input formControlName="webAddress">
+        </div>
 
-              @if(storeForm.controls['latitude'].touched && storeForm.controls['latitude'].errors){
-                <p class="error">*Latitude is required</p>
-              }
-            </div>
+        <!-- ADDRESS -->
+        <div class="form-group">
+          <label>Physical Address</label>
+          <input formControlName="physicalAddress">
+        </div>
 
-            <div class="form-group">
-              <label>Longitude *</label>
-              <input type="number" formControlName="longitude" placeholder="Enter longitude" step="0.0001">
+        <!-- LAT -->
+        <div class="form-group">
+          <label>Latitude</label>
+          <input formControlName="latitude">
+        </div>
 
-              @if(storeForm.controls['longitude'].touched && storeForm.controls['longitude'].errors){
-                <p class="error">*Longitude is required</p>
-              }
-            </div>
-          </div>
+        <!-- LONG -->
+        <div class="form-group">
+          <label>Longitude</label>
+          <input formControlName="longitude">
+        </div>
 
-          <!-- Buttons -->
-          <div class="button-group">
-            <button type="submit" [disabled]="storeForm.invalid" class="btn-primary">
-              Update Store
-            </button>
+        <button type="submit">Update Store</button>
+        <button type="button" (click)="goBack()">Cancel</button>
 
-            <button type="button" class="btn-secondary" (click)="goBack()">
-              Cancel
-            </button>
-          </div>
-
-        </form>
-      }
+      </form>
     </div>
 
-    <!-- Error Message -->
-    <div class="error-box" @if(error)>
+    <!-- ERROR -->
+    <div *ngIf="error" class="error-box">
       {{ error }}
     </div>
 
-    <!-- Success Message -->
-    <div class="success-box" @if(success)>
+    <!-- SUCCESS -->
+    <div *ngIf="success" class="success-box">
       {{ success }}
     </div>
 

@@ -4,12 +4,12 @@
 
     <h2 class="title">Stores Data Fetch</h2>
 
-    <!-- ✅ FORM (important change) -->
+    <!-- FORM -->
     <form [formGroup]="form" class="card">
 
       <div class="input-row">
 
-        <!-- ✅ changed from ngModel → formControlName -->
+        <!-- Store ID -->
         <input
           type="number"
           formControlName="storeId"
@@ -18,30 +18,45 @@
         />
 
         <button type="button" (click)="getStoreById()" class="btn primary">
-          Get Store
+          Get By ID
         </button>
 
+      </div>
+
+      <div class="input-row" style="margin-top:10px;">
+
+        <!-- NEW: Store Name -->
+        <input
+          type="text"
+          formControlName="storeName"
+          placeholder="Enter Store Name"
+          class="input-box"
+        />
+
+        <button type="button" (click)="getStoreByName()" class="btn primary">
+          Get By Name
+        </button>
+
+      </div>
+
+      <div class="input-row" style="margin-top:10px;">
         <button type="button" (click)="getAllStores()" class="btn secondary">
           Get All Stores
         </button>
-
       </div>
 
     </form>
 
     <!-- Loading -->
-    <div *ngIf="loading" class="info">
-      Loading...
-    </div>
+    <div *ngIf="loading" class="info">Loading...</div>
 
     <!-- Error -->
     <div *ngIf="error" class="error">
       {{ error }}
     </div>
 
-    <!-- ✅ Single Store -->
+    <!-- Single Store -->
     <div *ngIf="singleStore" class="card">
-
       <h3>Store Details</h3>
 
       <div class="grid">
@@ -52,16 +67,14 @@
         <p><strong>Latitude:</strong> {{ singleStore.latitude }}</p>
         <p><strong>Longitude:</strong> {{ singleStore.longitude }}</p>
       </div>
-
     </div>
 
-    <!-- ✅ All Stores -->
+    <!-- All Stores -->
     <div *ngIf="allStores.length > 0" class="card">
 
       <h3>All Stores</h3>
 
       <table>
-
         <thead>
           <tr>
             <th>ID</th>
