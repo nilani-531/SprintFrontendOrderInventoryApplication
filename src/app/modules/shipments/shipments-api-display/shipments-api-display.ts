@@ -1,14 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { NgFor } from "@angular/common";
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet, Router, NavigationEnd } from "@angular/router";
+import { NgFor, CommonModule } from "@angular/common";
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-shipments-api-display',
-  imports: [RouterLink, NgFor, RouterOutlet],
+  standalone: true,
+  imports: [RouterLink, NgFor, RouterOutlet, CommonModule],
   templateUrl: './shipments-api-display.html',
   styleUrl: './shipments-api-display.css',
 })
 export class ShipmentsApiDisplay {
+  router = inject(Router);
+  routeActive = false;
+
+  constructor() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.urlAfterRedirects;
+      this.routeActive = url.split('/modules/shipments/').length > 1 && url.split('/modules/shipments/')[1].length > 0;
+    });
+  }
+
+  isRouteActive(): boolean {
+    return this.routeActive;
+  }
 
   // List of all shipment API endpoints used in UI
    endpoints = [

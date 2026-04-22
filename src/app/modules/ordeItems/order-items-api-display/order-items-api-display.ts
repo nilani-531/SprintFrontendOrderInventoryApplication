@@ -1,15 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { NgFor } from "@angular/common";
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet, Router, NavigationEnd } from "@angular/router";
+import { NgFor, CommonModule } from "@angular/common";
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-order-items-api-display',
   standalone: true,
-  imports: [RouterLink, NgFor, RouterOutlet],
+  imports: [RouterLink, NgFor, RouterOutlet, CommonModule],
   templateUrl: './order-items-api-display.html',
   styleUrl: './order-items-api-display.css',
 })
 export class OrderItemsApiDisplay {
+  router = inject(Router);
+  routeActive = false;
+
+  constructor() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.urlAfterRedirects;
+      this.routeActive = url.split('/modules/order-items/').length > 1 && url.split('/modules/order-items/')[1].length > 0;
+    });
+  }
+
+  isRouteActive(): boolean {
+    return this.routeActive;
+  }
 
   // List of all order items API endpoints used in UI
   endpoints = [

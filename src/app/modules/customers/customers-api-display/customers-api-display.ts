@@ -1,14 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterOutlet } from "@angular/router";
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet, Router, NavigationEnd } from "@angular/router";
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-customers-api-display',
-  imports: [CommonModule, RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, RouterLink],
   templateUrl: './customers-api-display.html',
   styleUrl: './customers-api-display.css',
 })
 export class CustomersApiDisplay {
+  router = inject(Router);
+  routeActive = false;
+
+  constructor() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.urlAfterRedirects;
+      this.routeActive = url.split('/modules/customers/').length > 1 && url.split('/modules/customers/')[1].length > 0;
+    });
+  }
+
+  isRouteActive(): boolean {
+    return this.routeActive;
+  }
  endpoints = [
     { name: 'Get All Customers', method: 'GET', route: 'get-all', desc: 'Get all customer details from system database' },
     { name: 'Get Customer By ID', method: 'GET', route: 'get-by-customerid', desc: 'Get customer details using given customer ID' },

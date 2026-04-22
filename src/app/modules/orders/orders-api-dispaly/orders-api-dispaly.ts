@@ -1,15 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from "@angular/router";
-import { NgFor } from "@angular/common";
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet, Router, NavigationEnd } from "@angular/router";
+import { NgFor, CommonModule } from "@angular/common";
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-orders-api-dispaly',
   standalone: true,
-  imports: [RouterLink, NgFor, RouterOutlet],
+  imports: [RouterLink, NgFor, RouterOutlet, CommonModule],
   templateUrl: './orders-api-dispaly.html',
   styleUrl: './orders-api-dispaly.css',
 })
 export class OrdersApiDispaly {
+  router = inject(Router);
+  routeActive = false;
+
+  constructor() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.urlAfterRedirects;
+      this.routeActive = url.split('/modules/orders/').length > 1 && url.split('/modules/orders/')[1].length > 0;
+    });
+  }
+
+  isRouteActive(): boolean {
+    return this.routeActive;
+  }
 
   // List of all orders API endpoints used in UI
   endpoints = [

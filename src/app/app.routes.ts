@@ -103,8 +103,9 @@ export const routes: Routes = [
             { path: 'get-all', component: OrdersDataGet },
             { path: 'get-by-id', component: OrdersDataGet },
             { path: 'create', component: OrdersDataPost },
-            { path: 'update', component: OrdersDataPut },
-            { path: 'delete', component: OrdersDataDelete }
+            { path: 'update-status', component: OrdersDataPut },
+            { path: 'delete', component: OrdersDataDelete },
+            { path: 'count-by-status', component: OrdersDataGet }
         ]
     },
 
@@ -114,11 +115,12 @@ export const routes: Routes = [
         component: OrderItemsApiDisplay,
         canActivate: [AuthGuard],
         children: [
-            { path: 'get-all', component: OrderItemsDataGet },
-            { path: 'get-by-id', component: OrderItemsDataGet },
-            { path: 'create', component: OrderItemsDataPost },
-            { path: 'update', component: OrderItemsDataPut },
-            { path: 'delete', component: OrderItemsDataDelete }
+            { path: 'get-by-order', component: OrderItemsDataGet },
+            { path: 'get-by-product', component: OrderItemsDataGet },
+            { path: 'add-item', component: OrderItemsDataPost },
+            { path: 'update-item', component: OrderItemsDataPut },
+            { path: 'delete-item', component: OrderItemsDataDelete },
+            { path: 'total-quantity', component: OrderItemsDataGet }
         ]
     },
 
@@ -143,7 +145,10 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             { path: 'get-all', component: CustomersDataGet },
-            { path: 'get-by-id', component: CustomersDataGet },
+            { path: 'get-by-customerid', component: CustomersDataGet },
+            { path: 'get-by-email', component: CustomersDataGet },
+            { path: 'get-orders', component: CustomersDataGet },
+            { path: 'get-shipments', component: CustomersDataGet },
             { path: 'create', component: CustomersDataPost },
             { path: 'update', component: CustomersDataPut },
             { path: 'delete', component: CustomersDataDelete }
@@ -158,9 +163,13 @@ export const routes: Routes = [
         children: [
             { path: 'get-all', component: ShipmentsDataGet },
             { path: 'get-by-id', component: ShipmentsDataGet },
+            { path: 'get-by-customerId', component: ShipmentsDataGet },
+            { path: 'get-by-storeId', component: ShipmentsDataGet },
+            { path: 'get-by-status', component: ShipmentsDataGet },
             { path: 'create', component: ShipmentsDataPost },
             { path: 'update', component: ShipmentsDataPut },
-            { path: 'delete', component: ShipmentsDataDelete }
+            { path: 'delete', component: ShipmentsDataDelete },
+            { path: 'status', component: ShipmentsDataPut }
         ]
     }
 ];
