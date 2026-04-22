@@ -1,0 +1,30 @@
+<div class="container">
+
+  <h2>Delete Inventory By ID</h2>
+
+  <form [formGroup]="deleteForm" (ngSubmit)="deleteById()">
+
+    <div class="input-group">
+      <input
+        type="number"
+        formControlName="inventoryId"
+        placeholder="Enter Inventory ID"
+      />
+
+      <button type="submit" class="delete-btn">
+        Delete
+      </button>
+    </div>
+
+  </form>
+
+</div>
+<div class="message-container">
+  @if (message) {
+    <p class="success show">{{ message }}</p>
+  }
+
+  @if (error) {
+    <p class="error show">{{ error }}</p>
+  }
+</div>
