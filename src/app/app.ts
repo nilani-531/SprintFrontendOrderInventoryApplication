@@ -13,11 +13,19 @@ import { ProductsDataPut } from "./modules/products/dataDisplay/products-data-pu
 import { Login } from "./login/login";
 import { ApiDashboard } from "./modules/api-dashboard/api-dashboard";
 import { Home } from "./home/home";
+import { OrdersDataGet } from "./modules/orders/dataDisplay/orders-data-get/orders-data-get";
+import { OrderItemsDataGet } from "./modules/ordeItems/dataDisplay/order-items-data-get/order-items-data-get";
+import { OrdersApiDispaly } from "./modules/orders/orders-api-dispaly/orders-api-dispaly";
+import { OrderItemsApiDisplay } from "./modules/ordeItems/order-items-api-display/order-items-api-display";
+import { OrdersDataPut } from "./modules/orders/dataDisplay/orders-data-put/orders-data-put";
+import { OrderItemsDataPut } from "./modules/ordeItems/dataDisplay/order-items-data-put/order-items-data-put";
+import { OrderItemsDataPost } from "./modules/ordeItems/dataDisplay/order-items-data-post/order-items-data-post";
+import { OrdersDataPost } from "./modules/orders/dataDisplay/orders-data-post/orders-data-post";
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home],
+  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, OrderItemsDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home, OrdersDataGet, OrderItemsDataGet, OrdersApiDispaly, OrderItemsApiDisplay, OrdersDataPut, OrderItemsDataPut, OrderItemsDataPost, OrdersDataPost],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
