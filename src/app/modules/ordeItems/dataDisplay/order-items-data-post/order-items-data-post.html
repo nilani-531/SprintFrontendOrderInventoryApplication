@@ -1,1 +1,84 @@
-<p>order-items-data-post works!</p>
+
+<div class="page-container">
+
+  <div class="content">
+
+    <h2 class="title">Add Order Item</h2>
+
+    <div class="card">
+
+      <form [formGroup]="orderItemForm" (ngSubmit)="handleSubmit()" class="form">
+
+        <div class="form-group">
+          <label>Order ID *</label>
+          <input type="number" formControlName="orderId" placeholder="Enter order ID">
+
+          @if(orderItemForm.controls.orderId.touched && orderItemForm.controls.orderId.errors){
+            <p class="error">*Order ID is required</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Product ID *</label>
+          <input type="number" formControlName="productId" placeholder="Enter product ID">
+
+          @if(orderItemForm.controls.productId.touched && orderItemForm.controls.productId.errors){
+            <p class="error">*Product ID is required</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Unit Price * (minimum 0.01)</label>
+          <input type="number" formControlName="unitPrice" placeholder="Enter unit price" step="0.01" min="0.01">
+
+          @if(orderItemForm.controls.unitPrice.touched && orderItemForm.controls.unitPrice.errors){
+            @if(orderItemForm.get('unitPrice')?.errors?.['required']){
+              <p class="error">*Unit price is required</p>
+            }
+            @if(orderItemForm.get('unitPrice')?.errors?.['min']){
+              <p class="error">*Unit price must be greater than 0</p>
+            }
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Quantity * (minimum 1)</label>
+          <input type="number" formControlName="quantity" placeholder="Enter quantity" min="1">
+
+          @if(orderItemForm.controls.quantity.touched && orderItemForm.controls.quantity.errors){
+            @if(orderItemForm.get('quantity')?.errors?.['required']){
+              <p class="error">*Quantity is required</p>
+            }
+            @if(orderItemForm.get('quantity')?.errors?.['min']){
+              <p class="error">*Quantity must be at least 1</p>
+            }
+          }
+        </div>
+
+        <div class="button-group">
+          <button type="submit" [disabled]="orderItemForm.invalid" class="btn-primary">
+            Add Item
+          </button>
+
+          <button type="button" class="btn-secondary">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+      <div class="error-box" >
+        @if(error){
+          {{ error }}
+        }
+      </div>
+
+      <div class="success-box" >
+        @if(success){
+          {{ success }}
+        }
+      </div>
+
+  </div>
+</div>
