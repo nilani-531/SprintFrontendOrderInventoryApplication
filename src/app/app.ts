@@ -13,13 +13,11 @@ import { ProductsDataPut } from "./modules/products/dataDisplay/products-data-pu
 import { Login } from "./login/login";
 import { ApiDashboard } from "./modules/api-dashboard/api-dashboard";
 import { Home } from "./home/home";
-import { ShipmentsDataDelete } from "./modules/shipments/dataDisplay/shipments-data-delete/shipments-data-delete";
-import { ShipmentsDataGet } from "./modules/shipments/dataDisplay/shipments-data-get/shipments-data-get";
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home, ShipmentsDataDelete, ShipmentsDataGet],
+  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
