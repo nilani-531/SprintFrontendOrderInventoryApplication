@@ -11,10 +11,12 @@ import { ProductsDataPost } from "./modules/products/dataDisplay/products-data-p
 import { ProductsDataGet } from "./modules/products/dataDisplay/products-data-get/products-data-get";
 import { ProductsDataPut } from "./modules/products/dataDisplay/products-data-put/products-data-put";
 import { Login } from "./login/login";
+import { ApiDashboard } from "./modules/api-dashboard/api-dashboard";
+import { Home } from "./home/home";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login],
+  imports: [RouterOutlet, InventoryApiDisplay, ProductsApiDisplay, InventoryDataDelete, InventoryDataGet, InventoryDataPost, InventoryDataPut, ProductsDataDelete, ProductsDataPost, ProductsDataGet, ProductsDataPut, Login, ApiDashboard, Home],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

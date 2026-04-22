@@ -1,0 +1,22 @@
+<div class="selector-container">
+  <h1>Select API Module</h1>
+  <p>Choose a module to view endpoints</p>
+  
+  <div class="user-info" *ngIf="loggedInUser">
+    <p class="logged-in-user">Logged in as: <strong>{{ loggedInUser }}</strong></p>
+  </div>
+
+  <div class="card-wrapper">
+    <div 
+      *ngFor="let api of accessibleApis" 
+      class="module-card" 
+      [routerLink]="api.route">
+      <h2>{{ api.title }}</h2>
+      <p>{{ api.description }}</p>
+    </div>
+  </div>
+
+  <div class="no-apis-message" *ngIf="accessibleApis.length === 0">
+    <p>No APIs available for your user role. Please contact an administrator.</p>
+  </div>
+</div>

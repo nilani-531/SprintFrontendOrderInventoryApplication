@@ -32,12 +32,12 @@ export class Login {
    * - admin   → products (full access, ADMIN role)
    */
   private readonly userRouteMap: { [key: string]: string } = {
-    'karthi': '/home',
-    'nilani': '/home',
-    'pooja': '/home',
-    'abinaya': '/home',
-    'yamini': '/home',
-    'admin': '/products'
+    'karthi': '/api-dashboard',
+    'nilani': '/api-dashboard',
+    'pooja': '/api-dashboard',
+    'abinaya': '/api-dashboard',
+    'yamini': '/api-dashboard',
+    'admin': '/api-dashboard'
   };
 
   /**
