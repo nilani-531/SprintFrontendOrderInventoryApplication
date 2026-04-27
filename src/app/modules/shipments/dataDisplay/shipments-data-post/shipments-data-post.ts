@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ShipmentsService } from '../../shipments-service';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+
 
 @Component({
   selector: 'app-shipments-data-post',
@@ -13,6 +13,7 @@ import { NgClass } from '@angular/common';
 export class ShipmentsDataPost {
   shipmentsService: ShipmentsService = inject(ShipmentsService);
   router = inject(Router);
+  cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   shipmentsForm = new FormGroup({
     customerId: new FormControl('', [Validators.required]),
@@ -24,25 +25,18 @@ export class ShipmentsDataPost {
   error: any = null;
 
   handleSubmit() {
-    console.log(this.shipmentsForm.value);
-
     if (this.shipmentsForm.valid) {
+      this.error = null;
+      this.success = null;
       this.shipmentsService.createShipment(this.shipmentsForm.value).subscribe({
         next: (response: any) => {
           this.success = response.msg + ' (Shipment ID: ' + response.data.shipmentId + ')';
           this.shipmentsForm.reset();
+          this.cdr.detectChanges();
         },
-
-        error: (err) => {
-          console.error(err);
-
-          if (err.error && err.error.msg) {
-            this.error = err.error.msg;
-          } else if (err.status === 0) {
-            this.error = 'Cannot connect to server';
-          } else {
-            this.error = 'Something went wrong';
-          }
+        error: (err: any) => {
+          this.error = err.error?.msg || (err.status === 0 ? 'Cannot connect to server' : 'Something went wrong');
+          this.cdr.detectChanges();
         },
       });
     }
@@ -50,9 +44,5 @@ export class ShipmentsDataPost {
 
   goBack() {
     this.router.navigate(['/modules/shipments']);
-  }
-
-  private extractErrorMessage(err: any): string {
-    return this.extractErrorMessage(err);
   }
 }
