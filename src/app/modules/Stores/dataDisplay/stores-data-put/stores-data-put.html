@@ -1,9 +1,32 @@
 <!-- This template contains the form used to update existing store records. -->
 
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
   <div class="content">
     <h2 class="title">Update Store</h2>
     <p class="page-subtitle">Update existing store details using store ID</p>
+
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method put">PUT</span>
+        <span class="endpoint-path">/api/stores/&#123;storeId&#125;</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Update an existing store's name, address, location, or logo details using its store ID.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if (error) {
+      <div class="error-box">{{ error }}</div>
+    }
+  @if (success) {
+      <div class="success-box">{{ success }}</div>
+    }
+
 
     <div class="card">
       <form [formGroup]="storeForm" class="form">
@@ -97,11 +120,10 @@
       </form>
     </div>
 
-    @if (error) {
-      <div class="error-box">{{ error }}</div>
-    }
-    @if (success) {
-      <div class="success-box">{{ success }}</div>
-    }
-  </div>
+    
+    
+  
+      </div>
+    </div>
+</div>
 </div>

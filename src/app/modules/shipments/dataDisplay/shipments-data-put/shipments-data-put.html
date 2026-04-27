@@ -1,13 +1,31 @@
 <!-- This template contains the form used to update existing shipment records. -->
 
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
   <div class="content">
     <h2 class="title">Update Shipment</h2>
     <p class="page-subtitle">Update existing shipment details using shipment ID</p>
 
-    @if(showToast) {
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method put">PUT</span>
+        <span class="endpoint-path">/api/shipments/&#123;shipmentId&#125;</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Update an existing shipment's customer ID, store ID, or delivery address using its shipment ID.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if(showToast) {
       <div [ngClass]="['toast', toastType]">{{ toastMessage }}</div>
     }
+
+
+    
 
     <div class="card">
       <form [formGroup]="shipmentsForm" class="form">
@@ -60,5 +78,8 @@
         }
       </form>
     </div>
-  </div>
+  
+      </div>
+    </div>
+</div>
 </div>

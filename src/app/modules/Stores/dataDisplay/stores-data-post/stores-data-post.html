@@ -1,11 +1,36 @@
 <!-- This template contains the form used to create new store records. -->
 
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
 
   <div class="content">
 
     <h2 class="title">Create Store</h2>
     <p class="page-subtitle">Create new store by providing store name, address and location details</p>
+
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/stores</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Create a new store by providing store name, web address, physical address, latitude, longitude, and optional logo details.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if(error) {
+      <div class="error-box">{{ error }}</div>
+    }
+  @if(success) {
+      <div class="success-box">
+        ✓ {{ success }}
+      </div>
+    }
+
 
     <div class="card">
 
@@ -97,15 +122,12 @@
       </form>
     </div>
 
-    @if(error) {
-      <div class="error-box">{{ error }}</div>
-    }
+    
 
-    @if(success) {
-      <div class="success-box">
-        ✓ {{ success }}
+    
+
+  
       </div>
-    }
-
-  </div>
+    </div>
+</div>
 </div>

@@ -1,17 +1,35 @@
 <!-- This template contains the form used to update existing product records. -->
 
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
 
   <div class="content">
     <h2 class="title">Update Product</h2>
     <p class="page-subtitle">Update existing product details using product ID</p>
 
-    <!-- Toast Notification -->
-    @if(showToast) {
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method put">PUT</span>
+        <span class="endpoint-path">/api/products/&#123;productId&#125;</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Update an existing product's details such as name, price, brand, colour, size, and rating using its ID.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if(showToast) {
       <div [ngClass]="['toast', toastType]">
         {{ toastMessage }}
       </div>
     }
+
+
+    <!-- Toast Notification -->
+    
 
     <div class="card">
 
@@ -122,5 +140,8 @@
       </form>
     </div>
 
-  </div>
+  
+      </div>
+    </div>
+</div>
 </div>

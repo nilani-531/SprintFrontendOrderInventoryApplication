@@ -511,14 +511,14 @@ tr:hover td {
 /* ── Toast Notifications (fixed bottom-right) ──────────── */
 .error-box,
 .success-box {
-  position: fixed !important;
-  bottom: 24px !important;
-  right: 24px !important;
+  /* position: fixed !important; */
+  
+  
   padding: 14px 22px !important;
   border-radius: var(--radius) !important;
   font-weight: 500 !important;
   font-size: 14px !important;
-  z-index: 9999 !important;
+  
   box-shadow: var(--shadow-lg) !important;
   animation: slideIn 0.3s ease forwards !important;
   max-width: 380px !important;
@@ -590,3 +590,48 @@ tr:hover td {
   font-size: 14px;
   margin: 10px 0;
 }
+
+/* ── Universal Endpoint Info Box ─────────────────────── */
+.desc-panel {
+  background: white;
+  border-radius: 14px;
+  border: 1.5px solid #ede9fe;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.07);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.desc-method-row { display: flex; align-items: center; gap: 8px; }
+.desc-url-box {
+  background: #f8f7ff;
+  border: 1px solid #ede9fe;
+  border-radius: 9px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.desc-body-box { display: flex; flex-direction: column; gap: 4px; }
+.desc-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: #7c3aed;
+}
+.desc-url {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1e1b4b;
+  word-break: break-all;
+  background: none;
+}
+.desc-text { font-size: 12px; color: #374151; line-height: 1.65; margin: 0; }
+.method-get    { background: #dbeafe; color: #1d4ed8; }
+.method-post   { background: #dcfce7; color: #15803d; }
+.method-put    { background: #fef3c7; color: #b45309; }
+.method-delete { background: #fee2e2; color: #b91c1c; }
+.method-patch  { background: #f3e8ff; color: #7c3aed; }
+

@@ -1,24 +1,45 @@
 <!-- This template collects the required details to delete product records safely. -->
 
-<div class="container">
+<div class="container" style="max-width: 1000px;">
+
+  <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+  <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method delete">DELETE</span>
+        <span class="endpoint-path">/api/products/&#123;productId&#125;</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Permanently delete a product record from the system using the given product ID.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if (error) {
+    <div class="error-box">{{ error }}</div>
+  }
+
+
   <h2>Delete Product By ID</h2>
 
-  <form [formGroup]="deleteForm" (ngSubmit)="deleteById()">
-    <div class="input-group">
-      <input type="number" formControlName="productId" placeholder="Enter Product ID" />
+  <div style="display: flex; justify-content: center; width: 100%;">
+  <form style="display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 320px; margin: 0 auto; padding-top: 40px;" [formGroup]="deleteForm" (ngSubmit)="deleteById()">
+    <input type="number" formControlName="productId" placeholder="Enter Product ID" style="width: 100%; text-align: center; padding: 12px; border-radius: 8px; border: 1.5px solid var(--border); font-size: 14px;">
 
-      <button type="submit" class="delete-btn">Delete</button>
-    </div>
+      <button type="submit" class="delete-btn" style="min-width: 120px; padding: 10px 24px; border-radius: 8px;">Delete</button>
   </form>
+</div>
+  </div>
+    </div>
 </div>
 <div class="message-container">
   @if (message) {
     <div class="success-box">{{ message }}</div>
   }
 
-  @if (error) {
-    <div class="error-box">{{ error }}</div>
-  }
+  
 </div>
 
 <!-- ✅ Deleted Product Card -->
