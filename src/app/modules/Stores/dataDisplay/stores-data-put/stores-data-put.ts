@@ -33,7 +33,7 @@ export class StoresDataPut implements OnInit {
     private storesService: StoresService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {

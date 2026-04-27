@@ -20,7 +20,7 @@
 
           <!-- Validation error for Customer ID -->
           @if(shipmentsForm.controls.customerId.touched && shipmentsForm.controls.customerId.errors){
-            <p class="error">*Customer ID is required</p>
+          <p class="error">*Customer ID is required</p>
           }
         </div>
 
@@ -31,7 +31,7 @@
 
           <!-- Validation error for Store ID -->
           @if(shipmentsForm.controls.storeId.touched && shipmentsForm.controls.storeId.errors){
-            <p class="error">*Store ID is required</p>
+          <p class="error">*Store ID is required</p>
           }
         </div>
 
@@ -42,7 +42,7 @@
 
           <!-- Validation error for Delivery Address -->
           @if(shipmentsForm.controls.deliveryAddress.touched && shipmentsForm.controls.deliveryAddress.errors){
-            <p class="error">*Delivery address is required</p>
+          <p class="error">*Delivery address is required</p>
           }
         </div>
 
@@ -67,9 +67,9 @@
 
     <!-- Displays success message after creation -->
     @if(success) {
-      <div class="success-box">
-        ✓ {{ success }}
-      </div>
+    <div class="success-box">
+      ✓ {{ success }}
+    </div>
     }
 
   </div>
