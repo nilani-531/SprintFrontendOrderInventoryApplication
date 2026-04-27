@@ -1,11 +1,36 @@
 <!-- Main container for Create Shipment page -->
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
 
   <div class="content">
 
     <!-- Page title and description -->
     <h2 class="title">Create Shipment</h2>
     <p class="page-subtitle">Create new shipment by providing required details</p>
+
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/shipments</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Create a new shipment by providing customer ID, store ID, and delivery address.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if(error) {
+      <div class="error-box">{{ error }}</div>
+    }
+  @if(success) {
+    <div class="success-box">
+      ✓ {{ success }}
+    </div>
+    }
+
 
     <!-- Card layout for form -->
     <div class="card">
@@ -61,16 +86,13 @@
     </div>
 
     <!-- Displays API error message -->
-    @if(error) {
-      <div class="error-box">{{ error }}</div>
-    }
+    
 
     <!-- Displays success message after creation -->
-    @if(success) {
-    <div class="success-box">
-      ✓ {{ success }}
-    </div>
-    }
+    
 
-  </div>
+  
+      </div>
+    </div>
+</div>
 </div>

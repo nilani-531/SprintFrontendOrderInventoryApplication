@@ -422,7 +422,7 @@ tr:hover td { background: #faf5ff; }
 .method-badge { background: #e0f2fe; color: #0284c7; }
 
 /* Toast */
-.toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 9999; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.toast { /* position: fixed; */ /* bottom: 24px; */ /* right: 24px; */ padding: 12px 20px; border-radius: 10px; font-size: 14px; /* z-index: 9999; */ box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
 .toast.success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
 .toast.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 .toast.info { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }

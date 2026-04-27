@@ -1,21 +1,42 @@
 <!-- This template collects the required details to delete shipment records safely. -->
 
-<div class="container">
+<div class="container" style="max-width: 1000px;">
 
   <h2>Delete Shipment By ID</h2>
   <p class="page-subtitle">Delete shipment record using given shipment ID</p>
 
-  <form [formGroup]="deleteForm" (ngSubmit)="deleteById()">
+  <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+  <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method delete">DELETE</span>
+        <span class="endpoint-path">/api/shipments/&#123;shipmentId&#125;</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Permanently delete a shipment record from the system using the given shipment ID.</p>
+    </div>
+      </div>
+      <div class="right-col">
 
-    <div class="input-group">
-      <input type="number" formControlName="shipmentId" placeholder="Enter Shipment ID"/>
-      <button type="submit" class="delete-btn">
+  @if (error) {
+    <div class="error-box">{{ error }}</div>
+  }
+
+
+  <div style="display: flex; justify-content: center; width: 100%;">
+  <form style="display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 320px; margin: 0 auto; padding-top: 40px;" [formGroup]="deleteForm" (ngSubmit)="deleteById()">
+
+    <input type="number" formControlName="shipmentId" placeholder="Enter Shipment ID"style="width: 100%; text-align: center; padding: 12px; border-radius: 8px; border: 1.5px solid var(--border); font-size: 14px;">
+      <button type="submit" class="delete-btn" style="min-width: 120px; padding: 10px 24px; border-radius: 8px;">
         Delete
       </button>
-    </div>
-
   </form>
+</div>
 
+  </div>
+    </div>
 </div>
 
 <div class="message-container">
@@ -24,9 +45,7 @@
     <div class="success-box">{{ message }}</div>
   }
 
-  @if (error) {
-    <div class="error-box">{{ error }}</div>
-  }
+  
 
 </div>
 

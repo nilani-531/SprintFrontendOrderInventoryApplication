@@ -1,10 +1,10 @@
 // This component deletes selected store records.
 // It collects the required identifier and sends the remove request.
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http'; 
+import { HttpErrorResponse } from '@angular/common/http';
 import { StoresService } from '../../stores-service';
 
 @Component({
@@ -23,10 +23,10 @@ export class StoresDataDelete {
 
   // Initializes this component and prepares the dependencies used in the file.
   constructor(
-    private readonly fb: FormBuilder, 
+    private readonly fb: FormBuilder,
     private readonly storesService: StoresService,
-    private readonly cdr: ChangeDetectorRef 
-  , private readonly router: Router) {
+    private readonly cdr: ChangeDetectorRef
+    , private readonly router: Router) {
     this.deleteForm = this.fb.group({
       storeId: ['', [Validators.required, Validators.min(1)]]
     });
@@ -53,28 +53,28 @@ export class StoresDataDelete {
             this.deletedStore = storeData;
             this.message = `ID ${id} is deleted successfully`;
             this.deleteForm.reset();
-            this.cdr.detectChanges(); 
+            this.cdr.detectChanges();
           },
           error: (err: HttpErrorResponse) => {
             console.error("Delete Error:", err);
-            this.message = ''; 
+            this.message = '';
 
             if (err.status === 404) {
               this.error = err.error?.msg || `ID ${id} not found`;
-            } 
+            }
             else if (err.status === 400) {
-               this.error = err.error?.msg || "Invalid Request";
+              this.error = err.error?.msg || "Invalid Request";
             }
             else if (err.status === 0) {
               this.error = "Server is offline or unreachable";
-            } 
+            }
             else if (err.status === 500) {
               this.error = err.error?.msg || "Cannot delete: store is referenced by existing orders";
             }
             else {
               this.error = err.error?.msg || "An unexpected error occurred";
             }
-            this.cdr.detectChanges(); 
+            this.cdr.detectChanges();
           }
         });
       },

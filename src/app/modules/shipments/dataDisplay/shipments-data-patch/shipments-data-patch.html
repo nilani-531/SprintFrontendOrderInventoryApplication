@@ -1,9 +1,36 @@
 <!-- This template allows users to partially update selected fields of shipment records. -->
 
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
   <div class="content">
     <h2 class="title">Patch Shipment Status</h2>
     <p class="page-subtitle">Update only the shipment status after searching by shipment ID</p>
+
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method patch">PATCH</span>
+        <span class="endpoint-path">/api/shipments/&#123;shipmentId&#125;/status</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Partially update a shipment by changing only its status field using the given shipment ID.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if (error) {
+      <div class="error-box">
+        {{ error }}
+      </div>
+    }
+  @if (success) {
+      <div class="success-box">
+        {{ success }}
+      </div>
+    }
+
 
     <div class="card">
       <form [formGroup]="shipmentsForm" class="form" (ngSubmit)="handlePatchStatus()">
@@ -76,16 +103,11 @@
       </form>
     </div>
 
-    @if (error) {
-      <div class="error-box">
-        {{ error }}
-      </div>
-    }
+    
 
-    @if (success) {
-      <div class="success-box">
-        {{ success }}
+    
+  
       </div>
-    }
-  </div>
+    </div>
+</div>
 </div>

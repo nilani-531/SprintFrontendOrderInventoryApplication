@@ -1,18 +1,36 @@
 <!-- This template contains the form used to create new product records. -->
 
-<div class="page-container">
+<div class="page-container" style="max-width: 1000px;">
 
   <div class="content">
     <h2 class="title">Create Product</h2>
     <p class="page-subtitle">Create new product by providing product details</p>
 
-    @if(error){
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+    <div class="card description-card" style="margin-bottom: 20px;">
+      <h3>Current Endpoint</h3>
+      <div class="current-endpoint-box">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/products</span>
+      </div>
+      <h3>Endpoint Description</h3>
+      <p>Create a new product by providing product name, unit price, brand, colour, size, and rating.</p>
+    </div>
+      </div>
+      <div class="right-col">
+
+  @if(error){
       <div class="error-box">
         @if(error) {
 <div class="error-box">{{ error }}</div>
 }
       </div>
     }
+
+
+    
 
     @if(successMessage){
       <div class="success-box">
@@ -82,5 +100,8 @@
       </form>
     </div>
 
-  </div>
+  
+      </div>
+    </div>
+</div>
 </div>
