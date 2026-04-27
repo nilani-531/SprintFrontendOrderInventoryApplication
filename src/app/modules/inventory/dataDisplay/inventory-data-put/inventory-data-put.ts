@@ -1,3 +1,6 @@
+// This component updates existing inventory records.
+// It is used when the user wants to replace saved data with new values.
+
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -25,8 +28,10 @@ export class InventoryDataPut implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor() { }
 
+  // Displays a toast message for the latest success or error response.
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
     this.toastType = type;
@@ -35,6 +40,7 @@ export class InventoryDataPut implements OnInit {
     setTimeout(() => { this.showToast = false; this.cdr.detectChanges(); }, 3000);
   }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     this.inventoryForm = new FormGroup({
       inventoryId: new FormControl('', [Validators.required, Validators.min(1)]),
@@ -44,6 +50,7 @@ export class InventoryDataPut implements OnInit {
     });
   }
 
+  // Searches the available inventory records using the current input value.
   // 🔍 SEARCH INVENTORY
   searchInventory(): void {
     const id = this.inventoryForm.get('inventoryId')?.value;
@@ -78,6 +85,7 @@ export class InventoryDataPut implements OnInit {
     });
   }
 
+  // Handles update and updates the related state safely.
   handleUpdate(): void {
     if (this.inventoryForm.invalid) {
       this.showNotification('Please fill all required fields', 'error');
@@ -109,10 +117,12 @@ export class InventoryDataPut implements OnInit {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack(): void {
     this.router.navigate(['/modules/inventory']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

@@ -1,3 +1,6 @@
+// This component deletes selected customer records.
+// It collects the required identifier and sends the remove request.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,6 +26,7 @@ export class CustomersDataDelete {
   success: any = null;
   deletedCustomer: any = null;
 
+  // Handles delete and updates the related state safely.
   handleDelete() {
     this.error = null;
     this.success = null;
@@ -62,8 +66,10 @@ export class CustomersDataDelete {
     }
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/customers']); }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

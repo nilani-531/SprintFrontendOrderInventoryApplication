@@ -1,3 +1,6 @@
+// This component deletes selected shipment records.
+// It collects the required identifier and sends the remove request.
+
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,6 +19,7 @@ export class ShipmentsDataDelete {
   error: string = '';
   deletedShipment: any = null;
 
+// Initializes this component and prepares the dependencies used in the file.
 constructor(
   private fb: FormBuilder,
   private shipmentsService: ShipmentsService,
@@ -26,6 +30,7 @@ constructor(
   });
 }
 
+  // Sends a request to delete the selected shipment record using its identifier.
   deleteById() {
     this.message = '';
     this.error = '';
@@ -81,8 +86,10 @@ constructor(
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/shipments']); }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

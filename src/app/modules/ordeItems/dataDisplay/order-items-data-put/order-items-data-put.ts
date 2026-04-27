@@ -1,3 +1,6 @@
+// This component updates existing order item records.
+// It is used when the user wants to replace saved data with new values.
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +34,7 @@ export class OrderItemsDataPut implements OnInit {
   lineItemDetails: OrderItem | null = null;
   loading: boolean = false;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private orderItemsService: OrderItemsService,
     private route: ActivatedRoute,
@@ -38,6 +42,7 @@ export class OrderItemsDataPut implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
 
     this.lineItemForm = new FormGroup({
@@ -56,6 +61,7 @@ export class OrderItemsDataPut implements OnInit {
     }
   }
 
+  // Displays a toast message for the latest success or error response.
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info') {
 
     if (this.toastTimeout) {
@@ -73,6 +79,7 @@ export class OrderItemsDataPut implements OnInit {
     }, 3000);
   }
 
+  // Loads the required order item data before the next screen action runs.
   // 🔍 LOAD ITEM
   loadLineItem() {
 
@@ -118,6 +125,7 @@ export class OrderItemsDataPut implements OnInit {
     });
   }
 
+  // Handles update and updates the related state safely.
   // ✏️ UPDATE
   handleUpdate() {
 
@@ -147,10 +155,12 @@ export class OrderItemsDataPut implements OnInit {
     });
   }
 
+  // Searches the available order item records using the current input value.
   searchLineItem() {
     this.loadLineItem();
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/modules/order-items']);
   }

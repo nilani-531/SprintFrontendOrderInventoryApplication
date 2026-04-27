@@ -1,3 +1,6 @@
+// This component provides local navigation for the orders module.
+// It helps users switch between available operations on the feature page.
+
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
@@ -21,6 +24,7 @@ export class OrderGetNavbar {
     { id: 'getByDateRange', label: 'Get Orders By Date Range' },
   ];
 
+  // Stores the selected option and updates the related component state.
   selectEndpoint(endpointId: string) {
     this.selectedOption = endpointId;
     this.optionSelected.emit(endpointId);

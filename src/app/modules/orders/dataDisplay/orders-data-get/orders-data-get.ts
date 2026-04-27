@@ -1,3 +1,6 @@
+// This component fetches and displays order records.
+// It is used for the read or view operation in this module.
+
 import { Component, ChangeDetectorRef } from '@angular/core';
 
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -41,6 +44,7 @@ export class OrdersDataGet {
   loading = false;
   error = '';
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private ordersService: OrdersService,
     private fb: FormBuilder,
@@ -57,6 +61,7 @@ export class OrdersDataGet {
     });
   }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit() {
     this.route.url.subscribe((segments) => {
       if (segments.length > 0) {
@@ -71,11 +76,13 @@ export class OrdersDataGet {
     });
   }
 
+  // Stores the selected option and resets the screen for the next request.
   onOptionSelected(option: string) {
     this.selectedOption = option;
     this.resetData();
   }
 
+  // Checks whether the current input values are valid for the selected request.
   isInputValid(): boolean {
     if (this.selectedOption === 'getAll') return true;
     if (this.selectedOption === 'getById') return !!this.orderId && this.orderId > 0;
@@ -87,6 +94,7 @@ export class OrdersDataGet {
     return false;
   }
 
+  // Calls the selected API endpoint and updates the screen with the response.
   fetchData() {
     if (!this.isInputValid()) {
       this.error = 'Please provide valid input';
@@ -108,6 +116,7 @@ export class OrdersDataGet {
     }
   }
 
+  // Returns the order record that matches the provided identifier.
   getOrderById() {
     const id = this.form.value.orderId;
     this.resetData();
@@ -134,6 +143,7 @@ export class OrdersDataGet {
     });
   }
 
+  // Returns all available order records from the backend service.
   getAllOrders() {
     this.resetData();
     this.loading = true;
@@ -163,6 +173,7 @@ export class OrdersDataGet {
     });
   }
 
+  // Returns filtered order records based on the provided search value.
   getOrdersByCustomer() {
     this.resetData();
     this.loading = true;
@@ -191,6 +202,7 @@ export class OrdersDataGet {
     });
   }
 
+  // Returns filtered order records based on the provided search value.
   getOrdersByStore() {
     this.resetData();
     this.loading = true;
@@ -219,6 +231,7 @@ export class OrdersDataGet {
     });
   }
 
+  // Returns filtered order records based on the provided search value.
   getOrdersByStatus() {
     this.resetData();
     this.loading = true;
@@ -247,6 +260,7 @@ export class OrdersDataGet {
     });
   }
 
+  // Returns filtered order records based on the provided search value.
   getOrdersByDateRange() {
     this.resetData();
     this.loading = true;
@@ -278,15 +292,18 @@ export class OrdersDataGet {
     });
   }
 
+  // Sends a request to update the selected order record with the provided data.
   updatePaginatedOrders() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     this.paginatedOrders = this.allOrders.slice(start, start + this.itemsPerPage);
   }
 
+  // Returns the required order data for the current request.
   getTotalPages(): number {
     return Math.ceil(this.allOrders.length / this.itemsPerPage);
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToPage(page: number) {
     if (page >= 1 && page <= this.getTotalPages()) {
       this.currentPage = page;
@@ -294,10 +311,12 @@ export class OrdersDataGet {
     }
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return err?.error?.msg || err?.error?.data || err?.message || 'Orders not found.';
   }
 
+  // Handles reset data for the current component without changing the workflow.
   resetData() {
     this.error = '';
     this.singleOrder = null;

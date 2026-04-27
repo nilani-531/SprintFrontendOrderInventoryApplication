@@ -1,3 +1,6 @@
+// This component handles the API dashboard feature in the frontend.
+// It manages the UI behavior and connects user actions with the app logic.
+
 import { Component, OnInit, inject } from '@angular/core';
 
 import { RouterModule, Router, RouterLink } from '@angular/router';
@@ -24,10 +27,12 @@ export class ApiDashboard implements OnInit {
   accessibleApis: ApiModule[] = [];
   loggedInUser: string | null = null;
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     this.loadUserApis();
   }
 
+  // Loads the APIs available to the logged-in user and updates the dashboard view.
   /**
    * Load the APIs that are accessible to the currently logged-in user
    */
@@ -47,6 +52,7 @@ export class ApiDashboard implements OnInit {
     });
   }
 
+  // Handles navigate for the current component without changing the workflow.
   navigate(route: string): void {
     // Trim leading slash to avoid issues
     const path = route.startsWith('/') ? route.substring(1) : route;

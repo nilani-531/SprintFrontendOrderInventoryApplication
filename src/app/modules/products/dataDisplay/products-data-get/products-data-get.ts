@@ -1,3 +1,6 @@
+// This component fetches and displays product records.
+// It is used for the read or view operation in this module.
+
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -40,6 +43,7 @@ export class ProductsDataGet {
 
   private baseUrl = 'http://localhost:9090/api/products';
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
@@ -50,17 +54,20 @@ export class ProductsDataGet {
     });
   }
 
+  // Stores the selected option and resets the screen for the next request.
   onOptionSelected(option: string) {
     this.selectedOption = option;
     this.resetData();
   }
 
+  // Checks whether the current input values are valid for the selected request.
   isInputValid(): boolean {
     if (this.selectedOption === 'getAll') return true;
     if (this.selectedOption === 'getById') return !!this.productId && this.productId > 0;
     return false;
   }
 
+  // Calls the selected API endpoint and updates the screen with the response.
   fetchData() {
     if (!this.isInputValid()) {
       this.error = 'Please provide valid input';
@@ -76,6 +83,7 @@ export class ProductsDataGet {
     }
   }
 
+  // Returns the request headers needed for the current backend call.
   // 🔹 Common Auth Header
   private getHeaders() {
     const auth = sessionStorage.getItem('authCredentials');
@@ -87,6 +95,7 @@ export class ProductsDataGet {
     };
   }
 
+  // Returns the product record that matches the provided identifier.
   // 🔹 Get Product by ID
   getProductById() {
     if (this.form.invalid) {
@@ -114,6 +123,7 @@ export class ProductsDataGet {
     });
   }
 
+  // Returns all available product records from the backend service.
   // 🔹 Get All Products
   getAllProducts() {
     this.resetData();
@@ -136,6 +146,7 @@ export class ProductsDataGet {
     });
   }
 
+  // Extracts a readable error message from the current API response.
   // 🔹 Better Error Message
   private extractErrorMessage(err: any): string {
     if (err.status === 401) return 'Unauthorized - Please Login First';
@@ -145,6 +156,7 @@ export class ProductsDataGet {
     return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
   }
 
+  // Handles reset data for the current component without changing the workflow.
   // 🔹 Reset UI
   resetData() {
     this.error = '';
@@ -152,6 +164,7 @@ export class ProductsDataGet {
     this.allProducts = [];
   }
 
+  // Sends a request to update the selected product record with the provided data.
   // 🔹 Pagination Methods
   updatePaginatedProducts() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -159,10 +172,12 @@ export class ProductsDataGet {
     this.paginatedProducts = this.allProducts.slice(start, end);
   }
 
+  // Returns the required product data for the current request.
   getTotalPages(): number {
     return Math.ceil(this.allProducts.length / this.itemsPerPage);
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToPage(page: number) {
     if (page >= 1 && page <= this.getTotalPages()) {
       this.currentPage = page;

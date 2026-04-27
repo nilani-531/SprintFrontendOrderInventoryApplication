@@ -1,3 +1,6 @@
+// This component creates new order records from user input.
+// It sends form data to the backend for the add operation.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,7 +20,7 @@ export class OrdersDataPost {
   change: ChangeDetectorRef = inject(ChangeDetectorRef);
   router = inject(Router);
 
-  // ✅ FORM
+  //  FORM
   orderForm = new FormGroup({
     customerId: new FormControl('', [Validators.required]),
     storeId: new FormControl('', [Validators.required]),
@@ -28,7 +31,8 @@ export class OrdersDataPost {
   error: any = null;
   success: any = null;
 
-  // ✅ SUBMIT FUNCTION
+  // Handles submit and updates the related state safely.
+  //  SUBMIT FUNCTION
   handleSubmit() {
     console.log('RAW FORM:', this.orderForm.value);
 
@@ -41,7 +45,7 @@ export class OrdersDataPost {
 
     const formValue: any = this.orderForm.value;
 
-    // 🔥 FIX DATETIME FORMAT
+    //  FIX DATETIME FORMAT
     const payload = {
       customerId: Number(formValue.customerId),
       storeId: Number(formValue.storeId),
@@ -52,7 +56,7 @@ export class OrdersDataPost {
     console.log('FINAL PAYLOAD:', payload);
 
     this.ordersService.createOrder(payload).subscribe({
-      // ✅ SUCCESS
+      //  SUCCESS
       next: (data: any) => {
         this.success = data.msg + ' with Order ID: ' + data.data.orderId;
         this.error = null;
@@ -68,7 +72,7 @@ export class OrdersDataPost {
         this.change.detectChanges();
       },
 
-      // ❌ ERROR HANDLING
+      //  ERROR HANDLING
       error: (err: HttpErrorResponse) => {
         console.error('FULL ERROR:', err);
 
@@ -79,10 +83,12 @@ export class OrdersDataPost {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/modules/orders']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

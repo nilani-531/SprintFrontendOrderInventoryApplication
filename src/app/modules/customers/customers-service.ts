@@ -1,3 +1,6 @@
+// This service handles business logic and API communication for customers.
+// It keeps data operations separate from the UI components.
+
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,6 +17,7 @@ export class CustomersService {
   private http: HttpClient = inject(HttpClient);
   private readonly BASE_URL = 'http://localhost:9090/api/customers';
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with authentication
    * Uses session storage or fallback credentials
@@ -32,6 +36,7 @@ export class CustomersService {
     };
   }
 
+  // Returns all available customer records from the backend service.
   /**
    * Get all customers
    * Endpoint: GET /api/customers
@@ -40,6 +45,7 @@ export class CustomersService {
     return this.http.get(this.BASE_URL, this.getHeaders());
   }
 
+  // Returns the customer record that matches the provided identifier.
   /**
    * Get customer by ID
    * Endpoint: GET /api/customers/{customerId}
@@ -51,6 +57,7 @@ export class CustomersService {
     );
   }
 
+  // Returns filtered customer records based on the provided search value.
   /**
    * Get customer by email
    * Endpoint: GET /api/customers/search
@@ -62,6 +69,7 @@ export class CustomersService {
     );
   }
 
+  // Returns the required customer data for the current request.
   /**
    * Get customer orders
    * Endpoint: GET /api/customers/{customerId}/orders
@@ -73,6 +81,7 @@ export class CustomersService {
     );
   }
 
+  // Returns the required customer data for the current request.
   /**
    * Get customer shipments
    * Endpoint: GET /api/customers/{customerId}/shipments
@@ -84,6 +93,7 @@ export class CustomersService {
     );
   }
 
+  // Sends a request to create a new customer record with the provided data.
   /**
    * Create a new customer
    * Endpoint: POST /api/customers
@@ -93,6 +103,7 @@ export class CustomersService {
     return this.http.post(this.BASE_URL, customer, this.getHeaders());
   }
 
+  // Sends a request to update the selected customer record with the provided data.
   /**
    * Update an existing customer
    * Endpoint: PUT /api/customers/{customerId}
@@ -105,6 +116,7 @@ export class CustomersService {
     );
   }
 
+  // Sends a request to delete the selected customer record using its identifier.
   /**
    * Delete a customer
    * Endpoint: DELETE /api/customers/{customerId}

@@ -1,3 +1,6 @@
+// This component provides local navigation for the order items module.
+// It helps users switch between available operations on the feature page.
+
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
@@ -14,6 +17,7 @@ export class OrderItemsGetNavbar {
 
   getEndpoints = [{ id: 'getByOrder', label: 'Get Items By Order ID' }];
 
+  // Stores the selected option and updates the related component state.
   selectEndpoint(endpointId: string) {
     this.selectedOption = endpointId;
     this.optionSelected.emit(endpointId);

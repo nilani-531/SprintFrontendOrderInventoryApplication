@@ -1,3 +1,6 @@
+// This component creates new shipment records from user input.
+// It sends form data to the backend for the add operation.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ShipmentsService } from '../../shipments-service';

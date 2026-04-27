@@ -1,3 +1,6 @@
+// This component creates new product records from user input.
+// It sends form data to the backend for the add operation.
+
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +28,7 @@ export class ProductsDataPost {
   error: any = null;
   successMessage: string = '';
 
+  // Handles submit and updates the related state safely.
   handleSubmit() {
     if (this.productsForm.valid) {
       const payload = this.productsForm.value;
@@ -51,8 +55,10 @@ export class ProductsDataPost {
     }
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/products']); }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

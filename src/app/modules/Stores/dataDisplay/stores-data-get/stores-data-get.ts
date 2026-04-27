@@ -1,3 +1,6 @@
+// This component fetches and displays store records.
+// It is used for the read or view operation in this module.
+
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -45,6 +48,7 @@ export class StoresDataGet {
   loading = false;
   error = '';
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private storesService: StoresService,
     private fb: FormBuilder,
@@ -56,11 +60,13 @@ export class StoresDataGet {
     });
   }
 
+  // Stores the selected option and resets the screen for the next request.
   onOptionSelected(option: string) {
     this.selectedOption = option;
     this.resetData();
   }
 
+  // Checks whether the current input values are valid for the selected request.
   isInputValid(): boolean {
     if (this.selectedOption === 'getAll') return true;
     if (this.selectedOption === 'getByName') return this.storeName.trim().length > 0;
@@ -74,6 +80,7 @@ export class StoresDataGet {
     return false;
   }
 
+  // Calls the selected API endpoint and updates the screen with the response.
   fetchData() {
     if (!this.isInputValid()) {
       this.error = 'Please provide valid input';
@@ -89,6 +96,7 @@ export class StoresDataGet {
     if (this.selectedOption === 'getStoreShipments') { this.getStoreShipments(); return; }
   }
 
+  // Returns the store record that matches the provided identifier.
   getStoreById() {
     const id = this.form.value.storeId;
     if (!id) { this.error = 'Please enter Store ID'; return; }
@@ -100,6 +108,7 @@ export class StoresDataGet {
     });
   }
 
+  // Returns filtered store records based on the provided search value.
   getStoreByName() {
     const name = this.storeName.trim();
     if (!name) { this.error = 'Please enter Store Name'; return; }
@@ -111,6 +120,7 @@ export class StoresDataGet {
     });
   }
 
+  // Returns the required store data for the current request.
   getStoreInventory() {
     const id = this.form.value.storeId;
     if (!id) {
@@ -129,6 +139,7 @@ export class StoresDataGet {
     });
   }
 
+  // Returns the required store data for the current request.
   getStoreOrders() {
     const id = this.form.value.storeId;
     if (!id) { this.error = 'Please enter Store ID'; return; }
@@ -146,6 +157,7 @@ export class StoresDataGet {
     });
   }
 
+  // Returns the required store data for the current request.
   getStoreShipments() {
     const id = this.form.value.storeId;
     if (!id) { this.error = 'Please enter Store ID'; return; }
@@ -163,6 +175,7 @@ export class StoresDataGet {
     });
   }
 
+  // Returns all available store records from the backend service.
   getAllStores() {
     this.resetData();
     this.loading = true;
@@ -178,13 +191,16 @@ export class StoresDataGet {
     });
   }
 
+  // Sends a request to update the selected store record with the provided data.
   updatePaginated() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     this.paginatedStores = this.allStores.slice(start, start + this.itemsPerPage);
   }
 
+  // Returns the required store data for the current request.
   getTotalPages(): number { return Math.ceil(this.allStores.length / this.itemsPerPage); }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToPage(page: number) {
     if (page >= 1 && page <= this.getTotalPages()) {
       this.currentPage = page;
@@ -192,13 +208,16 @@ export class StoresDataGet {
     }
   }
 
+  // Sends a request to update the selected store record with the provided data.
   updatePaginatedOrders() {
     const start = (this.ordersPage - 1) * this.itemsPerPage;
     this.paginatedOrders = this.ordersList.slice(start, start + this.itemsPerPage);
   }
 
+  // Returns the required store data for the current request.
   getOrdersTotalPages(): number { return Math.ceil(this.ordersList.length / this.itemsPerPage); }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToOrdersPage(page: number) {
     if (page >= 1 && page <= this.getOrdersTotalPages()) {
       this.ordersPage = page;
@@ -206,13 +225,16 @@ export class StoresDataGet {
     }
   }
 
+  // Sends a request to update the selected store record with the provided data.
   updatePaginatedShipments() {
     const start = (this.shipmentsPage - 1) * this.itemsPerPage;
     this.paginatedShipments = this.shipmentsList.slice(start, start + this.itemsPerPage);
   }
 
+  // Returns the required store data for the current request.
   getShipmentsTotalPages(): number { return Math.ceil(this.shipmentsList.length / this.itemsPerPage); }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToShipmentsPage(page: number) {
     if (page >= 1 && page <= this.getShipmentsTotalPages()) {
       this.shipmentsPage = page;
@@ -220,12 +242,14 @@ export class StoresDataGet {
     }
   }
 
+  // Handles error and updates the related state safely.
   private handleError(err: any) {
     this.loading = false;
     this.error = err.error?.msg || err.message || 'Something went wrong';
     this.cdr.detectChanges();
   }
 
+  // Handles reset data for the current component without changing the workflow.
   resetData() {
     this.error = '';
     this.singleStore = null;
@@ -241,6 +265,7 @@ export class StoresDataGet {
     this.shipmentsPage = 1;
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

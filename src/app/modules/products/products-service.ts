@@ -1,3 +1,6 @@
+// This service handles business logic and API communication for products.
+// It keeps data operations separate from the UI components.
+
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -13,6 +16,7 @@ export class ProductsService {
   private http: HttpClient = inject(HttpClient);
   private readonly BASE_URL = 'http://localhost:9090/api/products';
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with authentication
    * Retrieves credentials from session storage
@@ -31,6 +35,7 @@ export class ProductsService {
     };
   }
 
+  // Returns all available product records from the backend service.
   /**
    * Get all products
    * Endpoint: GET /api/products
@@ -39,6 +44,7 @@ export class ProductsService {
     return this.http.get(this.BASE_URL, this.getHeaders());
   }
 
+  // Returns the product record that matches the provided identifier.
   /**
    * Get product by ID
    * Endpoint: GET /api/products/{productId}
@@ -48,6 +54,7 @@ export class ProductsService {
     return this.http.get(`${this.BASE_URL}/${productId}`, this.getHeaders());
   }
 
+  // Sends a request to create a new product record with the provided data.
   /**
    * Create a new product
    * Endpoint: POST /api/products
@@ -57,6 +64,7 @@ export class ProductsService {
     return this.http.post(this.BASE_URL, product, this.getHeaders());
   }
 
+  // Sends a request to update the selected product record with the provided data.
   /**
    * Update an existing product
    * Endpoint: PUT /api/products/{productId}
@@ -71,6 +79,7 @@ export class ProductsService {
     );
   }
 
+  // Sends a request to delete the selected product record using its identifier.
   /**
    * Delete a product
    * Endpoint: DELETE /api/products/{productId}

@@ -1,3 +1,6 @@
+// This component deletes selected order item records.
+// It collects the required identifier and sends the remove request.
+
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +19,7 @@ export class OrderItemsDataDelete {
   message: string = '';
   error: string = '';
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder, 
     private orderItemsService: OrderItemsService,
@@ -29,6 +33,7 @@ export class OrderItemsDataDelete {
 
   deletedItemDetails: any = null;
 
+  // Sends a request to delete the selected order item record using its identifier.
   deleteById() {
     this.message = '';
     this.error = '';
@@ -82,8 +87,10 @@ export class OrderItemsDataDelete {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/order-items']); }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

@@ -1,3 +1,6 @@
+// This component updates existing order records.
+// It is used when the user wants to replace saved data with new values.
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,12 +25,14 @@ export class OrdersDataPut implements OnInit {
 
   orderStatuses = ['OPEN', 'PAID', 'SHIPPED', 'COMPLETE', 'CANCELLED', 'REFUNDED'];
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private ordersService: OrdersService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) { }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     this.orderForm = new FormGroup({
       orderId: new FormControl('', [Validators.required, Validators.min(1)]),
@@ -38,6 +43,7 @@ export class OrdersDataPut implements OnInit {
     });
   }
 
+  // Displays a toast message for the latest success or error response.
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
     this.toastType = type;
@@ -49,6 +55,7 @@ export class OrdersDataPut implements OnInit {
     }, 3000);
   }
 
+  // Searches the available order records using the current input value.
   searchOrder(): void {
     const id = this.orderForm.get('orderId')?.value;
     if (!id) {
@@ -80,6 +87,7 @@ export class OrdersDataPut implements OnInit {
     });
   }
 
+  // Handles update and updates the related state safely.
   handleUpdate(): void {
     if (!this.orderDetails) {
       this.showNotification('Search for an order first', 'error');
@@ -147,6 +155,7 @@ export class OrdersDataPut implements OnInit {
       });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack(): void {
     this.router.navigate(['/modules/orders']);
   }

@@ -1,3 +1,6 @@
+// This component is the main display page for the shipments module.
+// It connects the module UI with the available API operations.
+
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 
@@ -14,6 +17,7 @@ export class ShipmentsApiDisplay {
   router = inject(Router);
   routeActive = false;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor() {
     this.updateRouteActive(this.router.url);
     this.router.events
@@ -23,11 +27,13 @@ export class ShipmentsApiDisplay {
       });
   }
 
+  // Refreshes the active navigation state based on the current route.
   private updateRouteActive(url: string) {
     this.routeActive =
       url.split('/modules/shipments/').length > 1 && url.split('/modules/shipments/')[1].length > 0;
   }
 
+  // Returns whether the current route matches the selected navigation option.
   isRouteActive(): boolean {
     return this.routeActive;
   }
@@ -89,6 +95,7 @@ export class ShipmentsApiDisplay {
       desc: 'Get shipments filtered by current shipment status',
     },
   ];
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/api-dashboard']);
   }

@@ -1,3 +1,6 @@
+// This service handles login state and user authentication in the application.
+// It stores access details and helps protect features based on the signed-in user.
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -77,8 +80,10 @@ export class AuthService {
     }
   };
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(private http: HttpClient, private router: Router) { }
 
+  // Returns all available authentication records from the backend service.
   /**
    * Get all team members (for home page display)
    */
@@ -86,6 +91,7 @@ export class AuthService {
     return TEAM_MEMBERS;
   }
 
+  // Handles set selected member for the current component without changing the workflow.
   /**
    * Persist selected member so module screens can render endpoint metadata.
    */
@@ -93,6 +99,7 @@ export class AuthService {
     sessionStorage.setItem(this.SELECTED_MEMBER_KEY, JSON.stringify(member));
   }
 
+  // Returns the required authentication data for the current request.
   /**
    * Resolve selected member from session or fallback to logged-in user mapping.
    */
@@ -112,6 +119,7 @@ export class AuthService {
     return TEAM_MEMBERS.find(m => m.username.toLowerCase() === normalized) || null;
   }
 
+  // Returns the default module route for the current user role.
   getDefaultModuleRoute(): string {
     const allowedApis = this.getAccessibleApis();
     if (allowedApis.length > 0) {
@@ -120,6 +128,7 @@ export class AuthService {
     return '/api-dashboard';
   }
 
+  // Returns the logged-in user details saved in the current session.
   /**
    * Get the currently logged-in username
    */
@@ -127,6 +136,7 @@ export class AuthService {
     return sessionStorage.getItem('loggedInUser');
   }
 
+  // Returns the stored authentication details for the current user.
   /**
    * Get the stored Basic Auth credentials
    */
@@ -134,6 +144,7 @@ export class AuthService {
     return sessionStorage.getItem('authCredentials');
   }
 
+  // Handles login for the current component without changing the workflow.
   /**
    * Login by sending HTTP request with Basic Auth to the backend
    */
@@ -150,6 +161,7 @@ export class AuthService {
     return this.http.get<any>(probeUrl, { headers });
   }
 
+  // Stores the authenticated user details for later route and API checks.
   /**
    * Store credentials after successful login
    */
@@ -169,6 +181,7 @@ export class AuthService {
     }
   }
 
+  // Returns the API list the current user is allowed to open.
   /**
    * Get the API modules accessible to the current user
    */
@@ -180,6 +193,7 @@ export class AuthService {
     return this.userApiMap[username] || [];
   }
 
+  // Returns the display details needed for the selected API module card.
   /**
    * Get the display information for an API module
    */
@@ -191,6 +205,7 @@ export class AuthService {
     };
   }
 
+  // Returns the route path used for the selected API module.
   /**
    * Get the route path for an API module
    */
@@ -198,6 +213,7 @@ export class AuthService {
     return `/modules/${apiName}`;
   }
 
+  // Returns whether authenticated is true for this flow.
   /**
    * Check if user is authenticated
    */
@@ -205,10 +221,12 @@ export class AuthService {
     return this.getLoggedInUser() !== null && this.getAuthCredentials() !== null;
   }
 
+  // Returns whether admin is true for this flow.
   isAdmin(): boolean {
     return this.getLoggedInUser() === 'admin';
   }
 
+  // Handles logout for the current component without changing the workflow.
   /**
    * Clear authentication data on logout
    */

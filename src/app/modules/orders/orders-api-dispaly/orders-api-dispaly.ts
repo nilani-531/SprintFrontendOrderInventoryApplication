@@ -14,6 +14,7 @@ export class OrdersApiDispaly {
   router = inject(Router);
   routeActive = false;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor() {
     this.updateRouteActive(this.router.url);
     this.router.events
@@ -23,11 +24,13 @@ export class OrdersApiDispaly {
       });
   }
 
+  // Refreshes the active navigation state based on the current route.
   private updateRouteActive(url: string) {
     this.routeActive =
       url.split('/modules/orders/').length > 1 && url.split('/modules/orders/')[1].length > 0;
   }
 
+  // Returns whether the current route matches the selected navigation option.
   isRouteActive(): boolean {
     return this.routeActive;
   }
@@ -95,6 +98,7 @@ export class OrdersApiDispaly {
       desc: 'Delete order record using given order ID',
     },
   ];
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/api-dashboard']);
   }

@@ -1,3 +1,6 @@
+// This component fetches and displays shipment records.
+// It is used for the read or view operation in this module.
+
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ShipmentsService } from '../../shipments-service';
@@ -38,6 +41,7 @@ export class ShipmentsDataGet {
   loading = false;
   error = '';
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder,
     private shipmentsService: ShipmentsService,
@@ -51,11 +55,13 @@ export class ShipmentsDataGet {
     });
   }
 
+  // Stores the selected option and resets the screen for the next request.
   onOptionSelected(option: string) {
     this.selectedOption = option;
     this.resetData();
   }
 
+  // Checks whether the current input values are valid for the selected request.
   isInputValid(): boolean {
     if (this.selectedOption === 'getAll') return true;
     if (this.selectedOption === 'getById') return !!this.shipmentId && this.shipmentId > 0;
@@ -66,6 +72,7 @@ export class ShipmentsDataGet {
     return false;
   }
 
+  // Calls the selected API endpoint and updates the screen with the response.
   fetchData() {
     if (!this.isInputValid()) {
       this.error = 'Please provide valid input';
@@ -90,6 +97,7 @@ export class ShipmentsDataGet {
     }
   }
 
+  // Returns the shipment record that matches the provided identifier.
   getShipmentById() {
     this.resetData();
     this.loading = true;
@@ -107,6 +115,7 @@ export class ShipmentsDataGet {
     });
   }
 
+  // Returns all available shipment records from the backend service.
   getAllShipments() {
     this.resetData();
     this.loading = true;
@@ -126,6 +135,7 @@ export class ShipmentsDataGet {
     });
   }
 
+  // Returns the required shipment data for the current request.
   getByCustomerId() {
     this.resetData();
     this.loading = true;
@@ -145,6 +155,7 @@ export class ShipmentsDataGet {
     });
   }
 
+  // Returns the required shipment data for the current request.
   getByStoreId() {
     this.resetData();
     this.loading = true;
@@ -164,6 +175,7 @@ export class ShipmentsDataGet {
     });
   }
 
+  // Returns the required shipment data for the current request.
   getByStatus() {
     this.resetData();
     this.loading = true;
@@ -183,15 +195,18 @@ export class ShipmentsDataGet {
     });
   }
 
+  // Sends a request to update the selected shipment record with the provided data.
   updatePaginated() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     this.paginatedShipments = this.allShipments.slice(start, start + this.itemsPerPage);
   }
 
+  // Returns the required shipment data for the current request.
   getTotalPages(): number {
     return Math.ceil(this.allShipments.length / this.itemsPerPage);
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToPage(page: number) {
     if (page >= 1 && page <= this.getTotalPages()) {
       this.currentPage = page;
@@ -199,10 +214,12 @@ export class ShipmentsDataGet {
     }
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
   }
 
+  // Handles reset data for the current component without changing the workflow.
   resetData() {
     this.error = '';
     this.singleShipment = null;

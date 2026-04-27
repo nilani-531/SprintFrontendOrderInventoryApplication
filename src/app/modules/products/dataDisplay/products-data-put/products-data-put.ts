@@ -1,3 +1,6 @@
+// This component updates existing product records.
+// It is used when the user wants to replace saved data with new values.
+
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -22,6 +25,7 @@ export class ProductsDataPut implements OnInit  {
   loading: boolean = false;
   productDetails: any = null;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private http: HttpClient,
     private productService: ProductsDataService,
@@ -30,6 +34,7 @@ export class ProductsDataPut implements OnInit  {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Displays a toast message for the latest success or error response.
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
     this.toastType = type;
@@ -41,6 +46,7 @@ export class ProductsDataPut implements OnInit  {
     }, 3000);
   }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
 
     // Initialize form
@@ -55,6 +61,7 @@ export class ProductsDataPut implements OnInit  {
     });
   }
 
+  // Searches the available product records using the current input value.
   // 🔍 SEARCH PRODUCT
   searchProduct(): void {
     const id = this.productForm.get('productId')?.value;
@@ -94,6 +101,7 @@ export class ProductsDataPut implements OnInit  {
     });
   }
 
+  // Handles update and updates the related state safely.
   // 🔹 Update product
   handleUpdate(): void {
     if (this.productForm.invalid) return;
@@ -110,11 +118,13 @@ export class ProductsDataPut implements OnInit  {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   // 🔹 Cancel button
   goBack(): void {
     this.router.navigate(['/modules/products']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

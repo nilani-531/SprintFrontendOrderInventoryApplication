@@ -1,3 +1,6 @@
+// This component deletes selected inventory records.
+// It collects the required identifier and sends the remove request.
+
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -23,6 +26,7 @@ export class InventoryDataDelete {
   private inventoryService = inject(InventoryDataService);
   router = inject(Router);
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
@@ -32,6 +36,7 @@ export class InventoryDataDelete {
     });
   }
 
+  // Sends a request to delete the selected inventory record using its identifier.
   deleteById() {
     this.message = '';
     this.error = '';
@@ -82,10 +87,12 @@ export class InventoryDataDelete {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/modules/inventory']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

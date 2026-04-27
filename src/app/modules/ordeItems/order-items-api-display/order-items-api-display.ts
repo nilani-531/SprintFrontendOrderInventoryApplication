@@ -1,3 +1,6 @@
+// This component is the main display page for the order items module.
+// It connects the module UI with the available API operations.
+
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 
@@ -14,6 +17,7 @@ export class OrderItemsApiDisplay {
   router = inject(Router);
   routeActive = false;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor() {
     this.updateRouteActive(this.router.url);
     this.router.events
@@ -23,12 +27,14 @@ export class OrderItemsApiDisplay {
       });
   }
 
+  // Refreshes the active navigation state based on the current route.
   private updateRouteActive(url: string) {
     this.routeActive =
       url.split('/modules/order-items/').length > 1 &&
       url.split('/modules/order-items/')[1].length > 0;
   }
 
+  // Returns whether the current route matches the selected navigation option.
   isRouteActive(): boolean {
     return this.routeActive;
   }
@@ -60,6 +66,7 @@ export class OrderItemsApiDisplay {
       desc: 'Remove a line item from an order',
     },
   ];
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/api-dashboard']);
   }

@@ -1,0 +1,719 @@
+*** Begin Patch
+*** Update File: src/app/access-denied/access-denied.component.ts
+@@
++// This component shows an access denied message to unauthorized users.
++// It is displayed when route or module permission checks fail.
++
+*** Update File: src/app/guards/auth.guard.ts
+@@
++// This guard checks whether a user can access a route or module.
++// It helps protect pages based on login, role, or feature rules.
++
+*** Update File: src/app/home/home.css
+@@
++/* This stylesheet styles the home page layout and keeps the content clear and readable. */
++
+*** Update File: src/app/home/home.html
+@@
++<!-- This template shows the home page content and provides entry points to the application modules. -->
++
+*** Update File: src/app/home/home.ts
+@@
++// This component shows the home page of the application.
++// It helps users understand the project and move to different modules.
++
+*** Update File: src/app/login/login.css
+@@
++/* This stylesheet styles the login screen and keeps the form clean and user friendly. */
++
+*** Update File: src/app/login/login.html
+@@
++<!-- This template shows the login form and collects user credentials for authentication. -->
++
+*** Update File: src/app/login/login.ts
+@@
++// This component handles user login for the application.
++// It collects credentials and starts the authentication flow.
++
+*** Update File: src/app/modules/api-dashboard/api-dashboard.css
+@@
++/* This stylesheet styles the API dashboard feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/api-dashboard/api-dashboard.html
+@@
++<!-- This template builds the UI for the API dashboard feature and connects user actions with the component. -->
++
+*** Update File: src/app/modules/api-dashboard/api-dashboard.ts
+@@
++// This component handles the API dashboard feature in the frontend.
++// It manages the UI behavior and connects user actions with the app logic.
++
+*** Update File: src/app/modules/customers/customers-api-display/customers-api-display.css
+@@
++/* This stylesheet styles the customers feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/customers/customers-api-display/customers-api-display.html
+@@
++<!-- This template displays the main screen for the customers module and links users to its API operations. -->
++
+*** Update File: src/app/modules/customers/customers-api-display/customers-api-display.ts
+@@
++// This component is the main display page for the customers module.
++// It connects the module UI with the available API operations.
++
+*** Update File: src/app/modules/customers/dataDisplay/customer-get-navbar/customer-get-navbar.css
+@@
++/* This stylesheet styles the customers feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/customers/dataDisplay/customer-get-navbar/customer-get-navbar.html
+@@
++<!-- This template shows the navigation options for the customers module so users can move between actions. -->
++
+*** Update File: src/app/modules/customers/dataDisplay/customer-get-navbar/customer-get-navbar.ts
+@@
++// This component provides local navigation for the customers module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-delete/customers-data-delete.css
+@@
++/* This stylesheet styles the customers feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-delete/customers-data-delete.html
+@@
++<!-- This template collects the required details to delete customers records safely. -->
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-delete/customers-data-delete.ts
+@@
++// This component deletes selected customers records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-get/customers-data-get.css
+@@
++/* This stylesheet styles the customers feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-get/customers-data-get.html
+@@
++<!-- This template shows the UI for viewing customers data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-get/customers-data-get.ts
+@@
++// This component fetches and displays customers records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-post/customers-data-post.css
+@@
++/* This stylesheet styles the customers feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-post/customers-data-post.html
+@@
++<!-- This template contains the form used to create new customers records. -->
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-post/customers-data-post.ts
+@@
++// This component creates new customers records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-put/customers-data-put.css
+@@
++/* This stylesheet styles the customers feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-put/customers-data-put.html
+@@
++<!-- This template contains the form used to update existing customers records. -->
++
+*** Update File: src/app/modules/customers/dataDisplay/customers-data-put/customers-data-put.ts
+@@
++// This component updates existing customers records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/customers/customers-service.ts
+@@
++// This service handles business logic and API communication for customers.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-delete/inventory-data-delete.css
+@@
++/* This stylesheet styles the inventory feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-delete/inventory-data-delete.html
+@@
++<!-- This template collects the required details to delete inventory records safely. -->
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-delete/inventory-data-delete.ts
+@@
++// This component deletes selected inventory records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-get/inventory-data-get.css
+@@
++/* This stylesheet styles the inventory feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-get/inventory-data-get.html
+@@
++<!-- This template shows the UI for viewing inventory data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-get/inventory-data-get.ts
+@@
++// This component fetches and displays inventory records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-post/inventory-data-post.css
+@@
++/* This stylesheet styles the inventory feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-post/inventory-data-post.html
+@@
++<!-- This template contains the form used to create new inventory records. -->
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-post/inventory-data-post.ts
+@@
++// This component creates new inventory records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-put/inventory-data-put.css
+@@
++/* This stylesheet styles the inventory feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-put/inventory-data-put.html
+@@
++<!-- This template contains the form used to update existing inventory records. -->
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data-put/inventory-data-put.ts
+@@
++// This component updates existing inventory records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-get-navbar/inventory-get-navbar.css
+@@
++/* This stylesheet styles the inventory feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-get-navbar/inventory-get-navbar.html
+@@
++<!-- This template shows the navigation options for the inventory module so users can move between actions. -->
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-get-navbar/inventory-get-navbar.ts
+@@
++// This component provides local navigation for the inventory module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/inventory/dataDisplay/inventory-data.service.ts
+@@
++// This service handles business logic and API communication for inventory.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/inventory/inventory-api-display/inventory-api-display.css
+@@
++/* This stylesheet styles the inventory feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/inventory/inventory-api-display/inventory-api-display.html
+@@
++<!-- This template displays the main screen for the inventory module and links users to its API operations. -->
++
+*** Update File: src/app/modules/inventory/inventory-api-display/inventory-api-display.ts
+@@
++// This component is the main display page for the inventory module.
++// It connects the module UI with the available API operations.
++
+*** Update File: src/app/modules/inventory/inventory-service.ts
+@@
++// This service handles business logic and API communication for inventory.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-delete/order-items-data-delete.css
+@@
++/* This stylesheet styles the order items feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-delete/order-items-data-delete.html
+@@
++<!-- This template collects the required details to delete order item records safely. -->
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-delete/order-items-data-delete.ts
+@@
++// This component deletes selected order item records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-get/order-items-data-get.css
+@@
++/* This stylesheet styles the order items feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-get/order-items-data-get.html
+@@
++<!-- This template shows the UI for viewing order item data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-get/order-items-data-get.ts
+@@
++// This component fetches and displays order item records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-post/order-items-data-post.css
+@@
++/* This stylesheet styles the order items feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-post/order-items-data-post.html
+@@
++<!-- This template contains the form used to create new order item records. -->
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-post/order-items-data-post.ts
+@@
++// This component creates new order item records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-put/order-items-data-put.css
+@@
++/* This stylesheet styles the order items feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-put/order-items-data-put.html
+@@
++<!-- This template contains the form used to update existing order item records. -->
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-data-put/order-items-data-put.ts
+@@
++// This component updates existing order item records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-get-navbar/order-items-get-navbar.css
+@@
++/* This stylesheet styles the order items feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-get-navbar/order-items-get-navbar.html
+@@
++<!-- This template shows the navigation options for the order items module so users can move between actions. -->
++
+*** Update File: src/app/modules/ordeItems/dataDisplay/order-items-get-navbar/order-items-get-navbar.ts
+@@
++// This component provides local navigation for the order items module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/ordeItems/order-items-api-display/order-items-api-display.css
+@@
++/* This stylesheet styles the order items feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/ordeItems/order-items-api-display/order-items-api-display.html
+@@
++<!-- This template displays the main screen for the order items module and links users to its API operations. -->
++
+*** Update File: src/app/modules/ordeItems/order-items-api-display/order-items-api-display.ts
+@@
++// This component is the main display page for the order items module.
++// It connects the module UI with the available API operations.
++
+*** Update File: src/app/modules/ordeItems/orderitems-service.ts
+@@
++// This service handles business logic and API communication for order items.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/orders/dataDisplay/order-get-navbar/order-get-navbar.css
+@@
++/* This stylesheet styles the orders feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/orders/dataDisplay/order-get-navbar/order-get-navbar.html
+@@
++<!-- This template shows the navigation options for the orders module so users can move between actions. -->
++
+*** Update File: src/app/modules/orders/dataDisplay/order-get-navbar/order-get-navbar.ts
+@@
++// This component provides local navigation for the orders module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-delete/orders-data-delete.css
+@@
++/* This stylesheet styles the orders feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-delete/orders-data-delete.html
+@@
++<!-- This template collects the required details to delete orders records safely. -->
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-delete/orders-data-delete.ts
+@@
++// This component deletes selected orders records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-get/orders-data-get.css
+@@
++/* This stylesheet styles the orders feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-get/orders-data-get.html
+@@
++<!-- This template shows the UI for viewing orders data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-get/orders-data-get.ts
+@@
++// This component fetches and displays orders records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-post/orders-data-post.css
+@@
++/* This stylesheet styles the orders feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-post/orders-data-post.html
+@@
++<!-- This template contains the form used to create new orders records. -->
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-post/orders-data-post.ts
+@@
++// This component creates new orders records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-put/orders-data-put.css
+@@
++/* This stylesheet styles the orders feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-put/orders-data-put.html
+@@
++<!-- This template contains the form used to update existing orders records. -->
++
+*** Update File: src/app/modules/orders/dataDisplay/orders-data-put/orders-data-put.ts
+@@
++// This component updates existing orders records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/orders/orders-service.ts
+@@
++// This service handles business logic and API communication for orders.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/products/dataDisplay/product-get-navbar/product-get-navbar.css
+@@
++/* This stylesheet styles the products feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/products/dataDisplay/product-get-navbar/product-get-navbar.html
+@@
++<!-- This template shows the navigation options for the products module so users can move between actions. -->
++
+*** Update File: src/app/modules/products/dataDisplay/product-get-navbar/product-get-navbar.ts
+@@
++// This component provides local navigation for the products module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-delete/products-data-delete.css
+@@
++/* This stylesheet styles the products feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-delete/products-data-delete.html
+@@
++<!-- This template collects the required details to delete products records safely. -->
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-delete/products-data-delete.ts
+@@
++// This component deletes selected products records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-get/products-data-get.css
+@@
++/* This stylesheet styles the products feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-get/products-data-get.html
+@@
++<!-- This template shows the UI for viewing products data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-get/products-data-get.ts
+@@
++// This component fetches and displays products records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-post/products-data-post.css
+@@
++/* This stylesheet styles the products feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-post/products-data-post.html
+@@
++<!-- This template contains the form used to create new products records. -->
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-post/products-data-post.ts
+@@
++// This component creates new products records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-put/products-data-put.css
+@@
++/* This stylesheet styles the products feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-put/products-data-put.html
+@@
++<!-- This template contains the form used to update existing products records. -->
++
+*** Update File: src/app/modules/products/dataDisplay/products-data-put/products-data-put.ts
+@@
++// This component updates existing products records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/products/dataDisplay/products-data.service.ts
+@@
++// This service handles business logic and API communication for products.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/products/products-api-display/products-api-display.css
+@@
++/* This stylesheet styles the products feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/products/products-api-display/products-api-display.html
+@@
++<!-- This template displays the main screen for the products module and links users to its API operations. -->
++
+*** Update File: src/app/modules/products/products-api-display/products-api-display.ts
+@@
++// This component is the main display page for the products module.
++// It connects the module UI with the available API operations.
++
+*** Update File: src/app/modules/products/products-service.ts
+@@
++// This service handles business logic and API communication for products.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipment-get-navbar/shipment-get-navbar.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipment-get-navbar/shipment-get-navbar.html
+@@
++<!-- This template shows the navigation options for the shipments module so users can move between actions. -->
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipment-get-navbar/shipment-get-navbar.ts
+@@
++// This component provides local navigation for the shipments module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-delete/shipments-data-delete.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-delete/shipments-data-delete.html
+@@
++<!-- This template collects the required details to delete shipments records safely. -->
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-delete/shipments-data-delete.ts
+@@
++// This component deletes selected shipments records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-get/shipments-data-get.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-get/shipments-data-get.html
+@@
++<!-- This template shows the UI for viewing shipments data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-get/shipments-data-get.ts
+@@
++// This component fetches and displays shipments records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-patch/shipments-data-patch.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-patch/shipments-data-patch.html
+@@
++<!-- This template allows users to partially update selected fields of shipment records. -->
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-patch/shipments-data-patch.ts
+@@
++// This component partially updates existing shipment records.
++// It sends only the fields that need to be changed.
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-post/shipments-data-post.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-post/shipments-data-post.html
+@@
++<!-- This template contains the form used to create new shipments records. -->
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-post/shipments-data-post.ts
+@@
++// This component creates new shipments records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-put/shipments-data-put.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-put/shipments-data-put.html
+@@
++<!-- This template contains the form used to update existing shipments records. -->
++
+*** Update File: src/app/modules/shipments/dataDisplay/shipments-data-put/shipments-data-put.ts
+@@
++// This component updates existing shipments records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/shipments/shipments-api-display/shipments-api-display.css
+@@
++/* This stylesheet styles the shipments feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/shipments/shipments-api-display/shipments-api-display.html
+@@
++<!-- This template displays the main screen for the shipments module and links users to its API operations. -->
++
+*** Update File: src/app/modules/shipments/shipments-api-display/shipments-api-display.ts
+@@
++// This component is the main display page for the shipments module.
++// It connects the module UI with the available API operations.
++
+*** Update File: src/app/modules/shipments/shipments-service.ts
+@@
++// This service handles business logic and API communication for shipments.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/modules/Stores/dataDisplay/store-get-navbar/store-get-navbar.css
+@@
++/* This stylesheet styles the stores feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/Stores/dataDisplay/store-get-navbar/store-get-navbar.html
+@@
++<!-- This template shows the navigation options for the stores module so users can move between actions. -->
++
+*** Update File: src/app/modules/Stores/dataDisplay/store-get-navbar/store-get-navbar.ts
+@@
++// This component provides local navigation for the stores module.
++// It helps users switch between available operations on the feature page.
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-delete/stores-data-delete.css
+@@
++/* This stylesheet styles the stores feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-delete/stores-data-delete.html
+@@
++<!-- This template collects the required details to delete store records safely. -->
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-delete/stores-data-delete.ts
+@@
++// This component deletes selected store records.
++// It collects the required identifier and sends the remove request.
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-get/stores-data-get.css
+@@
++/* This stylesheet styles the stores feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-get/stores-data-get.html
+@@
++<!-- This template shows the UI for viewing store data and displaying the fetched records. -->
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-get/stores-data-get.ts
+@@
++// This component fetches and displays store records.
++// It is used for the read or view operation in this module.
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-post/stores-data-post.css
+@@
++/* This stylesheet styles the stores feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-post/stores-data-post.html
+@@
++<!-- This template contains the form used to create new store records. -->
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-post/stores-data-post.ts
+@@
++// This component creates new store records from user input.
++// It sends form data to the backend for the add operation.
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-put/stores-data-put.css
+@@
++/* This stylesheet styles the stores feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-put/stores-data-put.html
+@@
++<!-- This template contains the form used to update existing store records. -->
++
+*** Update File: src/app/modules/Stores/dataDisplay/stores-data-put/stores-data-put.ts
+@@
++// This component updates existing store records.
++// It is used when the user wants to replace saved data with new values.
++
+*** Update File: src/app/modules/Stores/stores-api-display/stores-api-display.css
+@@
++/* This stylesheet styles the stores feature and keeps its layout, forms, and data view consistent. */
++
+*** Update File: src/app/modules/Stores/stores-api-display/stores-api-display.html
+@@
++<!-- This template displays the main screen for the stores module and links users to its API operations. -->
++
+*** Update File: src/app/modules/Stores/stores-api-display/stores-api-display.ts
+@@
++// This component is the main display page for the stores module.
++// It connects the module UI with the available API operations.
++
+*** Update File: src/app/modules/Stores/stores-service.ts
+@@
++// This service handles business logic and API communication for stores.
++// It keeps data operations separate from the UI components.
++
+*** Update File: src/app/services/auth.service.ts
+@@
++// This service handles login state and user authentication in the application.
++// It stores access details and helps protect features based on the signed-in user.
++
+*** Update File: src/app/shared/components/response-viewer/response-viewer.component.ts
+@@
++// This component displays API responses in a readable format.
++// It helps students and evaluators inspect returned data clearly.
++
+*** Update File: src/app/shared/components/toast-container/toast-container.component.ts
+@@
++// This component displays toast notifications in the UI.
++// It shows quick success, error, or info messages after user actions.
++
+*** Update File: src/app/shared/guards/admin.guard.ts
+@@
++// This guard checks whether a user can access a route or module.
++// It helps protect pages based on login, role, or feature rules.
++
+*** Update File: src/app/shared/guards/auth.guard.ts
+@@
++// This guard checks whether a user can access a route or module.
++// It helps protect pages based on login, role, or feature rules.
++
+*** Update File: src/app/shared/guards/module-access.guard.ts
+@@
++// This guard checks whether a user can access a route or module.
++// It helps protect pages based on login, role, or feature rules.
++
+*** Update File: src/app/shared/layout/layout.css
+@@
++/* This stylesheet styles the shared application layout, including navigation and content areas. */
++
+*** Update File: src/app/shared/layout/layout.html
+@@
++<!-- This template defines the shared page layout, including navigation and routed content. -->
++
+*** Update File: src/app/shared/layout/layout.ts
+@@
++// This component defines the common layout used across the application.
++// It keeps shared navigation and routed content in one place.
++
+*** Update File: src/app/shared/models/team-data.ts
+@@
++// This file stores shared team data used in the application.
++// It provides a simple data source for display or reference.
++
+*** Update File: src/app/shared/models/team.model.ts
+@@
++// This model defines the data structure used for team member details.
++// It keeps object fields consistent across components and services.
++
+*** Update File: src/app/shared/services/api.service.ts
+@@
++// This service provides shared API helper methods used across the application.
++// It keeps common backend request logic reusable and centralized.
++
+*** Update File: src/app/shared/services/toast.service.ts
+@@
++// This service manages toast messages shown in the application.
++// It lets components trigger user feedback without duplicating notification logic.
++
+*** Update File: src/app/app.css
+@@
++/* This stylesheet defines the basic look of the root application shell. */
++
+*** Update File: src/app/app.html
+@@
++<!-- This template holds the root UI of the Angular app and loads the main content area. -->
++
+*** Update File: src/app/app.ts
+@@
++// This is the root component of the Angular application.
++// It loads the main UI structure and acts as the entry point for the app.
++
+*** End Patch
+

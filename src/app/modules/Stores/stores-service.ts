@@ -1,3 +1,6 @@
+// This service handles business logic and API communication for stores.
+// It keeps data operations separate from the UI components.
+
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,6 +17,7 @@ export class StoresService {
   private http: HttpClient = inject(HttpClient);
   private readonly BASE_URL = 'http://localhost:9090/api/stores';
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with authentication
    * Uses session storage or fallback credentials
@@ -32,6 +36,7 @@ export class StoresService {
     };
   }
 
+  // Returns all available store records from the backend service.
   /**
    * Get all stores
    * Endpoint: GET /api/stores
@@ -40,6 +45,7 @@ export class StoresService {
     return this.http.get(this.BASE_URL, this.getHeaders());
   }
 
+  // Returns the store record that matches the provided identifier.
   /**
    * Get store by ID
    * Endpoint: GET /api/stores/{storeId}
@@ -48,6 +54,7 @@ export class StoresService {
     return this.http.get(`${this.BASE_URL}/${storeId}`, this.getHeaders());
   }
 
+  // Returns filtered store records based on the provided search value.
   /**
    * Get store by name
    * Endpoint: GET /api/stores/name/{storeName}
@@ -56,6 +63,7 @@ export class StoresService {
     return this.http.get(`${this.BASE_URL}/name/${encodeURIComponent(storeName)}`, this.getHeaders());
   }
 
+  // Returns the required store data for the current request.
   /**
    * Get store inventory
    * Endpoint: GET /api/stores/{storeId}/inventory
@@ -67,6 +75,7 @@ export class StoresService {
     );
   }
 
+  // Returns the required store data for the current request.
   /**
    * Get store orders
    * Endpoint: GET /api/stores/{storeId}/orders
@@ -78,6 +87,7 @@ export class StoresService {
     );
   }
 
+  // Returns the required store data for the current request.
   /**
    * Get store shipments
    * Endpoint: GET /api/stores/{storeId}/shipments
@@ -89,6 +99,7 @@ export class StoresService {
     );
   }
 
+  // Sends a request to create a new store record with the provided data.
   /**
    * Create a new store
    * Endpoint: POST /api/stores
@@ -98,6 +109,7 @@ export class StoresService {
     return this.http.post(this.BASE_URL, store, this.getHeaders());
   }
 
+  // Sends a request to update the selected store record with the provided data.
   /**
    * Update an existing store
    * Endpoint: PUT /api/stores/{storeId}
@@ -106,6 +118,7 @@ export class StoresService {
     return this.http.put(`${this.BASE_URL}/${storeId}`, store, this.getHeaders());
   }
 
+  // Sends a request to delete the selected store record using its identifier.
   /**
    * Delete a store
    * Endpoint: DELETE /api/stores/{storeId}

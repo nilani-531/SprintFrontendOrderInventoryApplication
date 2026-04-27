@@ -1,3 +1,6 @@
+// This component creates new store records from user input.
+// It sends form data to the backend for the add operation.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
@@ -37,6 +40,7 @@ export class StoresDataPost {
   error: string | null = null;
   success: string | null = null;
 
+  // Handles submit and updates the related state safely.
   handleSubmit() {
     this.error = null;
     this.success = null;
@@ -71,5 +75,6 @@ export class StoresDataPost {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/stores']); }
 }
