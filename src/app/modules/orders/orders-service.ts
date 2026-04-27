@@ -1,3 +1,6 @@
+// This service handles business logic and API communication for orders.
+// It keeps data operations separate from the UI components.
+
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,6 +17,7 @@ export class OrdersService {
   private http: HttpClient = inject(HttpClient);
   private readonly BASE_URL = 'http://localhost:9090/api/orders';
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with authentication
    * Uses session storage or fallback credentials
@@ -32,6 +36,7 @@ export class OrdersService {
     };
   }
 
+  // Returns all available order records from the backend service.
   /**
    * Get all orders
    * Endpoint: GET /api/orders
@@ -40,6 +45,7 @@ export class OrdersService {
     return this.http.get(this.BASE_URL, this.getHeaders());
   }
 
+  // Returns the order record that matches the provided identifier.
   /**
    * Get order by ID
    * Endpoint: GET /api/orders/{orderId}
@@ -48,6 +54,7 @@ export class OrdersService {
     return this.http.get(`${this.BASE_URL}/${orderId}`, this.getHeaders());
   }
 
+  // Returns filtered order records based on the provided search value.
   /**
    * Get orders by customer
    * Endpoint: GET /api/orders/customer/{customerId}
@@ -59,6 +66,7 @@ export class OrdersService {
     );
   }
 
+  // Returns filtered order records based on the provided search value.
   /**
    * Get orders by store
    * Endpoint: GET /api/orders/store/{storeId}
@@ -70,6 +78,7 @@ export class OrdersService {
     );
   }
 
+  // Returns filtered order records based on the provided search value.
   /**
    * Get orders by status
    * Endpoint: GET /api/orders/status/{status}
@@ -81,6 +90,7 @@ export class OrdersService {
     );
   }
 
+  // Returns the required order data for the current request.
   /**
    * Get order count by status
    * Endpoint: GET /api/orders/count
@@ -89,6 +99,7 @@ export class OrdersService {
     return this.http.get(`${this.BASE_URL}/count`, this.getHeaders());
   }
 
+  // Returns filtered order records based on the provided search value.
   /**
    * Get orders by date range
    * Endpoint: GET /api/orders/date-range
@@ -100,6 +111,7 @@ export class OrdersService {
     );
   }
 
+  // Sends a request to create a new order record with the provided data.
   /**
    * Create a new order
    * Endpoint: POST /api/orders
@@ -109,6 +121,7 @@ export class OrdersService {
     return this.http.post(this.BASE_URL, order, this.getHeaders());
   }
 
+  // Sends a request to update the selected order record with the provided data.
   /**
    * Update order storeId or customerId
    * Endpoint: PUT /api/orders/{orderId}?storeId=X or ?customerId=X
@@ -121,6 +134,7 @@ export class OrdersService {
     return this.http.put(`${this.BASE_URL}/${orderId}`, {}, { ...this.getHeaders(), params });
   }
 
+  // Sends a request to update the selected order record with the provided data.
   /**
    * Update order timestamp (orderTms)
    * Endpoint: PUT /api/orders/{orderId}?orderTms=2023-01-18T18:30:00
@@ -131,6 +145,7 @@ export class OrdersService {
     return this.http.put(`${this.BASE_URL}/${orderId}`, {}, { ...this.getHeaders(), params });
   }
 
+  // Sends a request to update the selected order record with the provided data.
   /**
    * Update order status
    * Endpoint: PATCH /api/orders/{orderId}/status
@@ -143,6 +158,7 @@ export class OrdersService {
     );
   }
 
+  // Sends a request to delete the selected order record using its identifier.
   /**
    * Delete an order
    * Endpoint: DELETE /api/orders/{orderId}

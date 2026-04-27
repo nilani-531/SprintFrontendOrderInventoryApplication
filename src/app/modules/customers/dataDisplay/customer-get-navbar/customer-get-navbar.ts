@@ -1,3 +1,6 @@
+// This component provides local navigation for the customers module.
+// It helps users switch between available operations on the feature page.
+
 import { Component, inject, Output, EventEmitter } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -32,6 +35,7 @@ export class CustomerGetNavbar {
     },
   ];
 
+  // Stores the selected option and updates the related component state.
   selectEndpoint(endpointId: string) {
     this.selectedOption = endpointId;
     this.optionSelected.emit(endpointId);

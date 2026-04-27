@@ -1,3 +1,6 @@
+// This component updates existing customer records.
+// It is used when the user wants to replace saved data with new values.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -28,6 +31,7 @@ export class CustomersDataPut {
   isLoading: boolean = false;
   customerDetails: any = null;
 
+  // Handles fetch customer by id for the current component without changing the workflow.
   fetchCustomerById(): void {
     const id = this.updateForm.get('customerId')?.value;
     if (!id) {
@@ -59,6 +63,7 @@ export class CustomersDataPut {
     });
   }
 
+  // Handles submit and updates the related state safely.
   handleSubmit() {
     this.error = null;
     this.success = null;
@@ -84,10 +89,12 @@ export class CustomersDataPut {
     }
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/modules/customers']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

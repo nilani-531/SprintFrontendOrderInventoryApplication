@@ -1,3 +1,6 @@
+// This model defines the data structure used for team member details.
+// It keeps object fields consistent across components and services.
+
 export interface TeamMember {
   id: string;
   name: string;

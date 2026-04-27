@@ -1,3 +1,6 @@
+// This component fetches and displays inventory records.
+// It is used for the read or view operation in this module.
+
 import { Component, ChangeDetectorRef, inject } from '@angular/core';
 
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -42,6 +45,7 @@ export class InventoryDataGet {
 
   private inventoryService = inject(InventoryDataService);
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
@@ -54,6 +58,7 @@ export class InventoryDataGet {
     });
   }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit() {
     this.route.url.subscribe((segments) => {
       if (segments.length > 0) {
@@ -66,11 +71,13 @@ export class InventoryDataGet {
     });
   }
 
+  // Stores the selected option and resets the screen for the next request.
   onOptionSelected(option: string) {
     this.selectedOption = option;
     this.resetData();
   }
 
+  // Checks whether the current input values are valid for the selected request.
   isInputValid(): boolean {
     if (this.selectedOption === 'getAll') return true;
     if (this.selectedOption === 'getById') return !!this.inventoryId && this.inventoryId > 0;
@@ -79,6 +86,7 @@ export class InventoryDataGet {
     return false;
   }
 
+  // Calls the selected API endpoint and updates the screen with the response.
   fetchData() {
     if (!this.isInputValid()) {
       this.error = 'Please provide valid input';
@@ -98,6 +106,7 @@ export class InventoryDataGet {
     }
   }
 
+  // Returns the inventory record that matches the provided identifier.
   // 🔹 Get Inventory by ID
   getInventoryById() {
     const id = this.form.value.inventoryId;
@@ -124,6 +133,7 @@ export class InventoryDataGet {
     });
   }
 
+  // Returns all available inventory records from the backend service.
   // 🔹 Get All Inventories
   getAllInventories() {
     this.resetData();
@@ -155,6 +165,7 @@ export class InventoryDataGet {
     });
   }
 
+  // Returns filtered inventory records based on the provided search value.
   getInventoryByStore() {
     this.resetData();
     this.loading = true;
@@ -183,6 +194,7 @@ export class InventoryDataGet {
     });
   }
 
+  // Returns filtered inventory records based on the provided search value.
   getInventoryByProduct() {
     this.resetData();
     this.loading = true;
@@ -211,11 +223,13 @@ export class InventoryDataGet {
     });
   }
 
+  // Extracts a readable error message from the current API response.
   // 🔹 Extract backend error message properly
   private extractErrorMessage(err: any): string {
     return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
   }
 
+  // Handles reset data for the current component without changing the workflow.
   // 🔹 Reset UI
   resetData() {
     this.error = '';
@@ -223,6 +237,7 @@ export class InventoryDataGet {
     this.allInventories = [];
   }
 
+  // Sends a request to update the selected inventory record with the provided data.
   // 🔹 Pagination Methods
   updatePaginatedInventories() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -230,10 +245,12 @@ export class InventoryDataGet {
     this.paginatedInventories = this.allInventories.slice(start, end);
   }
 
+  // Returns the required inventory data for the current request.
   getTotalPages(): number {
     return Math.ceil(this.allInventories.length / this.itemsPerPage);
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToPage(page: number) {
     if (page >= 1 && page <= this.getTotalPages()) {
       this.currentPage = page;

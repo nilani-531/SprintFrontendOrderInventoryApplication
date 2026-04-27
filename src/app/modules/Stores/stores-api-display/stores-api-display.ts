@@ -1,3 +1,6 @@
+// This component is the main display page for the stores module.
+// It connects the module UI with the available API operations.
+
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet, Router, NavigationEnd } from '@angular/router';
 
@@ -14,6 +17,7 @@ export class StoresApiDisplay {
   router = inject(Router);
   routeActive = false;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor() {
     this.updateRouteActive(this.router.url);
     this.router.events
@@ -23,11 +27,13 @@ export class StoresApiDisplay {
       });
   }
 
+  // Refreshes the active navigation state based on the current route.
   private updateRouteActive(url: string) {
     this.routeActive =
       url.split('/modules/stores/').length > 1 && url.split('/modules/stores/')[1].length > 0;
   }
 
+  // Returns whether the current route matches the selected navigation option.
   isRouteActive(): boolean {
     return this.routeActive;
   }
@@ -89,6 +95,7 @@ export class StoresApiDisplay {
       desc: 'Delete store record using given store ID',
     },
   ];
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/api-dashboard']);
   }

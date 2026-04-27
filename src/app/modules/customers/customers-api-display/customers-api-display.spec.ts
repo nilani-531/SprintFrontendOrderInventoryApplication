@@ -21,4 +21,3 @@ describe('CustomersApiDisplay', () => {
     expect(component).toBeTruthy();
   });
 });
-  goBack() { this.router.navigate(['/api-dashboard']); }

@@ -1,3 +1,6 @@
+// This service handles business logic and API communication for inventory.
+// It keeps data operations separate from the UI components.
+
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -13,6 +16,7 @@ export class InventoryService {
   private http: HttpClient = inject(HttpClient);
   private readonly BASE_URL = 'http://localhost:9090/api/inventory';
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with authentication
    * Retrieves credentials from session storage
@@ -31,6 +35,7 @@ export class InventoryService {
     };
   }
 
+  // Returns all available inventory records from the backend service.
   /**
    * Get all inventory records
    * Endpoint: GET /api/inventory
@@ -39,6 +44,7 @@ export class InventoryService {
     return this.http.get(this.BASE_URL, this.getHeaders());
   }
 
+  // Returns the inventory record that matches the provided identifier.
   /**
    * Get inventory record by ID
    * Endpoint: GET /api/inventory/{inventoryId}
@@ -51,6 +57,7 @@ export class InventoryService {
     );
   }
 
+  // Returns filtered inventory records based on the provided search value.
   /**
    * Get inventory records by store
    * Endpoint: GET /api/inventory/store/{storeId}
@@ -63,6 +70,7 @@ export class InventoryService {
     );
   }
 
+  // Returns filtered inventory records based on the provided search value.
   /**
    * Get inventory records by product
    * Endpoint: GET /api/inventory/product/{productId}
@@ -75,6 +83,7 @@ export class InventoryService {
     );
   }
 
+  // Sends a request to create a new inventory record with the provided data.
   /**
    * Create a new inventory record
    * Endpoint: POST /api/inventory
@@ -84,6 +93,7 @@ export class InventoryService {
     return this.http.post(this.BASE_URL, inventory, this.getHeaders());
   }
 
+  // Sends a request to update the selected inventory record with the provided data.
   /**
    * Update an existing inventory record
    * Endpoint: PUT /api/inventory/{inventoryId}
@@ -98,6 +108,7 @@ export class InventoryService {
     );
   }
 
+  // Sends a request to delete the selected inventory record using its identifier.
   /**
    * Delete an inventory record
    * Endpoint: DELETE /api/inventory/{inventoryId}

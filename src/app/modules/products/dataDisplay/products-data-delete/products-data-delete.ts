@@ -1,3 +1,6 @@
+// This component deletes selected product records.
+// It collects the required identifier and sends the remove request.
+
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +22,7 @@ export class ProductsDataDelete {
   error: string = '';
   deletedProduct: any = null;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder,
     private productService: ProductsDataService,
@@ -30,6 +34,7 @@ export class ProductsDataDelete {
     });
   }
 
+  // Sends a request to delete the selected product record using its identifier.
   deleteById() {
     this.message = '';
     this.error = '';
@@ -80,10 +85,12 @@ export class ProductsDataDelete {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/modules/products']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

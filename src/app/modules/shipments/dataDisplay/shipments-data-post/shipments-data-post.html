@@ -1,60 +1,71 @@
+<!-- Main container for Create Shipment page -->
 <div class="page-container">
 
   <div class="content">
 
+    <!-- Page title and description -->
     <h2 class="title">Create Shipment</h2>
     <p class="page-subtitle">Create new shipment by providing required details</p>
 
+    <!-- Card layout for form -->
     <div class="card">
 
+      <!-- Reactive form for creating shipment -->
       <form [formGroup]="shipmentsForm" (ngSubmit)="handleSubmit()" class="form">
 
+        <!-- Customer ID input field -->
         <div class="form-group">
           <label>Customer ID *</label>
           <input type="number" formControlName="customerId" placeholder="Enter customer ID">
 
+          <!-- Validation error for Customer ID -->
           @if(shipmentsForm.controls.customerId.touched && shipmentsForm.controls.customerId.errors){
             <p class="error">*Customer ID is required</p>
           }
         </div>
 
+        <!-- Store ID input field -->
         <div class="form-group">
           <label>Store ID *</label>
           <input type="number" formControlName="storeId" placeholder="Enter store ID">
 
+          <!-- Validation error for Store ID -->
           @if(shipmentsForm.controls.storeId.touched && shipmentsForm.controls.storeId.errors){
             <p class="error">*Store ID is required</p>
           }
         </div>
 
+        <!-- Delivery address input field -->
         <div class="form-group">
           <label>Delivery Address *</label>
           <textarea formControlName="deliveryAddress" placeholder="Enter delivery address"></textarea>
 
+          <!-- Validation error for Delivery Address -->
           @if(shipmentsForm.controls.deliveryAddress.touched && shipmentsForm.controls.deliveryAddress.errors){
             <p class="error">*Delivery address is required</p>
           }
         </div>
 
+        <!-- Action buttons -->
         <div class="button-group">
+          <!-- Submit button (disabled if form is invalid) -->
           <button type="submit" [disabled]="shipmentsForm.invalid" class="btn-primary">
             Create
           </button>
 
+          <!-- Cancel button to navigate back -->
           <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
         </div>
 
       </form>
     </div>
 
+    <!-- Displays API error message -->
     @if(error) {
-      <div class="error-box">
-        @if(error) {
-<div class="error-box">{{ error }}</div>
-}
-      </div>
+      <div class="error-box">{{ error }}</div>
     }
 
+    <!-- Displays success message after creation -->
     @if(success) {
       <div class="success-box">
         ✓ {{ success }}

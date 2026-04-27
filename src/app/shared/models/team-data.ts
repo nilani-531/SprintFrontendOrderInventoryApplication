@@ -1,3 +1,6 @@
+// This file stores shared team data used in the application.
+// It provides a simple data source for display or reference.
+
 import { TeamMember } from './team.model';
 
 const BASE = 'http://localhost:9090';

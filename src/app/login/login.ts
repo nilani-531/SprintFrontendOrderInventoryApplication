@@ -1,3 +1,6 @@
+// This component handles user login for the application.
+// It collects credentials and starts the authentication flow.
+
 import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
@@ -35,11 +38,13 @@ export class Login implements OnInit {
     ])
   });
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private authService: AuthService,
     private router: Router
   ) { }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     // Pre-fill username if user came from home page
     const selectedUser = sessionStorage.getItem('selectedUser');
@@ -49,6 +54,7 @@ export class Login implements OnInit {
     }
   }
 
+  // Rejects input values that contain spaces during form validation.
   /** Validator: reject values that contain spaces. */
   noSpace(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -58,10 +64,12 @@ export class Login implements OnInit {
     return null;
   }
 
+  // Shows or hides the password field for easier user input.
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+  // Validates the form values and submits the request when the input is valid.
   onSubmit(): void {
     if (this.loginForm.invalid) return;
 

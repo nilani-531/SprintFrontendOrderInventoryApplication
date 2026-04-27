@@ -1,3 +1,6 @@
+// This component shows an access denied message to unauthorized users.
+// It is displayed when route or module permission checks fail.
+
 import { Component } from '@angular/core';
 
 import { RouterModule, Router } from '@angular/router';
@@ -113,12 +116,15 @@ import { RouterModule, Router } from '@angular/router';
   ],
 })
 export class AccessDeniedComponent {
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(private router: Router) {}
 
+  // Returns to the previous screen or parent module page.
   goBack(): void {
     this.router.navigate(['/api-dashboard']);
   }
 
+  // Navigates back to the main dashboard page for the application.
   goDashboard(): void {
     this.router.navigate(['/api-dashboard']);
   }

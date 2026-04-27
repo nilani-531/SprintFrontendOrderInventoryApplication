@@ -1,3 +1,6 @@
+// This service handles business logic and API communication for order items.
+// It keeps data operations separate from the UI components.
+
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,6 +17,7 @@ export class OrderItemsService {
   private http: HttpClient = inject(HttpClient);
   private readonly BASE_URL = 'http://localhost:9090/api/orders';
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with authentication
    * Uses session storage or fallback credentials
@@ -32,6 +36,7 @@ export class OrderItemsService {
     };
   }
 
+  // Returns filtered order item records based on the provided search value.
   /**
    * Get all items for a specific order
    * Endpoint: GET /api/orders/{orderId}/items
@@ -43,6 +48,7 @@ export class OrderItemsService {
     );
   }
 
+  // Handles add item to order for the current component without changing the workflow.
   /**
    * Add a new item to an order
    * Endpoint: POST /api/orders/{orderId}/items
@@ -56,6 +62,7 @@ export class OrderItemsService {
     );
   }
 
+  // Sends a request to update the selected order item record with the provided data.
   /**
    * Update an existing order item
    * Endpoint: PUT /api/orders/{orderId}/items/{lineItemId}
@@ -72,6 +79,7 @@ export class OrderItemsService {
     );
   }
 
+  // Sends a request to delete the selected order item record using its identifier.
   /**
    * Delete an order item
    * Endpoint: DELETE /api/orders/{orderId}/items/{lineItemId}

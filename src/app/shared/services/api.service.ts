@@ -1,3 +1,6 @@
+// This service provides shared API helper methods used across the application.
+// It keeps common backend request logic reusable and centralized.
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -6,8 +9,10 @@ import { ToastService } from './toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(private http: HttpClient, private toast: ToastService) {}
 
+  // Returns the request headers needed for the current backend call.
   /**
    * Get HTTP headers with Authorization if available
    */
@@ -20,6 +25,7 @@ export class ApiService {
     return headers;
   }
 
+  // Builds the full backend URL for the requested API endpoint.
   /**
    * Build URL by replacing path parameters
    */
@@ -31,6 +37,7 @@ export class ApiService {
     return url;
   }
 
+  // Builds the query parameters needed for the current API request.
   /**
    * Build query parameters, filtering out empty/null values
    */
@@ -44,6 +51,7 @@ export class ApiService {
     return params;
   }
 
+  // Returns the required application data for the current request.
   /**
    * GET request
    */
@@ -53,6 +61,7 @@ export class ApiService {
     return this.http.get(url, { params, headers }).pipe(catchError(this.handleError.bind(this)));
   }
 
+  // Sends a create request for the selected application record.
   /**
    * POST request
    */
@@ -62,6 +71,7 @@ export class ApiService {
     return this.http.post(url, body, { params, headers }).pipe(catchError(this.handleError.bind(this)));
   }
 
+  // Sends an update request for the selected application record.
   /**
    * PUT request
    */
@@ -71,6 +81,7 @@ export class ApiService {
     return this.http.put(url, body, { params, headers }).pipe(catchError(this.handleError.bind(this)));
   }
 
+  // Sends a partial update request for the selected application record.
   /**
    * PATCH request
    */
@@ -80,6 +91,7 @@ export class ApiService {
     return this.http.patch(url, null, { params, headers }).pipe(catchError(this.handleError.bind(this)));
   }
 
+  // Sends a request to delete the selected application record using its identifier.
   /**
    * DELETE request
    */
@@ -88,6 +100,7 @@ export class ApiService {
     return this.http.delete(url, { headers }).pipe(catchError(this.handleError.bind(this)));
   }
 
+  // Handles error and updates the related state safely.
   /**
    * Handle HTTP errors
    */

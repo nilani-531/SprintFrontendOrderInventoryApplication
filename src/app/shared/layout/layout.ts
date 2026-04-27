@@ -1,3 +1,6 @@
+// This component defines the common layout used across the application.
+// It keeps shared navigation and routed content in one place.
+
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -24,6 +27,7 @@ export class Layout {
     route: '/modules/' + api
   }));
 
+  // Returns the required application data for the current request.
   private getLabel(api: string): string {
     const labels: any = {
       customers: '👥 Customers',
@@ -38,6 +42,7 @@ export class Layout {
     return labels[api] || api;
   }
 
+  // Handles logout for the current component without changing the workflow.
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

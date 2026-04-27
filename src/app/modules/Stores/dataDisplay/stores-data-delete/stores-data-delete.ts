@@ -1,3 +1,6 @@
+// This component deletes selected store records.
+// It collects the required identifier and sends the remove request.
+
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +22,7 @@ export class StoresDataDelete {
   error: string = '';
   deletedStore: any = null;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder, 
     private storesService: StoresService,
@@ -29,6 +33,7 @@ export class StoresDataDelete {
     });
   }
 
+  // Sends a request to delete the selected store record using its identifier.
   deleteById() {
     this.message = '';
     this.error = '';
@@ -86,8 +91,10 @@ export class StoresDataDelete {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/stores']); }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

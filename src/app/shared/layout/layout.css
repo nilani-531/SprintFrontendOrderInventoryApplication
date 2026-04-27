@@ -1,3 +1,5 @@
+/* This stylesheet styles the shared application layout, including navigation and content areas. */
+
 .app-layout {
   display: flex;
   min-height: 100vh;

@@ -1,3 +1,6 @@
+// This component fetches and displays customer records.
+// It is used for the read or view operation in this module.
+
 import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -53,6 +56,7 @@ export class CustomersDataGet {
     },
   ];
 
+  // Checks whether the current input values are valid for the selected request.
   isInputValid(): boolean {
     const endpoint = this.getEndpoints.find((e) => e.id === this.selectedOption);
     if (!endpoint?.requiresInput) return true;
@@ -66,6 +70,7 @@ export class CustomersDataGet {
     return false;
   }
 
+  // Calls the selected API endpoint and updates the screen with the response.
   fetchData() {
     if (!this.isInputValid()) {
       this.errorMessage = 'Please provide valid input';
@@ -112,11 +117,13 @@ export class CustomersDataGet {
     });
   }
 
+  // Stores the selected option and resets the screen for the next request.
   onOptionSelected(option: string) {
     this.selectedOption = option;
     this.reset();
   }
 
+  // Stores the returned API data and updates the visible screen sections.
   // Handle data from navbar
   onDataFetched(event: { type: string; data: any }) {
     this.reset();
@@ -147,10 +154,12 @@ export class CustomersDataGet {
     this.change.detectChanges();
   }
 
+  // Updates the visible error message when the child component reports a change.
   onErrorChanged(error: string) {
     this.errorMessage = error;
   }
 
+  // Sends a request to update the selected customer record with the provided data.
   // Pagination methods
   updatePaginatedCustomers() {
     const start = (this.currentCustomerPage - 1) * this.itemsPerPage;
@@ -158,30 +167,36 @@ export class CustomersDataGet {
     this.paginatedCustomers = this.customers.slice(start, end);
   }
 
+  // Sends a request to update the selected customer record with the provided data.
   updatePaginatedOrders() {
     const start = (this.currentOrderPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.paginatedOrders = this.orders.slice(start, end);
   }
 
+  // Sends a request to update the selected customer record with the provided data.
   updatePaginatedShipments() {
     const start = (this.currentShipmentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
     this.paginatedShipments = this.shipments.slice(start, end);
   }
 
+  // Returns the required customer data for the current request.
   getTotalCustomerPages(): number {
     return Math.ceil(this.customers.length / this.itemsPerPage);
   }
 
+  // Returns the required customer data for the current request.
   getTotalOrderPages(): number {
     return Math.ceil(this.orders.length / this.itemsPerPage);
   }
 
+  // Returns the required customer data for the current request.
   getTotalShipmentPages(): number {
     return Math.ceil(this.shipments.length / this.itemsPerPage);
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToCustomerPage(page: number) {
     if (page >= 1 && page <= this.getTotalCustomerPages()) {
       this.currentCustomerPage = page;
@@ -189,6 +204,7 @@ export class CustomersDataGet {
     }
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToOrderPage(page: number) {
     if (page >= 1 && page <= this.getTotalOrderPages()) {
       this.currentOrderPage = page;
@@ -196,6 +212,7 @@ export class CustomersDataGet {
     }
   }
 
+  // Moves to the selected page and refreshes the visible results as needed.
   goToShipmentPage(page: number) {
     if (page >= 1 && page <= this.getTotalShipmentPages()) {
       this.currentShipmentPage = page;
@@ -205,6 +222,7 @@ export class CustomersDataGet {
   iserror: boolean = false;
   issuccess: boolean = false;
 
+  // Returns all available customer records from the backend service.
   //  Get All Customers
   getAllCustomers() {
     this.reset();
@@ -220,6 +238,7 @@ export class CustomersDataGet {
     });
   }
 
+  // Returns the customer record that matches the provided identifier.
   // ✅ Get By ID
   getCustomerById() {
     if (!this.customerId || this.customerId <= 0) {
@@ -238,6 +257,7 @@ export class CustomersDataGet {
     });
   }
 
+  // Returns filtered customer records based on the provided search value.
   // ✅ Get By Email
   getCustomerByEmail() {
     if (!this.emailAddress) {
@@ -256,6 +276,7 @@ export class CustomersDataGet {
     });
   }
 
+  // Returns the required customer data for the current request.
   // ✅ Get Orders
   getOrders() {
     if (!this.customerId || this.customerId <= 0) {
@@ -275,6 +296,7 @@ export class CustomersDataGet {
     });
   }
 
+  // Returns the required customer data for the current request.
   // ✅ Get Shipments
   getShipments() {
     if (!this.customerId || this.customerId <= 0) {
@@ -294,6 +316,7 @@ export class CustomersDataGet {
     });
   }
 
+  // Clears the current component state and prepares the screen for a fresh action.
   // 🔥 Common Reset
   reset() {
     this.customers = [];
@@ -309,6 +332,7 @@ export class CustomersDataGet {
     this.errorMessage = '';
   }
 
+  // Handles error and updates the related state safely.
   // 🔥 Error Handler
   handleError(err: any) {
     console.log('Status:', err.status);
@@ -325,6 +349,7 @@ export class CustomersDataGet {
 
     this.change.detectChanges();
   }
+  // Handles reset lists only for the current component without changing the workflow.
   resetListsOnly() {
     this.orders = [];
     this.shipments = [];
@@ -333,6 +358,7 @@ export class CustomersDataGet {
     this.errorMessage = '';
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

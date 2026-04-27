@@ -1,3 +1,6 @@
+// This component displays toast notifications in the UI.
+// It shows quick success, error, or info messages after user actions.
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../services/toast.service';
@@ -92,12 +95,15 @@ import { ToastService } from '../../services/toast.service';
   ],
 })
 export class ToastContainerComponent {
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(public toastService: ToastService) {}
 
+  // Returns the required toast data for the current request.
   getToasts() {
     return this.toastService.toasts;
   }
 
+  // Handles remove toast for the current component without changing the workflow.
   removeToast(id: string) {
     this.toastService.remove(id);
   }

@@ -1,3 +1,6 @@
+// This component displays API responses in a readable format.
+// It helps students and evaluators inspect returned data clearly.
+
 import { Component, Input } from '@angular/core';
 
 @Component({

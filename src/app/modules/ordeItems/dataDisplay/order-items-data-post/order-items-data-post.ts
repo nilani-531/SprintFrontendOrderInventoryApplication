@@ -1,3 +1,6 @@
+// This component creates new order item records from user input.
+// It sends form data to the backend for the add operation.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +28,7 @@ export class OrderItemsDataPost {
   error: any = null;
   success: any = null;
 
+  // Handles submit and updates the related state safely.
   handleSubmit() {
     if (this.orderItemForm.invalid) {
       this.error = 'Please fill all fields correctly';
@@ -73,10 +77,12 @@ export class OrderItemsDataPost {
       });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() {
     this.router.navigate(['/modules/order-items']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

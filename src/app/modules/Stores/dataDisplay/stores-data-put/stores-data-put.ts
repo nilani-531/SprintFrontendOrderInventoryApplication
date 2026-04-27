@@ -1,3 +1,6 @@
+// This component updates existing store records.
+// It is used when the user wants to replace saved data with new values.
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,12 +28,14 @@ export class StoresDataPut implements OnInit {
   isLoading = false;
   storeDetails: any = null;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private storesService: StoresService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {}
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     this.storeForm = new FormGroup({
       storeId: new FormControl('', [Validators.required]),
@@ -47,6 +52,7 @@ export class StoresDataPut implements OnInit {
     }, { validators: addressValidator });
   }
 
+  // Handles fetch store by id for the current component without changing the workflow.
   fetchStoreById(): void {
     const id = this.storeForm.get('storeId')?.value;
     if (!id) {
@@ -84,6 +90,7 @@ export class StoresDataPut implements OnInit {
     });
   }
 
+  // Handles update and updates the related state safely.
   handleUpdate(): void {
     this.error = '';
     this.success = '';
@@ -134,6 +141,7 @@ export class StoresDataPut implements OnInit {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack(): void {
     this.router.navigate(['/modules/stores']);
   }

@@ -1,3 +1,6 @@
+// This component provides local navigation for the stores module.
+// It helps users switch between available operations on the feature page.
+
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -22,6 +25,7 @@ export class StoreGetNavbar {
     { id: 'getStoreShipments', label: 'Get Store Shipments' },
   ];
 
+  // Stores the selected option and updates the related component state.
   selectEndpoint(endpointId: string) {
     this.selectedOption = endpointId;
     this.optionSelected.emit(endpointId);

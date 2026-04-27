@@ -1,3 +1,6 @@
+// This component partially updates existing shipment records.
+// It sends only the fields that need to be changed.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -46,6 +49,7 @@ export class ShipmentsDataPatch {
   success: string | null = null;
   error: string | null = null;
 
+  // Loads the required shipment data before the next screen action runs.
   loadShipment(): void {
     this.cancelPendingRequest();
     this.clearMessages();
@@ -81,6 +85,7 @@ export class ShipmentsDataPatch {
     });
   }
 
+  // Handles patch status and updates the related state safely.
   handlePatchStatus(): void {
     this.cancelPendingRequest();
     this.clearMessages();
@@ -129,15 +134,18 @@ export class ShipmentsDataPatch {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack(): void {
     this.router.navigate(['/modules/shipments']);
   }
 
+  // Clears the current success and error messages from the screen.
   private clearMessages(): void {
     this.success = null;
     this.error = null;
   }
 
+  // Handles start request fallback for the current component without changing the workflow.
   private startRequestFallback(message: string = 'Shipment not found'): void {
     this.requestTimer = setTimeout(() => {
       this.activeRequest?.unsubscribe();
@@ -149,6 +157,7 @@ export class ShipmentsDataPatch {
     }, this.requestTimeoutMs);
   }
 
+  // Returns whether cancel pending request is true for this flow.
   private cancelPendingRequest(): void {
     if (this.requestTimer) {
       clearTimeout(this.requestTimer);
@@ -161,10 +170,12 @@ export class ShipmentsDataPatch {
     }
   }
 
+  // Returns the required shipment data for the current request.
   private getStatusLabel(status: ShipmentStatus): string {
     return this.statusOptions.find((option) => option.value === status)?.label ?? status;
   }
 
+  // Handles normalize status value for the current component without changing the workflow.
   private normalizeStatusValue(value: string | null | undefined): ShipmentStatus | '' {
     if (!value) {
       return '';
@@ -173,6 +184,7 @@ export class ShipmentsDataPatch {
     return value.toString().trim().replace(/[\s-]+/g, '_').toUpperCase() as ShipmentStatus;
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any, fallbackMessage: string): string {
     return err?.error?.msg || err?.message || fallbackMessage;
   }

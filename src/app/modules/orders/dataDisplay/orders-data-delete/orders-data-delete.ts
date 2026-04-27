@@ -1,3 +1,6 @@
+// This component deletes selected order records.
+// It collects the required identifier and sends the remove request.
+
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +25,7 @@ export class OrdersDataDelete {
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private fb: FormBuilder,
     private ordersService: OrdersService,
@@ -33,6 +37,7 @@ export class OrdersDataDelete {
     });
   }
 
+  // Displays a toast message for the latest success or error response.
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
     this.toastType = type;
@@ -44,6 +49,7 @@ export class OrdersDataDelete {
     }, 4000);
   }
 
+  // Sends a request to delete the selected order record using its identifier.
   deleteById() {
     this.deletedOrder = null;
 
@@ -90,5 +96,6 @@ export class OrdersDataDelete {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/orders']); }
 }

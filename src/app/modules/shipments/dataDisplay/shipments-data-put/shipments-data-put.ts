@@ -1,3 +1,6 @@
+// This component updates existing shipment records.
+// It is used when the user wants to replace saved data with new values.
+
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ShipmentsService } from '../../shipments-service';
@@ -20,12 +23,14 @@ export class ShipmentsDataPut implements OnInit {
   loading: boolean = false;
   shipmentDetails: any = null;
 
+  // Initializes this component and prepares the dependencies used in the file.
   constructor(
     private shipmentsService: ShipmentsService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
+  // Displays a toast message for the latest success or error response.
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
     this.toastType = type;
@@ -34,6 +39,7 @@ export class ShipmentsDataPut implements OnInit {
     setTimeout(() => { this.showToast = false; this.cdr.detectChanges(); }, 3000);
   }
 
+  // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     this.shipmentsForm = new FormGroup({
       shipmentId: new FormControl('', [Validators.required]),
@@ -43,6 +49,7 @@ export class ShipmentsDataPut implements OnInit {
     });
   }
 
+  // Loads the required shipment data before the next screen action runs.
   loadShipment(): void {
     const id = this.shipmentsForm.get('shipmentId')?.value;
     if (!id) {
@@ -71,6 +78,7 @@ export class ShipmentsDataPut implements OnInit {
     });
   }
 
+  // Handles update and updates the related state safely.
   handleUpdate(): void {
     if (this.shipmentsForm.invalid || !this.shipmentDetails) return;
 
@@ -92,10 +100,12 @@ export class ShipmentsDataPut implements OnInit {
     });
   }
 
+  // Returns to the previous screen or parent module page.
   goBack(): void {
     this.router.navigate(['/modules/shipments']);
   }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }

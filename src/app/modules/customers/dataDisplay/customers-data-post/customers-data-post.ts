@@ -1,3 +1,6 @@
+// This component creates new customer records from user input.
+// It sends form data to the backend for the add operation.
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,6 +28,7 @@ export class CustomersDataPost {
   error: any = null;
   success: any = null;
 
+  // Handles submit and updates the related state safely.
   handleSubmit() {
     if (this.customerForm.valid) {
       this.customersService.createCustomer(this.customerForm.value).subscribe({
@@ -45,8 +49,10 @@ export class CustomersDataPost {
     }
   }
 
+  // Returns to the previous screen or parent module page.
   goBack() { this.router.navigate(['/modules/customers']); }
 
+  // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
     return this.extractErrorMessage(err);
   }
