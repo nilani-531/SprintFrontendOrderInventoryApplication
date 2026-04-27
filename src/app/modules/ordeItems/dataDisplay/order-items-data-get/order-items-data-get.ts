@@ -1,7 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { NgIf, NgForOf, CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { OrderItemsService } from '../../orderitems-service';
+import { OrderItemsGetNavbar } from '../order-items-get-navbar/order-items-get-navbar';
 
 interface OrderItem {
   lineItemId: number;
@@ -14,136 +16,104 @@ interface OrderItem {
 @Component({
   selector: 'app-order-items-data-get',
   standalone: true,
-  imports: [NgIf, NgForOf, ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, OrderItemsGetNavbar],
   templateUrl: './order-items-data-get.html',
   styleUrl: './order-items-data-get.css',
 })
 export class OrderItemsDataGet {
-
   form: FormGroup;
-  queryType: 'order' | 'product' = 'order'; // Toggle between order ID and product ID
+  selectedOption = '';
+  inputId!: number;
 
   orderItems: OrderItem[] = [];
+  paginatedItems: OrderItem[] = [];
   totalQuantity: number | null = null;
+
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
 
   loading = false;
   error = '';
 
-  private baseUrl = 'http://localhost:9090/api/order-items';
-
   constructor(
-    private http: HttpClient,
+    private orderItemsService: OrderItemsService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.form = this.fb.group({
-      id: ['', [Validators.required, Validators.min(1)]]
+      id: ['', [Validators.required, Validators.min(1)]],
     });
   }
 
-  // 🔹 Change query type
-  setQueryType(type: 'order' | 'product') {
-    this.queryType = type;
+  onOptionSelected(option: string) {
+    this.selectedOption = option;
     this.resetData();
-    this.form.reset();
   }
 
-  // 🔹 Get Items by Order ID
+  isInputValid(): boolean {
+    return !!this.inputId && this.inputId > 0;
+  }
+
+  fetchData() {
+    if (!this.isInputValid()) {
+      this.error = 'Please provide valid input';
+      return;
+    }
+    this.form.patchValue({ id: this.inputId });
+    switch (this.selectedOption) {
+      case 'getByOrder':
+        this.getItemsByOrder();
+        break;
+
+      default:
+        this.error = 'Please choose an endpoint';
+    }
+  }
+
   getItemsByOrder() {
-
-    if (this.form.invalid) {
-      this.error = 'Please enter a valid Order ID (greater than 0)';
-      return;
-    }
-
-    const orderId = this.form.value.id;
-
     this.resetData();
     this.loading = true;
-
-    this.http.get<any>(`${this.baseUrl}/${orderId}`)
-      .subscribe({
-        next: (res) => {
-          this.orderItems = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+    this.orderItemsService.getItemsByOrderId(this.form.value.id).subscribe({
+      next: (res: any) => {
+        this.orderItems = res.data;
+        this.currentPage = 1;
+        this.updatePaginated();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = this.extractErrorMessage(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
-  // 🔹 Get Items by Product ID
-  getItemsByProduct() {
+  updatePaginated() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    this.paginatedItems = this.orderItems.slice(start, start + this.itemsPerPage);
+  }
 
-    if (this.form.invalid) {
-      this.error = 'Please enter a valid Product ID (greater than 0)';
-      return;
+  getTotalPages(): number {
+    return Math.ceil(this.orderItems.length / this.itemsPerPage);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+      this.updatePaginated();
     }
-
-    const productId = this.form.value.id;
-
-    this.resetData();
-    this.loading = true;
-
-    this.http.get<any>(`${this.baseUrl}/products/${productId}`)
-      .subscribe({
-        next: (res) => {
-          this.orderItems = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
   }
 
-  // 🔹 Get Total Quantity by Product ID
-  getTotalQuantity() {
-
-    if (this.form.invalid) {
-      this.error = 'Please enter a valid Product ID (greater than 0)';
-      return;
-    }
-
-    const productId = this.form.value.id;
-
-    this.resetData();
-    this.loading = true;
-
-    this.http.get<any>(`${this.baseUrl}/products/${productId}/quantity`)
-      .subscribe({
-        next: (res) => {
-          this.totalQuantity = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
-  }
-
-  // 🔹 Extract backend error message properly
   private extractErrorMessage(err: any): string {
     return err?.error?.msg || err?.error?.data || err?.message || 'Order items not found.';
   }
 
-  //  Reset UI
   resetData() {
     this.error = '';
     this.orderItems = [];
+    this.paginatedItems = [];
     this.totalQuantity = null;
+    this.currentPage = 1;
   }
 }

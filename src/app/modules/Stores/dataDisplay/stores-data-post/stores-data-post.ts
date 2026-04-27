@@ -1,6 +1,14 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { StoresService } from '../../stores-service';
+
+// At least one of webAddress or physicalAddress must be provided
+const addressValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const web = (group.get('webAddress')?.value || '').trim();
+  const physical = (group.get('physicalAddress')?.value || '').trim();
+  return web || physical ? null : { addressRequired: true };
+};
 
 @Component({
   selector: 'app-stores-data-post',
@@ -11,42 +19,57 @@ import { StoresService } from '../../stores-service';
 export class StoresDataPost {
   storesService: StoresService = inject(StoresService);
   change: ChangeDetectorRef = inject(ChangeDetectorRef);
+  router = inject(Router);
 
   storeForm = new FormGroup({
     storeName: new FormControl('', [Validators.required]),
-    webAddress: new FormControl('', [Validators.required, Validators.pattern(/^(https?:\/\/)/)]),
-    physicalAddress: new FormControl('', [Validators.required]),
-    latitude: new FormControl('', [Validators.required]),
-    longitude: new FormControl('', [Validators.required]),
-  });
+    webAddress: new FormControl('', [Validators.pattern(/^(https?:\/\/)/)]),
+    physicalAddress: new FormControl(''),
+    latitude: new FormControl(''),
+    longitude: new FormControl(''),
+    logo: new FormControl(''),
+    logoMimeType: new FormControl(''),
+    logoFilename: new FormControl(''),
+    logoCharset: new FormControl(''),
+    logoLastUpdated: new FormControl(''),
+  }, { validators: addressValidator });
 
-  error: any = null;
-  success: any = null;
+  error: string | null = null;
+  success: string | null = null;
 
   handleSubmit() {
-    console.log(this.storeForm.value);
+    this.error = null;
+    this.success = null;
+    this.storeForm.markAllAsTouched();
 
-    if (this.storeForm.valid) {
-      this.storesService.createStore(this.storeForm.value).subscribe({
-        next: (data: any) => {
-          this.success = data.msg + ' with ID: ' + data.data.storeId;
-          this.error = null;
-          this.storeForm.reset();
-          this.change.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.success = null;
-          if (err.error && err.error.msg) {
-            this.error = err.error.msg;
-          } else if (err.status === 0) {
-            this.error = 'Cannot connect to server';
-          } else {
-            this.error = 'Something went wrong';
-          }
-          this.change.detectChanges();
-        },
-      });
+    if (this.storeForm.invalid) {
+      if (this.storeForm.get('storeName')?.hasError('required')) {
+        this.error = 'Store name is required';
+      } else if (this.storeForm.hasError('addressRequired')) {
+        this.error = 'Either web address or physical address is required';
+      } else if (this.storeForm.get('webAddress')?.hasError('pattern')) {
+        this.error = 'Web address must start with http:// or https://';
+      } else {
+        this.error = 'Please correct the form errors';
+      }
+      this.change.detectChanges();
+      return;
     }
+
+    this.storesService.createStore(this.storeForm.value).subscribe({
+      next: (data: any) => {
+        this.success = data.msg + ' with ID: ' + data.data.storeId;
+        this.error = null;
+        this.storeForm.reset();
+        this.change.detectChanges();
+      },
+      error: (err: any) => {
+        this.success = null;
+        this.error = err.error?.msg || 'Something went wrong';
+        this.change.detectChanges();
+      },
+    });
   }
+
+  goBack() { this.router.navigate(['/modules/stores']); }
 }

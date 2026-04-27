@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ShipmentsService } from '../../shipments-service';
-import { NgIf, NgForOf } from "@angular/common";
+
+import { FormsModule } from '@angular/forms';
+import { ShipmentGetNavbar } from '../shipment-get-navbar/shipment-get-navbar';
 
 interface Shipment {
   shipmentId: number;
@@ -13,16 +15,25 @@ interface Shipment {
 
 @Component({
   selector: 'app-shipments-data-get',
-  imports: [ReactiveFormsModule, NgIf, NgForOf],
+  standalone: true,
+  imports: [ReactiveFormsModule, FormsModule, ShipmentGetNavbar],
   templateUrl: './shipments-data-get.html',
   styleUrl: './shipments-data-get.css',
 })
-
 export class ShipmentsDataGet {
   form: FormGroup;
+  selectedOption = '';
+  shipmentId!: number;
+  customerId!: number;
+  storeId!: number;
+  statusValue = '';
 
   singleShipment: Shipment | null = null;
   allShipments: Shipment[] = [];
+  paginatedShipments: Shipment[] = [];
+
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
 
   loading = false;
   error = '';
@@ -30,150 +41,162 @@ export class ShipmentsDataGet {
   constructor(
     private fb: FormBuilder,
     private shipmentsService: ShipmentsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.form = this.fb.group({
-      shipmentId: ['',{
-      validators: [Validators.min(1)],
-      updateOn: 'change'
-    }],
+      shipmentId: [''],
       customerId: [''],
       storeId: [''],
-      status: ['']
+      status: [''],
     });
   }
 
-  getShipmentById() {
+  onOptionSelected(option: string) {
+    this.selectedOption = option;
+    this.resetData();
+  }
 
-    const id = this.form.value.shipmentId;
+  isInputValid(): boolean {
+    if (this.selectedOption === 'getAll') return true;
+    if (this.selectedOption === 'getById') return !!this.shipmentId && this.shipmentId > 0;
+    if (this.selectedOption === 'getByCustomerId') return !!this.customerId && this.customerId > 0;
+    if (this.selectedOption === 'getByStoreId') return !!this.storeId && this.storeId > 0;
+    if (this.selectedOption === 'getByStatus')
+      return !!this.statusValue && this.statusValue.trim().length > 0;
+    return false;
+  }
 
-    if (!id) {
-      this.error = 'Please enter Shipment ID';
+  fetchData() {
+    if (!this.isInputValid()) {
+      this.error = 'Please provide valid input';
       return;
     }
+    switch (this.selectedOption) {
+      case 'getAll':
+        this.getAllShipments();
+        break;
+      case 'getById':
+        this.getShipmentById();
+        break;
+      case 'getByCustomerId':
+        this.getByCustomerId();
+        break;
+      case 'getByStoreId':
+        this.getByStoreId();
+        break;
+      case 'getByStatus':
+        this.getByStatus();
+        break;
+    }
+  }
 
+  getShipmentById() {
     this.resetData();
     this.loading = true;
-
-    this.shipmentsService.getShipmentById(id)
-      .subscribe({
-        next: (res) => {
-          this.singleShipment = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+    this.shipmentsService.getShipmentById(this.shipmentId).subscribe({
+      next: (res: any) => {
+        this.singleShipment = res.data;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = this.extractErrorMessage(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   getAllShipments() {
-
     this.resetData();
     this.loading = true;
-
-    this.shipmentsService.getAllShipments()
-      .subscribe({
-        next: (res) => {
-          this.allShipments = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+    this.shipmentsService.getAllShipments().subscribe({
+      next: (res: any) => {
+        this.allShipments = res.data;
+        this.currentPage = 1;
+        this.updatePaginated();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = this.extractErrorMessage(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   getByCustomerId() {
-
-    const id = this.form.value.customerId;
-
-    if (!id) {
-      this.error = 'Please enter Customer ID';
-      return;
-    }
-
     this.resetData();
     this.loading = true;
-
-    this.shipmentsService.getByCustomerId(id)
-      .subscribe({
-        next: (res) => {
-          this.allShipments = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+    this.shipmentsService.getShipmentsByCustomer(this.customerId).subscribe({
+      next: (res: any) => {
+        this.allShipments = res.data;
+        this.currentPage = 1;
+        this.updatePaginated();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = this.extractErrorMessage(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   getByStoreId() {
-
-    const id = this.form.value.storeId;
-
-    if (!id) {
-      this.error = 'Please enter Store ID';
-      return;
-    }
-
     this.resetData();
     this.loading = true;
-
-    this.shipmentsService.getByStoreId(id)
-      .subscribe({
-        next: (res) => {
-          this.allShipments = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+    this.shipmentsService.getShipmentsByStore(this.storeId).subscribe({
+      next: (res: any) => {
+        this.allShipments = res.data;
+        this.currentPage = 1;
+        this.updatePaginated();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = this.extractErrorMessage(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   getByStatus() {
-
-    const status = this.form.value.status;
-
-    if (!status) {
-      this.error = 'Please enter Shipment Status';
-      return;
-    }
-
     this.resetData();
     this.loading = true;
+    this.shipmentsService.getShipmentsByStatus(this.statusValue).subscribe({
+      next: (res: any) => {
+        this.allShipments = res.data;
+        this.currentPage = 1;
+        this.updatePaginated();
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = this.extractErrorMessage(err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
-    this.shipmentsService.getByStatus(status)
-      .subscribe({
-        next: (res) => {
-          this.allShipments = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = this.extractErrorMessage(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-        }
-      });
+  updatePaginated() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    this.paginatedShipments = this.allShipments.slice(start, start + this.itemsPerPage);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.allShipments.length / this.itemsPerPage);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+      this.updatePaginated();
+    }
   }
 
   private extractErrorMessage(err: any): string {
@@ -184,5 +207,7 @@ export class ShipmentsDataGet {
     this.error = '';
     this.singleShipment = null;
     this.allShipments = [];
+    this.paginatedShipments = [];
+    this.currentPage = 1;
   }
 }

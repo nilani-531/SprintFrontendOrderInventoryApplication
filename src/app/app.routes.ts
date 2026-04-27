@@ -3,6 +3,10 @@ import { Home } from './home/home';
 import { Login } from './login/login';
 import { ApiDashboard } from './modules/api-dashboard/api-dashboard';
 import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './shared/guards/admin.guard';
+import { ModuleAccessGuard } from './shared/guards/module-access.guard';
+import { Layout } from './shared/layout/layout';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 // Inventory Imports
 import { InventoryApiDisplay } from './modules/inventory/inventory-api-display/inventory-api-display';
@@ -52,115 +56,141 @@ import { ShipmentsDataGet } from './modules/shipments/dataDisplay/shipments-data
 import { ShipmentsDataPost } from './modules/shipments/dataDisplay/shipments-data-post/shipments-data-post';
 import { ShipmentsDataPut } from './modules/shipments/dataDisplay/shipments-data-put/shipments-data-put';
 import { ShipmentsDataDelete } from './modules/shipments/dataDisplay/shipments-data-delete/shipments-data-delete';
+import { ShipmentsDataPatch } from './modules/shipments/dataDisplay/shipments-data-patch/shipments-data-patch';
 
 export const routes: Routes = [
-    // Public Routes
     { path: '', component: Home },
     { path: 'home', component: Home },
     { path: 'login', component: Login },
+    { path: 'access-denied', component: AccessDeniedComponent },
 
-    // Protected Routes - Require Authentication
+    // All protected routes wrapped in Layout (sidebar)
     {
-        path: 'api-dashboard',
-        component: ApiDashboard,
-        canActivate: [AuthGuard]
-    },
-
-    // Inventory Module Routes
-    {
-        path: 'modules/inventory',
-        component: InventoryApiDisplay,
+        path: '',
+        component: Layout,
         canActivate: [AuthGuard],
         children: [
-            { path: 'get-all', component: InventoryDataGet },
-            { path: 'get-by-id', component: InventoryDataGet },
-            { path: 'create', component: InventoryDataPost },
-            { path: 'update', component: InventoryDataPut },
-            { path: 'delete', component: InventoryDataDelete }
+            { path: 'api-dashboard', component: ApiDashboard },
+
+            // Inventory
+            {
+                path: 'modules/inventory',
+                component: InventoryApiDisplay,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-all', component: InventoryDataGet },
+                    { path: 'get-by-id', component: InventoryDataGet },
+                    { path: 'get-by-store', component: InventoryDataGet },
+                    { path: 'get-by-product', component: InventoryDataGet },
+                    { path: 'create', component: InventoryDataPost },
+                    { path: 'update', component: InventoryDataPut },
+                    { path: 'delete', component: InventoryDataDelete }
+                ]
+            },
+
+            // Products
+            {
+                path: 'modules/products',
+                component: ProductsApiDisplay,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-all', component: ProductsDataGet },
+                    { path: 'get-by-id', component: ProductsDataGet },
+                    { path: 'create', component: ProductsDataPost },
+                    { path: 'update', component: ProductsDataPut },
+                    { path: 'delete', component: ProductsDataDelete }
+                ]
+            },
+
+            // Orders
+            {
+                path: 'modules/orders',
+                component: OrdersApiDispaly,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-all', component: OrdersDataGet },
+                    { path: 'get-by-id', component: OrdersDataGet },
+                    { path: 'get-by-customer', component: OrdersDataGet },
+                    { path: 'get-by-store', component: OrdersDataGet },
+                    { path: 'get-by-status', component: OrdersDataGet },
+                    { path: 'get-by-date-range', component: OrdersDataGet },
+                    { path: 'create', component: OrdersDataPost },
+                    { path: 'update', component: OrdersDataPut },
+                    { path: 'update-status', component: OrdersDataPut },
+                    { path: 'delete', component: OrdersDataDelete }
+                ]
+            },
+
+            // Order Items
+            {
+                path: 'modules/order-items',
+                component: OrderItemsApiDisplay,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-by-order', component: OrderItemsDataGet },
+                    { path: 'get-by-product', component: OrderItemsDataGet },
+                    { path: 'add-item', component: OrderItemsDataPost },
+                    { path: 'update-item', component: OrderItemsDataPut },
+                    { path: 'delete-item', component: OrderItemsDataDelete },
+                    { path: 'total-quantity', component: OrderItemsDataGet }
+                ]
+            },
+
+            // Stores
+            {
+                path: 'modules/stores',
+                component: StoresApiDisplay,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-all', component: StoresDataGet },
+                    { path: 'get-by-id', component: StoresDataGet },
+                    { path: 'get-by-name', component: StoresDataGet },
+                    { path: 'get-store-inventory', component: StoresDataGet },
+                    { path: 'get-store-orders', component: StoresDataGet },
+                    { path: 'get-store-shipments', component: StoresDataGet },
+                    { path: 'create', component: StoresDataPost },
+                    { path: 'update', component: StoresDataPut },
+                    { path: 'delete', component: StoresDataDelete }
+                ]
+            },
+
+            // Customers
+            {
+                path: 'modules/customers',
+                component: CustomersApiDisplay,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-all', component: CustomersDataGet },
+                    { path: 'get-by-customerid', component: CustomersDataGet },
+                    { path: 'get-by-email', component: CustomersDataGet },
+                    { path: 'get-orders', component: CustomersDataGet },
+                    { path: 'get-shipments', component: CustomersDataGet },
+                    { path: 'create', component: CustomersDataPost },
+                    { path: 'update', component: CustomersDataPut },
+                    { path: 'delete', component: CustomersDataDelete }
+                ]
+            },
+
+            // Shipments
+            {
+                path: 'modules/shipments',
+                component: ShipmentsApiDisplay,
+                canActivate: [ModuleAccessGuard],
+                children: [
+                    { path: 'get-all', component: ShipmentsDataGet },
+                    { path: 'get-by-id', component: ShipmentsDataGet },
+                    { path: 'get-by-customerId', component: ShipmentsDataGet },
+                    { path: 'get-by-storeId', component: ShipmentsDataGet },
+                    { path: 'get-by-status', component: ShipmentsDataGet },
+                    { path: 'create', component: ShipmentsDataPost },
+                    { path: 'update', component: ShipmentsDataPut },
+                    { path: 'delete', component: ShipmentsDataDelete },
+                    { path: 'status', component: ShipmentsDataPatch }
+                ]
+            }
         ]
     },
 
-    // Products Module Routes
-    {
-        path: 'modules/products',
-        component: ProductsApiDisplay,
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'get-all', component: ProductsDataGet },
-            { path: 'get-by-id', component: ProductsDataGet },
-            { path: 'create', component: ProductsDataPost },
-            { path: 'update', component: ProductsDataPut },
-            { path: 'delete', component: ProductsDataDelete }
-        ]
-    },
-
-    // Orders Module Routes
-    {
-        path: 'modules/orders',
-        component: OrdersApiDispaly,
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'get-all', component: OrdersDataGet },
-            { path: 'get-by-id', component: OrdersDataGet },
-            { path: 'create', component: OrdersDataPost },
-            { path: 'update', component: OrdersDataPut },
-            { path: 'delete', component: OrdersDataDelete }
-        ]
-    },
-
-    // Order Items Module Routes
-    {
-        path: 'modules/order-items',
-        component: OrderItemsApiDisplay,
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'get-all', component: OrderItemsDataGet },
-            { path: 'get-by-id', component: OrderItemsDataGet },
-            { path: 'create', component: OrderItemsDataPost },
-            { path: 'update', component: OrderItemsDataPut },
-            { path: 'delete', component: OrderItemsDataDelete }
-        ]
-    },
-
-    // Stores Module Routes
-    {
-        path: 'modules/stores',
-        component: StoresApiDisplay,
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'get-all', component: StoresDataGet },
-            { path: 'get-by-id', component: StoresDataGet },
-            { path: 'create', component: StoresDataPost },
-            { path: 'update', component: StoresDataPut },
-            { path: 'delete', component: StoresDataDelete }
-        ]
-    },
-
-    // Customers Module Routes
-    {
-        path: 'modules/customers',
-        component: CustomersApiDisplay,
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'get-all', component: CustomersDataGet },
-            { path: 'get-by-id', component: CustomersDataGet },
-            { path: 'create', component: CustomersDataPost },
-            { path: 'update', component: CustomersDataPut },
-            { path: 'delete', component: CustomersDataDelete }
-        ]
-    },
-
-    // Shipments Module Routes
-    {
-        path: 'modules/shipments',
-        component: ShipmentsApiDisplay,
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'get-all', component: ShipmentsDataGet },
-            { path: 'get-by-id', component: ShipmentsDataGet },
-            { path: 'create', component: ShipmentsDataPost },
-            { path: 'update', component: ShipmentsDataPut },
-            { path: 'delete', component: ShipmentsDataDelete }
-        ]
-    }
+    // Wildcard - must be last
+    { path: '**', redirectTo: 'home' }
 ];

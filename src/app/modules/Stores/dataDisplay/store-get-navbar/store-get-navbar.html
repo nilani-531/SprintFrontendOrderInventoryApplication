@@ -1,0 +1,13 @@
+<div class="navbar">
+  <div class="nav-container">
+    <ul class="nav-links">
+      <li
+        *ngFor="let endpoint of getEndpoints"
+        [class.active]="selectedOption === endpoint.id"
+        (click)="selectEndpoint(endpoint.id)"
+      >
+        {{ endpoint.label }}
+      </li>
+    </ul>
+  </div>
+</div>

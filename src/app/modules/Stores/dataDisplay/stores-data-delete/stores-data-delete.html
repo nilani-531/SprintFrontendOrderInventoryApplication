@@ -1,6 +1,7 @@
 <div class="container">
 
   <h2>Delete Store By ID</h2>
+  <p class="page-subtitle">Delete store record using given store ID</p>
 
   <form [formGroup]="deleteForm" (ngSubmit)="deleteById()">
 
@@ -21,10 +22,25 @@
 </div>
 <div class="message-container">
   @if (message) {
-    <p class="success show">{{ message }}</p>
+    <div class="success-box">{{ message }}</div>
   }
 
   @if (error) {
-    <p class="error show">{{ error }}</p>
+    <div class="error-box">{{ error }}</div>
   }
 </div>
+
+@if (deletedStore) {
+  <div class="card deleted-item">
+    <h3>Deleted Store Details</h3>
+    <div class="grid">
+      <p><strong>Store ID:</strong> {{ deletedStore.storeId }}</p>
+      <p><strong>Store Name:</strong> {{ deletedStore.storeName }}</p>
+      <p><strong>Web Address:</strong> <a [href]="deletedStore.webAddress" target="_blank">{{ deletedStore.webAddress }}</a></p>
+      <p><strong>Physical Address:</strong> {{ deletedStore.physicalAddress }}</p>
+      <p><strong>Latitude:</strong> {{ deletedStore.latitude }}</p>
+      <p><strong>Longitude:</strong> {{ deletedStore.longitude }}</p>
+      <p><strong>Logo URL:</strong> <a [href]="deletedStore.logo" target="_blank">View Logo</a></p>
+    </div>
+  </div>
+}

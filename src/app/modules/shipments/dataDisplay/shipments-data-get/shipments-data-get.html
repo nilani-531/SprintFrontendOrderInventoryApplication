@@ -1,141 +1,173 @@
+<h2 class="title">Shipments Data Dashboard</h2>
+
 <div class="page">
-
-  <div class="container">
-
-    <h2 class="title">Shipments Data Fetch</h2>
-
-    <!-- FORM -->
-    <form [formGroup]="form" class="card">
-
-      <!-- 🔹 Shipment ID -->
-      <div class="input-row">
-
-        <input
-          type="number"
-          formControlName="shipmentId"
-          placeholder="Enter Shipment ID"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getShipmentById()" class="btn primary">
-          Get Shipment
-        </button>
-
-        <button type="button" (click)="getAllShipments()" class="btn secondary">
-          Get All Shipments 
-        </button>
-
+  <app-shipment-get-navbar (optionSelected)="onOptionSelected($event)"></app-shipment-get-navbar>
+  <div class="container" style="max-width: 100%">
+    @if (selectedOption) {
+      <div class="input-section">
+        <div class="input-row">
+          @if (selectedOption === 'getById') {
+            <input
+              type="number"
+              [(ngModel)]="shipmentId"
+              placeholder="Enter Shipment ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByCustomerId') {
+            <input
+              type="number"
+              [(ngModel)]="customerId"
+              placeholder="Enter Customer ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByStoreId') {
+            <input
+              type="number"
+              [(ngModel)]="storeId"
+              placeholder="Enter Store ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByStatus') {
+            <input
+              type="text"
+              [(ngModel)]="statusValue"
+              placeholder="e.g. CREATED / SHIPPED / IN-TRANSIT / DELIVERED"
+              class="input-box"
+            />
+          }
+          <button
+            type="button"
+            (click)="fetchData()"
+            [disabled]="!isInputValid() || loading"
+            class="fetch-btn"
+          >
+            {{ loading ? 'Loading...' : 'Fetch Data' }}
+          </button>
+        </div>
       </div>
-      <br>
+    }
 
-      <!-- 🔹 Customer ID -->
-      <div class="input-row">
-
-        <input
-          type="number"
-          formControlName="customerId"
-          placeholder="Enter Customer ID"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getByCustomerId()" class="btn secondary">
-          Get by Customer
-        </button>
-
+    <div class="split-layout">
+      <!-- A Place: Detailed Description -->
+      <div class="left-col">
+        <div class="card description-card">
+          <h3>Current Endpoint</h3>
+          @if (selectedOption) {
+            <div class="current-endpoint-box">
+              <span class="method get">GET</span>
+              @if (selectedOption === 'getAll') {
+                <span class="endpoint-path">/api/shipments</span>
+              }
+              @if (selectedOption === 'getById') {
+                <span class="endpoint-path">/api/shipments/&#123;shipmentId&#125;</span>
+              }
+              @if (selectedOption === 'getByCustomerId') {
+                <span class="endpoint-path">/api/shipments/customer/&#123;customerId&#125;</span>
+              }
+              @if (selectedOption === 'getByStoreId') {
+                <span class="endpoint-path">/api/shipments/store/&#123;storeId&#125;</span>
+              }
+              @if (selectedOption === 'getByStatus') {
+                <span class="endpoint-path">/api/shipments/status/&#123;statusValue&#125;</span>
+              }
+            </div>
+          }
+          <h3>Endpoint Description</h3>
+          @if (selectedOption === 'getAll') {
+            <p>Get all shipment details from system database</p>
+          }
+          @if (selectedOption === 'getById') {
+            <p>Get shipment details using given shipment ID</p>
+          }
+          @if (selectedOption === 'getByCustomerId') {
+            <p>Get shipments based on given customer ID</p>
+          }
+          @if (selectedOption === 'getByStoreId') {
+            <p>Get shipments handled by given store ID</p>
+          }
+          @if (selectedOption === 'getByStatus') {
+            <p>Get shipments filtered by current shipment status</p>
+          }
+          @if (!selectedOption) {
+            <p class="text-muted" style="color: var(--text-muted); font-style: italic">
+              Select an option from the navbar to view details.
+            </p>
+          }
+        </div>
       </div>
-      <br>
 
-      <!-- 🔹 Store ID -->
-      <div class="input-row">
+      <!-- B Place: Data Table/Card -->
+      <div class="right-col">
+        @if (loading) {
+          <div class="info">Loading...</div>
+        }
+        @if (error) {
+          <div class="error-box">{{ error }}</div>
+        }
 
-        <input
-          type="number"
-          formControlName="storeId"
-          placeholder="Enter Store ID"
-          class="input-box"
-        />
+        <!-- Single Shipment -->
+        @if (singleShipment) {
+          <div class="card">
+            <h3>Shipment Details</h3>
+            <div class="grid">
+              <p><strong>ID:</strong> {{ singleShipment.shipmentId }}</p>
+              <p><strong>Customer ID:</strong> {{ singleShipment.customerId }}</p>
+              <p><strong>Store ID:</strong> {{ singleShipment.storeId }}</p>
+              <p><strong>Status:</strong> {{ singleShipment.shipmentStatus || 'N/A' }}</p>
+              <p><strong>Address:</strong> {{ singleShipment.deliveryAddress }}</p>
+            </div>
+          </div>
+        }
 
-        <button type="button" (click)="getByStoreId()" class="btn secondary">
-          Get by Store
-        </button>
-
+        <!-- All Shipments with Pagination -->
+        @if (allShipments.length > 0) {
+          <div class="card">
+            <h3>Shipments ({{ allShipments.length }} total - Page {{ currentPage }})</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer ID</th>
+                  <th>Store ID</th>
+                  <th>Status</th>
+                  <th>Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (s of paginatedShipments; track s) {
+                  <tr>
+                    <td>{{ s.shipmentId }}</td>
+                    <td>{{ s.customerId }}</td>
+                    <td>{{ s.storeId }}</td>
+                    <td>{{ s.shipmentStatus || 'N/A' }}</td>
+                    <td>{{ s.deliveryAddress }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <div class="pagination">
+              <button
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)"
+                class="pagination-btn"
+              >
+                Previous
+              </button>
+              <span class="pagination-info">Page {{ currentPage }} of {{ getTotalPages() }}</span>
+              <button
+                [disabled]="currentPage === getTotalPages()"
+                (click)="goToPage(currentPage + 1)"
+                class="pagination-btn"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        }
       </div>
-<br>
-
-      <!-- 🔹 Status -->
-      <div class="input-row">
-
-        <input
-          type="text"
-          formControlName="status"
-          placeholder="Enter Shipment Status"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getByStatus()" class="btn secondary">
-          Get by Status
-        </button>
-
-      </div>
-
-    </form>
-
-    <!-- 🔹 Loading -->
-    <div *ngIf="loading" class="info">
-      Loading...
     </div>
-
-    <!-- 🔹 Error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
-
-    <!-- 🔹 Single Shipment -->
-    <div *ngIf="singleShipment" class="card">
-
-      <h3>Shipment Details</h3>
-
-      <div class="grid">
-        <p><strong>ID:</strong> {{ singleShipment.shipmentId }}</p>
-        <p><strong>Customer ID:</strong> {{ singleShipment.customerId }}</p>
-        <p><strong>Store ID:</strong> {{ singleShipment.storeId }}</p>
-        <p><strong>Address:</strong> {{ singleShipment.deliveryAddress }}</p>
-        <p><strong>Status:</strong> {{ singleShipment.shipmentStatus || 'N/A' }}</p>
-      </div>
-
-    </div>
-
-    <!-- 🔹 Multiple Shipments -->
-    <div *ngIf="allShipments.length > 0" class="card">
-
-      <h3>Shipments List</h3>
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Customer ID</th>
-            <th>Store ID</th>
-            <th>Address</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let shipment of allShipments">
-            <td>{{ shipment.shipmentId }}</td>
-            <td>{{ shipment.customerId }}</td>
-            <td>{{ shipment.storeId }}</td>
-            <td>{{ shipment.deliveryAddress }}</td>
-            <td>{{ shipment.shipmentStatus || 'N/A' }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
   </div>
-
 </div>

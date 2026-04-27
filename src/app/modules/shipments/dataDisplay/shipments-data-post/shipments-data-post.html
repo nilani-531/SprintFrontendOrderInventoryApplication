@@ -3,6 +3,7 @@
   <div class="content">
 
     <h2 class="title">Create Shipment</h2>
+    <p class="page-subtitle">Create new shipment by providing required details</p>
 
     <div class="card">
 
@@ -40,25 +41,25 @@
             Create
           </button>
 
-          <button type="button" class="btn-secondary">
-            Cancel
-          </button>
+          <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
         </div>
 
       </form>
     </div>
 
-    <div class="error-box">
-      @if(error){
-        {{ error }}
-      }
-    </div>
+    @if(error) {
+      <div class="error-box">
+        @if(error) {
+<div class="error-box">{{ error }}</div>
+}
+      </div>
+    }
 
-    <div class="success-box">
-      @if(success){
-        {{ success }}
-      }
-    </div>
+    @if(success) {
+      <div class="success-box">
+        ✓ {{ success }}
+      </div>
+    }
 
   </div>
 </div>

@@ -1,14 +1,20 @@
 <div class="container">
 
-  <h2>Delete Order By ID</h2>
+  <h2>Delete Order Item</h2>
+  <p class="page-subtitle">Remove a line item from an order</p>
 
   <form [formGroup]="deleteForm1" (ngSubmit)="deleteById()">
 
     <div class="input-group">
-      <input 
+      <input
         type="number"
         formControlName="orderId"
         placeholder="Enter Order ID"
+      />
+      <input
+        type="number"
+        formControlName="lineItemId"
+        placeholder="Enter Line Item ID"
       />
 
       <button type="submit" class="delete-btn">
@@ -21,10 +27,21 @@
 </div>
 <div class="message-container">
   @if (message) {
-    <p class="success show">{{ message }}</p>
+    <div class="success-box">{{ message }}</div>
   }
 
   @if (error) {
-    <p class="error show">{{ error }}</p>
+    <div class="error-box">{{ error }}</div>
+  }
+
+  @if (deletedItemDetails) {
+    <div class="card deleted-card mt-3">
+      <h4>Deleted Item Details</h4>
+      <p><strong>Order ID:</strong> {{ deletedItemDetails.orderId }}</p>
+      <p><strong>Line Item ID:</strong> {{ deletedItemDetails.lineItemId }}</p>
+      <p><strong>Product ID:</strong> {{ deletedItemDetails.productId }}</p>
+      <p><strong>Quantity:</strong> {{ deletedItemDetails.quantity }}</p>
+      <p><strong>Unit Price:</strong> ${{ deletedItemDetails.unitPrice }}</p>
+    </div>
   }
 </div>

@@ -1,128 +1,111 @@
+<h2 class="title">Order Items Data Dashboard</h2>
+
 <div class="page">
-
-  <div class="container">
-
-    <h2 class="title">Order Items Data Fetch</h2>
-
-    <!-- ✅ Query Type Selection -->
-    <form class="card">
-
-      <div class="input-row">
-
-        <label>
+  <app-order-items-get-navbar
+    (optionSelected)="onOptionSelected($event)"
+  ></app-order-items-get-navbar>
+  <div class="container" style="max-width: 100%">
+    @if (selectedOption) {
+      <div class="input-section">
+        <div class="input-row">
           <input
-            type="radio"
-            name="queryType"
-            [checked]="queryType === 'order'"
-            (change)="setQueryType('order')"
+            type="number"
+            [(ngModel)]="inputId"
+            placeholder="Enter Order ID"
+            class="input-box"
           />
-          By Order ID
-        </label>
+          <button
+            type="button"
+            (click)="fetchData()"
+            [disabled]="!isInputValid() || loading"
+            class="fetch-btn"
+          >
+            {{ loading ? 'Loading...' : 'Fetch Data' }}
+          </button>
+        </div>
+      </div>
+    }
 
-        <label>
-          <input
-            type="radio"
-            name="queryType"
-            [checked]="queryType === 'product'"
-            (change)="setQueryType('product')"
-          />
-          By Product ID
-        </label>
-
+    <div class="split-layout">
+      <!-- A Place: Detailed Description -->
+      <div class="left-col">
+        <div class="card description-card">
+          <h3>Current Endpoint</h3>
+          @if (selectedOption) {
+            <div class="current-endpoint-box">
+              <span class="method get">GET</span>
+              @if (selectedOption === 'getByOrder') {
+                <span class="endpoint-path">/api/order-items/order/&#123;inputId&#125;</span>
+              }
+            </div>
+          }
+          <h3>Endpoint Description</h3>
+          @if (selectedOption === 'getByOrder') {
+            <p>Get all line items for a specific order</p>
+          }
+          @if (!selectedOption) {
+            <p class="text-muted" style="color: var(--text-muted); font-style: italic">
+              Select an option from the navbar to view details.
+            </p>
+          }
+        </div>
       </div>
 
-    </form>
+      <!-- B Place: Data Table/Card -->
+      <div class="right-col">
+        @if (loading) {
+          <div class="info">Loading...</div>
+        }
+        @if (error) {
+          <div class="error-box">{{ error }}</div>
+        }
 
-    <!-- ✅ FORM -->
-    <form [formGroup]="form" class="card">
-
-      <div class="input-row">
-
-        <input
-          type="number"
-          formControlName="id"
-          [placeholder]="queryType === 'order' ? 'Enter Order ID' : 'Enter Product ID'"
-          class="input-box"
-        />
-
-        <button
-          *ngIf="queryType === 'order'"
-          type="button"
-          (click)="getItemsByOrder()"
-          class="btn primary">
-          Get Items by Order
-        </button>
-
-        <button
-          *ngIf="queryType === 'product'"
-          type="button"
-          (click)="getItemsByProduct()"
-          class="btn primary">
-          Get Items by Product
-        </button>
-
-        <button
-          *ngIf="queryType === 'product'"
-          type="button"
-          (click)="getTotalQuantity()"
-          class="btn secondary">
-          Get Total Quantity
-        </button>
-
+        <!-- Order Items with Pagination -->
+        @if (orderItems.length > 0) {
+          <div class="card">
+            <h3>Order Items ({{ orderItems.length }} total - Page {{ currentPage }})</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Line Item ID</th>
+                  <th>Order ID</th>
+                  <th>Product ID</th>
+                  <th>Quantity</th>
+                  <th>Unit Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of paginatedItems; track item) {
+                  <tr>
+                    <td>{{ item.lineItemId }}</td>
+                    <td>{{ item.orderId }}</td>
+                    <td>{{ item.productId }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.unitPrice }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <div class="pagination">
+              <button
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)"
+                class="pagination-btn"
+              >
+                Previous
+              </button>
+              <span class="pagination-info">Page {{ currentPage }} of {{ getTotalPages() }}</span>
+              <button
+                [disabled]="currentPage === getTotalPages()"
+                (click)="goToPage(currentPage + 1)"
+                class="pagination-btn"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        }
       </div>
-
-    </form>
-
-    <!-- Loading -->
-    <div *ngIf="loading" class="info">
-      Loading...
     </div>
-
-    <!-- Error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
-
-    <!-- ✅ Total Quantity Display -->
-    <div *ngIf="totalQuantity !== null && totalQuantity !== undefined" class="card">
-
-      <h3>Total Quantity</h3>
-
-      <p><strong>Total Quantity for Product:</strong> {{ totalQuantity }}</p>
-
-    </div>
-
-    <!-- ✅ Order Items Table -->
-    <div *ngIf="orderItems.length > 0" class="card">
-
-      <h3>Order Items</h3>
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Line Item ID</th>
-            <th>Order ID</th>
-            <th>Product ID</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let item of orderItems">
-            <td>{{ item.lineItemId }}</td>
-            <td>{{ item.orderId }}</td>
-            <td>{{ item.productId }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>${{ item.unitPrice | number:'1.2-2' }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
   </div>
-
 </div>

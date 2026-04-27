@@ -1,69 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core'; 
+import { HttpErrorResponse } from '@angular/common/http';
+import { OrdersService } from '../../orders-service';
+import { CommonModule, DatePipe } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-orders-data-delete',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, NgClass, DatePipe],
   templateUrl: './orders-data-delete.html',
   styleUrl: './orders-data-delete.css',
 })
 export class OrdersDataDelete {
 
   deleteForm: FormGroup;
-  message: string = '';
-  error: string = '';
+  deletedOrder: any = null;
 
-  baseUrl = 'http://localhost:9090/api/orders';
-
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'info' = 'info';
+  showToast: boolean = false;
 
   constructor(
-    private fb: FormBuilder, 
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef 
+    private fb: FormBuilder,
+    private ordersService: OrdersService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.deleteForm = this.fb.group({
       orderId: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
+  showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.showToast = false;
+      this.cdr.detectChanges();
+    }, 4000);
+  }
+
   deleteById() {
-    this.message = '';
-    this.error = '';
+    this.deletedOrder = null;
 
     if (this.deleteForm.invalid) {
-      this.error = "Please enter a valid ID";
+      this.showNotification('Please enter a valid Order ID', 'error');
       return;
     }
 
     const id = this.deleteForm.value.orderId;
 
-    this.http.delete(`${this.baseUrl}/${id}`).subscribe({
+    // First fetch the order so we can show its details after deletion
+    this.ordersService.getOrderById(id).subscribe({
       next: (res: any) => {
-        this.message = `ID ${id} is deleted successfully`;
-        this.deleteForm.reset();
-        this.cdr.detectChanges(); 
+        const orderData = res.data || res;
+
+        this.ordersService.deleteOrder(id).subscribe({
+          next: () => {
+            this.deletedOrder = orderData;
+            this.deleteForm.reset();
+            this.cdr.detectChanges();
+            this.showNotification(`Order #${id} deleted successfully`, 'success');
+          },
+          error: (err: HttpErrorResponse) => {
+            const msg = err.error?.msg || err.error?.message || err.message || '';
+            if (err.status === 404) {
+              this.showNotification(`Order #${id} not found`, 'error');
+            } else if (err.status === 0) {
+              this.showNotification('Server is offline or unreachable', 'error');
+            } else {
+              this.showNotification(`Delete failed: ${msg || 'Unexpected error'}`, 'error');
+            }
+            this.cdr.detectChanges();
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
-        console.error("Delete Error:", err);
-        this.message = ''; 
-
         if (err.status === 404) {
-          this.error = err.error?.msg || `ID ${id} not found`;
-        } 
-        else if (err.status === 400) {
-           this.error = err.error?.msg || "Invalid Request";
+          this.showNotification(`Order #${id} not found`, 'error');
+        } else {
+          this.showNotification('Could not fetch order for deletion', 'error');
         }
-        else if (err.status === 0) {
-          this.error = "Server is offline or unreachable";
-        } 
-        else {
-          this.error = "An unexpected error occurred";
-        }
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       }
     });
   }
+
+  goBack() { this.router.navigate(['/modules/orders']); }
 }

@@ -1,142 +1,153 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { NgClass, NgFor, CommonModule } from '@angular/common';
-
-interface OrderDetail {
-  orderId: number;
-  customerId: number;
-  storeId: number;
-  orderStatusS: string;
-  orderTms: string;
-}
+import { NgClass, CommonModule } from '@angular/common';
+import { OrdersService } from '../../orders-service';
 
 @Component({
   selector: 'app-orders-data-put',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgFor, CommonModule],
+  imports: [ReactiveFormsModule, NgClass, CommonModule],
   templateUrl: './orders-data-put.html',
   styleUrl: './orders-data-put.css',
 })
 export class OrdersDataPut implements OnInit {
-
   orderForm!: FormGroup;
-
-  orderDetails: OrderDetail | null = null;
+  orderDetails: any = null;
   loading: boolean = false;
 
-  // 🔥 Toast
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
-  private toastTimeout: any = null;
 
-  private baseUrl = 'http://localhost:9090/api/orders';
-
-  orderStatuses = ['OPEN', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+  orderStatuses = ['OPEN', 'PAID', 'SHIPPED', 'COMPLETE', 'CANCELLED', 'REFUNDED'];
 
   constructor(
-    private http: HttpClient,
+    private ordersService: OrdersService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+  ) { }
 
   ngOnInit(): void {
     this.orderForm = new FormGroup({
       orderId: new FormControl('', [Validators.required, Validators.min(1)]),
-      orderStatusS: new FormControl('', [Validators.required])
+      orderStatusS: new FormControl(''),
+      storeId: new FormControl(''),
+      customerId: new FormControl(''),
+      orderDate: new FormControl(''),
     });
   }
 
-  // 🔥 Toast (same as order-items → FIXES DOUBLE CLICK)
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
-    if (this.toastTimeout) {
-      clearTimeout(this.toastTimeout);
-    }
-
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
     this.cdr.detectChanges();
-
-    this.toastTimeout = setTimeout(() => {
+    setTimeout(() => {
       this.showToast = false;
       this.cdr.detectChanges();
     }, 3000);
   }
 
-  // 🔍 SEARCH ORDER
   searchOrder(): void {
     const id = this.orderForm.get('orderId')?.value;
-
     if (!id) {
       this.showNotification('Enter valid Order ID', 'error');
       return;
     }
-
     this.loading = true;
-
-    this.http.get<any>(`${this.baseUrl}/${id}`).subscribe({
-      next: (res) => {
+    this.ordersService.getOrderById(id).subscribe({
+      next: (res: any) => {
         this.orderDetails = res.data;
-
+        // orderTms is the real field name in this backend
+        const rawDate = this.orderDetails.orderTms;
         this.orderForm.patchValue({
-          orderStatusS: res.data.orderStatusS
+          orderStatusS: this.orderDetails.orderStatusS,
+          storeId: this.orderDetails.storeId,
+          customerId: this.orderDetails.customerId,
+          orderDate: rawDate ? rawDate.substring(0, 16) : '',
         });
-
         this.loading = false;
         this.cdr.detectChanges();
         this.showNotification('Order loaded successfully', 'info');
       },
-
-      error: (err) => {
-        console.error(err);
+      error: () => {
         this.orderDetails = null;
         this.loading = false;
         this.cdr.detectChanges();
-        this.showNotification('Order not found ❌', 'error');
-      }
+        this.showNotification('Order not found', 'error');
+      },
     });
   }
 
-  // 🔄 UPDATE STATUS
   handleUpdate(): void {
-    if (this.orderForm.invalid || !this.orderDetails) {
-      this.showNotification('Fill all fields properly', 'error');
+    if (!this.orderDetails) {
+      this.showNotification('Search for an order first', 'error');
       return;
     }
 
     const orderId = this.orderForm.get('orderId')?.value;
-    const status = this.orderForm.get('orderStatusS')?.value;
+    const newStatus   = this.orderForm.get('orderStatusS')?.value;
+    const newStoreId  = this.orderForm.get('storeId')?.value;
+    const newCustomerId = this.orderForm.get('customerId')?.value;
+    const newOrderDate = this.orderForm.get('orderDate')?.value; // from datetime-local: "2023-01-18T18:30"
+
+    const currentTms = this.orderDetails.orderTms; // e.g. "2023-01-18T10:00:00"
+
+    const statusChanged   = newStatus && newStatus !== this.orderDetails.orderStatusS;
+    const storeChanged    = newStoreId && +newStoreId !== this.orderDetails.storeId;
+    const customerChanged = newCustomerId && +newCustomerId !== this.orderDetails.customerId;
+    const dateChanged     = newOrderDate && newOrderDate !== (currentTms ? currentTms.substring(0, 16) : '');
+
+    if (!statusChanged && !storeChanged && !customerChanged && !dateChanged) {
+      this.showNotification('No changes detected to update', 'info');
+      return;
+    }
 
     this.loading = true;
+    const updates: Promise<any>[] = [];
 
-    this.http.put<any>(`${this.baseUrl}/${orderId}/status?status=${status}`, {})
-      .subscribe({
-        next: (res) => {
-          this.orderDetails = res.data;
-          this.loading = false;
-          this.cdr.detectChanges();
+    // PATCH status if changed
+    if (statusChanged) {
+      updates.push(this.ordersService.updateOrderStatus(orderId, newStatus).toPromise());
+    }
 
-          this.showNotification('Order updated successfully ✅', 'success');
+    // PUT storeId if changed (separate call — backend handles one at a time)
+    if (storeChanged) {
+      updates.push(this.ordersService.updateOrder(orderId, { storeId: +newStoreId }).toPromise());
+    }
 
-          setTimeout(() => {
-            this.router.navigate(['/orders/get-all']);
-          }, 1500);
-        },
+    // PUT customerId if changed
+    if (customerChanged) {
+      updates.push(this.ordersService.updateOrder(orderId, { customerId: +newCustomerId }).toPromise());
+    }
 
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-          this.cdr.detectChanges();
-          this.showNotification('Update failed ❌', 'error');
-        }
+    // PUT orderTms if changed — Spring expects ISO_DATE_TIME: "2023-01-18T18:30:00"
+    if (dateChanged) {
+      // datetime-local gives "2023-01-18T18:30" — append ":00" for full ISO format
+      const isoTms = newOrderDate.length === 16 ? newOrderDate + ':00' : newOrderDate;
+      updates.push(this.ordersService.updateOrderTms(orderId, isoTms).toPromise());
+    }
+
+    Promise.all(updates)
+      .then((results) => {
+        const lastRes = results[results.length - 1];
+        if (lastRes?.data) this.orderDetails = lastRes.data;
+        this.loading = false;
+        this.cdr.detectChanges();
+        this.showNotification(`Order #${orderId} updated successfully`, 'success');
+      })
+      .catch((err) => {
+        this.loading = false;
+        this.cdr.detectChanges();
+        this.showNotification(
+          'Update failed: ' + (err?.error?.msg || err?.error?.message || err?.message || 'Unknown error'),
+          'error'
+        );
       });
   }
 
-  // 🔙 BACK
   goBack(): void {
-    this.router.navigate(['/orders/get-all']);
+    this.router.navigate(['/modules/orders']);
   }
 }

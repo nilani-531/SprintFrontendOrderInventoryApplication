@@ -1,6 +1,7 @@
 <div class="container">
 
   <h2>Delete Shipment By ID</h2>
+  <p class="page-subtitle">Delete shipment record using given shipment ID</p>
 
   <form [formGroup]="deleteForm" (ngSubmit)="deleteById()">
 
@@ -18,11 +19,24 @@
 <div class="message-container">
 
   @if (message) {
-    <p class="success show">{{ message }}</p>
+    <div class="success-box">{{ message }}</div>
   }
 
   @if (error) {
-    <p class="error show">{{ error }}</p>
+    <div class="error-box">{{ error }}</div>
   }
 
 </div>
+
+@if (deletedShipment) {
+  <div class="card deleted-item">
+    <h3>Deleted Shipment Details</h3>
+    <div class="grid">
+      <p><strong>Shipment ID:</strong> {{ deletedShipment.shipmentId }}</p>
+      <p><strong>Customer ID:</strong> {{ deletedShipment.customer?.customerId }}</p>
+      <p><strong>Store ID:</strong> {{ deletedShipment.store?.storeId }}</p>
+      <p><strong>Delivery Address:</strong> {{ deletedShipment.deliveryAddress }}</p>
+      <p><strong>Status:</strong> {{ deletedShipment.shipmentStatus }}</p>
+    </div>
+  </div>
+}

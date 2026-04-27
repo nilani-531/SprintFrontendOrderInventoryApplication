@@ -1,88 +1,162 @@
+<h2 class="title">Inventory Data Dashboard</h2>
+
 <div class="page">
+  <app-inventory-get-navbar (optionSelected)="onOptionSelected($event)"></app-inventory-get-navbar>
+  <div class="container" style="max-width: 100%">
+    @if (selectedOption) {
+      <div class="input-section">
+        <div class="input-row">
+          @if (selectedOption === 'getById') {
+            <input
+              type="number"
+              [(ngModel)]="inventoryId"
+              placeholder="Enter Inventory ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByStore') {
+            <input
+              type="number"
+              [(ngModel)]="storeId"
+              placeholder="Enter Store ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByProduct') {
+            <input
+              type="number"
+              [(ngModel)]="productId"
+              placeholder="Enter Product ID"
+              class="input-box"
+            />
+          }
+          <button
+            type="button"
+            (click)="fetchData()"
+            [disabled]="!isInputValid() || loading"
+            class="fetch-btn"
+          >
+            {{ loading ? 'Loading...' : 'Fetch Data' }}
+          </button>
+        </div>
+      </div>
+    }
 
-  <div class="container">
-
-    <h2 class="title">Inventory Data Fetch</h2>
-
-    <!-- ✅ FORM -->
-    <form [formGroup]="form" class="card">
-
-      <div class="input-row">
-
-        <input
-          type="number"
-          formControlName="inventoryId"
-          placeholder="Enter Inventory ID"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getInventoryById()" class="btn primary">
-          Get Inventory
-        </button>
-
-        <button type="button" (click)="getAllInventories()" class="btn secondary">
-          Get All Inventories
-        </button>
-
+    <div class="split-layout">
+      <!-- A Place: Detailed Description -->
+      <div class="left-col">
+        <div class="card description-card">
+          <h3>Current Endpoint</h3>
+          @if (selectedOption) {
+            <div class="current-endpoint-box">
+              <span class="method get">GET</span>
+              @if (selectedOption === 'getAll') {
+                <span class="endpoint-path">/api/inventory</span>
+              }
+              @if (selectedOption === 'getById') {
+                <span class="endpoint-path">/api/inventory/&#123;inventoryId&#125;</span>
+              }
+              @if (selectedOption === 'getByStore') {
+                <span class="endpoint-path">/api/inventory/store/&#123;storeId&#125;</span>
+              }
+              @if (selectedOption === 'getByProduct') {
+                <span class="endpoint-path">/api/inventory/product/&#123;productId&#125;</span>
+              }
+            </div>
+          }
+          <h3>Endpoint Description</h3>
+          @if (selectedOption === 'getAll') {
+            <p>Get all inventory details from system database</p>
+          }
+          @if (selectedOption === 'getById') {
+            <p>Get inventory details using given inventory ID</p>
+          }
+          @if (selectedOption === 'getByStore') {
+            <p>Get inventory details using given store ID</p>
+          }
+          @if (selectedOption === 'getByProduct') {
+            <p>Get inventory details using given product ID</p>
+          }
+          @if (!selectedOption) {
+            <p class="text-muted" style="color: var(--text-muted); font-style: italic">
+              Select an option from the navbar to view details.
+            </p>
+          }
+        </div>
       </div>
 
-    </form>
+      <!-- B Place: Data Table/Card -->
+      <div class="right-col">
+        <!-- Loading -->
+        @if (loading) {
+          <div class="info">Loading...</div>
+        }
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="info">
-      Loading...
-    </div>
+        <!-- Error -->
+        @if (error) {
+          <div class="error-box">
+            {{ error }}
+          </div>
+        }
 
-    <!-- Error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
+        <!-- ✅ Single Inventory -->
+        @if (singleInventory) {
+          <div class="card">
+            <h3>Inventory Details</h3>
+            <div class="grid">
+              <p><strong>Inventory ID:</strong> {{ singleInventory.inventoryId }}</p>
+              <p><strong>Store ID:</strong> {{ singleInventory.storeId || 'N/A' }}</p>
+              <p><strong>Product ID:</strong> {{ singleInventory.productId || 'N/A' }}</p>
+              <p><strong>Quantity:</strong> {{ singleInventory.productInventory }}</p>
+            </div>
+          </div>
+        }
 
-    <!-- ✅ Single Inventory -->
-    <div *ngIf="singleInventory" class="card">
-
-      <h3>Inventory Details</h3>
-
-      <div class="grid">
-        <p><strong>Inventory ID:</strong> {{ singleInventory.inventoryId }}</p>
-        <p><strong>Store ID:</strong> {{ singleInventory.stores.storeId }}</p>
-        <p><strong>Store Name:</strong> {{ singleInventory.stores.storeName }}</p>
-        <p><strong>Product ID:</strong> {{ singleInventory.products.productId }}</p>
-        <p><strong>Product Name:</strong> {{ singleInventory.products.productName }}</p>
-        <p><strong>Quantity:</strong> {{ singleInventory.productInventory }}</p>
+        <!-- ✅ All Inventories -->
+        @if (allInventories.length > 0) {
+          <div class="card">
+            <h3>All Inventories ({{ allInventories.length }} total - Page {{ currentPage }})</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Store ID</th>
+                  <th>Product ID</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (inventory of paginatedInventories; track inventory) {
+                  <tr>
+                    <td>{{ inventory.inventoryId }}</td>
+                    <td>{{ inventory.storeId }}</td>
+                    <td>{{ inventory.productId }}</td>
+                    <td>{{ inventory.productInventory }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <!-- Pagination Controls -->
+            <div class="pagination">
+              <button
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)"
+                class="pagination-btn"
+              >
+                Previous
+              </button>
+              <span class="pagination-info"> Page {{ currentPage }} of {{ getTotalPages() }} </span>
+              <button
+                [disabled]="currentPage === getTotalPages()"
+                (click)="goToPage(currentPage + 1)"
+                class="pagination-btn"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        }
       </div>
-
     </div>
-
-    <!-- ✅ All Inventories -->
-    <div *ngIf="allInventories.length > 0" class="card">
-
-      <h3>All Inventories</h3>
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Store</th>
-            <th>Product</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let inventory of allInventories">
-            <td>{{ inventory.inventoryId }}</td>
-            <td>{{ inventory.stores.storeName }}</td>
-            <td>{{ inventory.products.productName }}</td>
-            <td>{{ inventory.productInventory }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
   </div>
-
 </div>

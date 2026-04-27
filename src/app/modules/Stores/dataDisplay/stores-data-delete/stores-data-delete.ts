@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core'; 
+import { StoresService } from '../../stores-service';
 
 @Component({
   selector: 'app-stores-data-delete',
@@ -15,15 +17,13 @@ export class StoresDataDelete {
   deleteForm: FormGroup;
   message: string = '';
   error: string = '';
-
-  baseUrl = 'http://localhost:9090/api/stores';
-
+  deletedStore: any = null;
 
   constructor(
     private fb: FormBuilder, 
-    private http: HttpClient,
+    private storesService: StoresService,
     private cdr: ChangeDetectorRef 
-  ) {
+  , private router: Router) {
     this.deleteForm = this.fb.group({
       storeId: ['', [Validators.required, Validators.min(1)]]
     });
@@ -32,6 +32,7 @@ export class StoresDataDelete {
   deleteById() {
     this.message = '';
     this.error = '';
+    this.deletedStore = null;
 
     if (this.deleteForm.invalid) {
       this.error = "Please enter a valid ID";
@@ -40,30 +41,54 @@ export class StoresDataDelete {
 
     const id = this.deleteForm.value.storeId;
 
-    this.http.delete(`${this.baseUrl}/${id}`).subscribe({
+    this.storesService.getStoreById(id).subscribe({
       next: (res: any) => {
-        this.message = `ID ${id} is deleted successfully`;
-        this.deleteForm.reset();
-        this.cdr.detectChanges(); 
+        const storeData = res.data || res;
+        this.storesService.deleteStore(id).subscribe({
+          next: () => {
+            this.deletedStore = storeData;
+            this.message = `ID ${id} is deleted successfully`;
+            this.deleteForm.reset();
+            this.cdr.detectChanges(); 
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error("Delete Error:", err);
+            this.message = ''; 
+
+            if (err.status === 404) {
+              this.error = err.error?.msg || `ID ${id} not found`;
+            } 
+            else if (err.status === 400) {
+               this.error = err.error?.msg || "Invalid Request";
+            }
+            else if (err.status === 0) {
+              this.error = "Server is offline or unreachable";
+            } 
+            else if (err.status === 500) {
+              this.error = err.error?.msg || "Cannot delete: store is referenced by existing orders";
+            }
+            else {
+              this.error = err.error?.msg || "An unexpected error occurred";
+            }
+            this.cdr.detectChanges(); 
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
-        console.error("Delete Error:", err);
-        this.message = ''; 
-
+        console.error("Fetch Error:", err);
         if (err.status === 404) {
           this.error = err.error?.msg || `ID ${id} not found`;
-        } 
-        else if (err.status === 400) {
-           this.error = err.error?.msg || "Invalid Request";
+        } else {
+          this.error = 'Could not fetch store for deletion';
         }
-        else if (err.status === 0) {
-          this.error = "Server is offline or unreachable";
-        } 
-        else {
-          this.error = "An unexpected error occurred";
-        }
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  goBack() { this.router.navigate(['/modules/stores']); }
+
+  private extractErrorMessage(err: any): string {
+    return this.extractErrorMessage(err);
   }
 }

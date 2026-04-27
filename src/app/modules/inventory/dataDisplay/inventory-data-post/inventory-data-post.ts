@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InventoryDataService } from '../inventory-data.service';
 
@@ -10,6 +11,7 @@ import { InventoryDataService } from '../inventory-data.service';
 })
 export class InventoryDataPost {
   inventoryService: InventoryDataService = inject(InventoryDataService);
+  router = inject(Router);
 
   inventoryForm = new FormGroup({
     storeId: new FormControl('', [Validators.required, Validators.min(1)]),
@@ -29,11 +31,9 @@ export class InventoryDataPost {
 
       this.inventoryService.createInventory(storeId, productId, payload).subscribe({
         next: (data: any) => {
-          this.successMessage = 'Inventory created successfully';
-          alert('Inventory created successfully');
+          this.successMessage = `Inventory created successfully! (ID: ${data.data?.inventoryId || ''})`;
           this.inventoryForm.reset();
           this.error = null;
-          this.successMessage = '';
         },
         error: (err) => {
           if (err.error && err.error.msg) {
@@ -51,5 +51,11 @@ export class InventoryDataPost {
         }
       });
     }
+  }
+
+  goBack() { this.router.navigate(['/modules/inventory']); }
+
+  private extractErrorMessage(err: any): string {
+    return this.extractErrorMessage(err);
   }
 }

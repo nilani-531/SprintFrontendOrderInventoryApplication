@@ -1,23 +1,88 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterOutlet } from "@angular/router";
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-customers-api-display',
-  imports: [CommonModule, RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './customers-api-display.html',
   styleUrl: './customers-api-display.css',
 })
 export class CustomersApiDisplay {
- endpoints = [
-    { name: 'Get All Customers', method: 'GET', route: 'get-all', desc: 'Get all customer details from system database' },
-    { name: 'Get Customer By ID', method: 'GET', route: 'get-by-customerid', desc: 'Get customer details using given customer ID' },
-    { name: 'Get Customer By Email', method: 'GET', route: 'get-by-email', desc: 'Get customer details using given email address' },
-    { name: 'Create Customer', method: 'POST', route: 'create', desc: 'Create new customer by providing required details' },
-    { name: 'Update Customer', method: 'PUT', route: 'update', desc: 'Update existing customer details using customer ID' },
-    { name: 'Delete Customer', method: 'DELETE', route: 'delete', desc: 'Delete customer record using given customer ID' },
-    { name: 'Get Customer Orders', method: 'GET', route: 'get-orders', desc: 'Get all orders placed by customer using customer ID' },
-    { name: 'Get Customer Shipments', method: 'GET', route: 'get-shipments', desc: 'Get all shipments associated with customer using customer ID' }
-    
+  router = inject(Router);
+  routeActive = false;
+
+  constructor() {
+    this.updateRouteActive(this.router.url);
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.updateRouteActive(event.urlAfterRedirects);
+      });
+  }
+
+  private updateRouteActive(url: string) {
+    const parts = url.split('/modules/customers/');
+    this.routeActive = parts.length > 1 && parts[1].length > 0;
+  }
+
+  isRouteActive(): boolean {
+    return this.routeActive;
+  }
+
+  goBack() {
+    this.router.navigate(['/api-dashboard']);
+  }
+
+  endpoints = [
+    {
+      name: 'Get All Customers',
+      method: 'GET',
+      route: 'get-all',
+      desc: 'Get all customer records from the database',
+    },
+    {
+      name: 'Get Customer By ID',
+      method: 'GET',
+      route: 'get-by-customerid',
+      desc: 'Find a customer using their ID',
+    },
+    {
+      name: 'Get Customer By Email',
+      method: 'GET',
+      route: 'get-by-email',
+      desc: 'Find a customer using their email address',
+    },
+    {
+      name: 'Create Customer',
+      method: 'POST',
+      route: 'create',
+      desc: 'Add a new customer to the system',
+    },
+    {
+      name: 'Update Customer',
+      method: 'PUT',
+      route: 'update',
+      desc: 'Update an existing customer by ID',
+    },
+    {
+      name: 'Delete Customer',
+      method: 'DELETE',
+      route: 'delete',
+      desc: 'Remove a customer record by ID',
+    },
+    {
+      name: 'Get Customer Orders',
+      method: 'GET',
+      route: 'get-orders',
+      desc: 'Get all orders placed by a customer',
+    },
+    {
+      name: 'Get Customer Shipments',
+      method: 'GET',
+      route: 'get-shipments',
+      desc: 'Get all shipments for a customer',
+    },
   ];
 }

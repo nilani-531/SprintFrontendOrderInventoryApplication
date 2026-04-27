@@ -1,0 +1,89 @@
+<div class="page-container">
+  <div class="content">
+    <h2 class="title">Patch Shipment Status</h2>
+    <p class="page-subtitle">Update only the shipment status after searching by shipment ID</p>
+
+    <div class="card">
+      <form [formGroup]="shipmentsForm" class="form" (ngSubmit)="handlePatchStatus()">
+        <div class="form-group">
+          <label>Shipment ID *</label>
+
+          <div class="input-with-btn">
+            <input
+              type="number"
+              formControlName="shipmentId"
+              placeholder="Enter shipment ID"
+            >
+
+            <button
+              type="button"
+              class="btn-search"
+              (click)="loadShipment()"
+            >
+              Search
+            </button>
+          </div>
+
+          @if (shipmentsForm.controls.shipmentId.touched && shipmentsForm.controls.shipmentId.errors) {
+            <p class="error">*Shipment ID is required</p>
+          }
+        </div>
+
+        @if (shipmentDetails) {
+          <div class="details-box">
+            <h4>Current Shipment Details</h4>
+
+            <div class="details-grid">
+              <p><strong>Shipment ID:</strong> {{ shipmentDetails.shipmentId }}</p>
+              <p><strong>Customer ID:</strong> {{ shipmentDetails.customerId }}</p>
+              <p><strong>Store ID:</strong> {{ shipmentDetails.storeId }}</p>
+              <p><strong>Status:</strong> {{ shipmentDetails.shipmentStatus }}</p>
+              <p><strong>Address:</strong> {{ shipmentDetails.deliveryAddress }}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>New Shipment Status *</label>
+
+            <select formControlName="shipmentStatus">
+              <option value="">Select shipment status</option>
+              @for (option of statusOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+
+            @if (shipmentsForm.controls.shipmentStatus.touched && shipmentsForm.controls.shipmentStatus.errors) {
+              <p class="error">*Shipment status is required</p>
+            }
+          </div>
+        }
+
+        <div class="button-group">
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="!shipmentDetails"
+          >
+            Patch Status
+          </button>
+
+          <button type="button" class="btn-secondary" (click)="goBack()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    @if (error) {
+      <div class="error-box">
+        {{ error }}
+      </div>
+    }
+
+    @if (success) {
+      <div class="success-box">
+        {{ success }}
+      </div>
+    }
+  </div>
+</div>

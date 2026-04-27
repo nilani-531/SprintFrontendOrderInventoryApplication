@@ -3,10 +3,19 @@
   <div class="content">
 
     <h2 class="title">Create Inventory</h2>
+    <p class="page-subtitle">Create new inventory by providing store, product and quantity details</p>
 
     @if(error){
       <div class="error-box">
-        {{ error }}
+        @if(error) {
+<div class="error-box">{{ error }}</div>
+}
+      </div>
+    }
+
+    @if(successMessage){
+      <div class="success-box">
+        ✓ {{ successMessage }}
       </div>
     }
 
@@ -46,9 +55,7 @@
             Create
           </button>
 
-          <button type="button" class="btn-secondary">
-            Cancel
-          </button>
+          <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
         </div>
 
       </form>

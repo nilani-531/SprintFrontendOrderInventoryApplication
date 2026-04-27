@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+
+import { RouterModule, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 interface ApiModule {
@@ -13,7 +13,7 @@ interface ApiModule {
 
 @Component({
   selector: 'app-api-dashboard',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule, RouterLink],
   templateUrl: './api-dashboard.html',
   styleUrl: './api-dashboard.css',
 })
@@ -35,14 +35,14 @@ export class ApiDashboard implements OnInit {
     this.loggedInUser = this.authService.getLoggedInUser();
     const apiNames = this.authService.getAccessibleApis();
 
-    this.accessibleApis = apiNames.map(apiName => {
+    this.accessibleApis = apiNames.map((apiName) => {
       const displayInfo = this.authService.getApiDisplayInfo(apiName);
       return {
         name: apiName,
         title: displayInfo.title,
         description: displayInfo.description,
         icon: displayInfo.icon,
-        route: this.authService.getApiRoute(apiName)
+        route: this.authService.getApiRoute(apiName),
       };
     });
   }

@@ -1,14 +1,15 @@
 <div class="container">
 
   <h2>Delete Customer By ID</h2>
+  <p class="page-subtitle">Remove a customer record by ID</p>
 
   <form [formGroup]="deleteForm" (ngSubmit)="handleDelete()">
 
     <div class="input-group">
-      <input 
+      <input
         type="number"
         formControlName="customerId"
-        placeholder="Enter Order ID"
+        placeholder="Enter Customer ID"
       />
 
       <button type="submit" class="delete-btn">
@@ -19,12 +20,24 @@
   </form>
 
 </div>
+
 <div class="message-container">
   @if (success) {
-    <p class="success show">{{ success }}</p>
+    <div class="success-box">{{ success }}</div>
   }
 
   @if (error) {
-    <p class="error show">{{ error }}</p>
+    <div class="error-box">{{ error }}</div>
   }
 </div>
+
+@if (deletedCustomer) {
+  <div class="card deleted-item">
+    <h3>Deleted Customer Details</h3>
+    <div class="grid">
+      <p><strong>Customer ID:</strong> {{ deletedCustomer.customerId }}</p>
+      <p><strong>Full Name:</strong> {{ deletedCustomer.fullName }}</p>
+      <p><strong>Email Address:</strong> {{ deletedCustomer.emailAddress }}</p>
+    </div>
+  </div>
+}

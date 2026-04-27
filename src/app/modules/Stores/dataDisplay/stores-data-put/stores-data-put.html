@@ -1,84 +1,105 @@
 <div class="page-container">
-
   <div class="content">
-
     <h2 class="title">Update Store</h2>
+    <p class="page-subtitle">Update existing store details using store ID</p>
 
     <div class="card">
-
-      <!-- LOADING -->
-      <div *ngIf="isLoading">Loading store...</div>
-
-      <!-- FORM -->
-      <form [formGroup]="storeForm" (ngSubmit)="handleUpdate()">
-
-        <!-- STORE NAME (USED FOR SEARCH) -->
+      <form [formGroup]="storeForm" class="form">
         <div class="form-group">
-          <label>Search by Store Name (optional)</label>
-
-          <input type="text"
-                 placeholder="Enter store name"
-                 #nameInput>
-
-          <button type="button"
-                  (click)="fetchByName(nameInput.value)">
-            Load by Name
-          </button>
+          <label>Store ID *</label>
+          <div class="input-with-btn">
+            <input type="number" formControlName="storeId" placeholder="Enter store ID" />
+            <button type="button" class="btn-search" (click)="fetchStoreById()">Search</button>
+          </div>
         </div>
 
-        <hr />
+        @if (isLoading) {
+          <div class="loading-box">Loading...</div>
+        }
 
-        <!-- STORE ID (READ ONLY) -->
-        <div class="form-group">
-          <label>Store ID</label>
-          <input formControlName="storeId" readonly>
-        </div>
+        @if (storeDetails && !isLoading) {
+          <div class="details-box">
+            <h4>Store Details</h4>
+            <div class="details-grid">
+              <p><strong>Name:</strong> {{ storeDetails.storeName }}</p>
+              <p><strong>Address:</strong> {{ storeDetails.physicalAddress }}</p>
+            </div>
+          </div>
+        }
 
-        <!-- NAME -->
-        <div class="form-group">
-          <label>Name</label>
-          <input formControlName="storeName">
-        </div>
-
-        <!-- WEB -->
-        <div class="form-group">
-          <label>Web Address</label>
-          <input formControlName="webAddress">
-        </div>
-
-        <!-- ADDRESS -->
-        <div class="form-group">
-          <label>Physical Address</label>
-          <input formControlName="physicalAddress">
-        </div>
-
-        <!-- LAT -->
-        <div class="form-group">
-          <label>Latitude</label>
-          <input formControlName="latitude">
-        </div>
-
-        <!-- LONG -->
-        <div class="form-group">
-          <label>Longitude</label>
-          <input formControlName="longitude">
-        </div>
-
-        <button type="submit">Update Store</button>
-        <button type="button" (click)="goBack()">Cancel</button>
-
+        @if (storeDetails) {
+          <div>
+            <div class="form-group">
+              <label>Store Name *</label>
+              <input type="text" formControlName="storeName" />
+              @if (
+                storeForm.controls['storeName'].touched && storeForm.controls['storeName'].errors
+              ) {
+                <p class="error">*Store name is required</p>
+              }
+            </div>
+            <div class="form-group">
+              <label>Physical Address <span style="font-size:11px;color:#6b7280">(required if no web address)</span></label>
+              <input type="text" formControlName="physicalAddress" />
+            </div>
+            <div class="form-group">
+              <label>Web Address <span style="font-size:11px;color:#6b7280">(required if no physical address)</span></label>
+              <input type="text" formControlName="webAddress" placeholder="https://..." />
+              @if(storeForm.get('webAddress')?.touched && storeForm.get('webAddress')?.errors?.['pattern']){
+                <p class="error">*Must start with http:// or https://</p>
+              }
+            </div>
+            @if(storeForm.touched && storeForm.hasError('addressRequired')){
+              <p class="error">*Either web address or physical address is required</p>
+            }
+            <div class="form-row">
+              <div class="form-group">
+                <label>Latitude</label>
+                <input type="number" formControlName="latitude" step="0.0001" />
+              </div>
+              <div class="form-group">
+                <label>Longitude</label>
+                <input type="number" formControlName="longitude" step="0.0001" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Logo Mime Type</label>
+                <input type="text" formControlName="logoMimeType" placeholder="e.g. image/png" />
+              </div>
+              <div class="form-group">
+                <label>Logo Filename</label>
+                <input type="text" formControlName="logoFilename" placeholder="e.g. store-logo.png" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Logo Charset</label>
+                <input type="text" formControlName="logoCharset" placeholder="Enter logo charset" />
+              </div>
+              <div class="form-group">
+                <label>Logo Last Updated</label>
+                <input type="date" formControlName="logoLastUpdated" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Logo</label>
+              <textarea formControlName="logo" placeholder="Enter logo content or leave blank"></textarea>
+            </div>
+            <div class="button-group">
+              <button type="button" class="btn-primary" (click)="handleUpdate()">Update</button>
+              <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
+            </div>
+          </div>
+        }
       </form>
     </div>
 
-    <!-- ERROR -->
-    <div *ngIf="error" class="error-box">
-      {{ error }}
-    </div>
-
-    <!-- SUCCESS -->
-    <div *ngIf="success" class="success-box">
-      {{ success }}
-    </div>
-
+    @if (error) {
+      <div class="error-box">{{ error }}</div>
+    }
+    @if (success) {
+      <div class="success-box">{{ success }}</div>
+    }
   </div>
 </div>

@@ -1,14 +1,13 @@
 import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomersService } from './../../customers-service';
 import { CustomerGetNavbar } from '../customer-get-navbar/customer-get-navbar';
 
-
 @Component({
   selector: 'app-customers-data-get',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, CustomerGetNavbar],
+  imports: [FormsModule, ReactiveFormsModule, CustomerGetNavbar],
   templateUrl: './customers-data-get.html',
   styleUrl: './customers-data-get.css',
 })
@@ -46,13 +45,18 @@ export class CustomersDataGet {
     { id: 'getById', label: 'Get by Customer ID', requiresInput: true, inputType: 'customerId' },
     { id: 'getByEmail', label: 'Get by Email', requiresInput: true, inputType: 'email' },
     { id: 'getOrders', label: 'Get Customer Orders', requiresInput: true, inputType: 'customerId' },
-    { id: 'getShipments', label: 'Get Customer Shipments', requiresInput: true, inputType: 'customerId' },
+    {
+      id: 'getShipments',
+      label: 'Get Customer Shipments',
+      requiresInput: true,
+      inputType: 'customerId',
+    },
   ];
 
   isInputValid(): boolean {
-    const endpoint = this.getEndpoints.find(e => e.id === this.selectedOption);
+    const endpoint = this.getEndpoints.find((e) => e.id === this.selectedOption);
     if (!endpoint?.requiresInput) return true;
-    
+
     if (endpoint?.inputType === 'customerId') {
       return this.customerId !== null && this.customerId > 0;
     }
@@ -101,14 +105,16 @@ export class CustomersDataGet {
         this.onDataFetched({ type: this.selectedOption, data: response });
       },
       error: (err) => {
-        this.errorMessage = 'Error fetching data: ' + (err.message || 'Unknown error');
         this.loading = false;
+        this.handleError(err);
+        this.change.detectChanges();
       },
     });
   }
 
   onOptionSelected(option: string) {
     this.selectedOption = option;
+    this.reset();
   }
 
   // Handle data from navbar
@@ -196,12 +202,11 @@ export class CustomersDataGet {
       this.updatePaginatedShipments();
     }
   }
-iserror:boolean=false;
-issuccess:boolean=false;
+  iserror: boolean = false;
+  issuccess: boolean = false;
 
   //  Get All Customers
   getAllCustomers() {
-    
     this.reset();
 
     this.customersService.getAllCustomers().subscribe({
@@ -211,15 +216,14 @@ issuccess:boolean=false;
         this.updatePaginatedCustomers();
         this.change.detectChanges();
       },
-      error: (err) => console.error(err)
-       
-    }); 
+      error: (err) => console.error(err),
+    });
   }
 
   // ✅ Get By ID
   getCustomerById() {
     if (!this.customerId || this.customerId <= 0) {
-      alert("Enter valid ID");
+      alert('Enter valid ID');
       return;
     }
 
@@ -230,14 +234,14 @@ issuccess:boolean=false;
         this.customer = data.data ? data.data : data;
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err)
+      error: (err) => this.handleError(err),
     });
   }
 
   // ✅ Get By Email
   getCustomerByEmail() {
     if (!this.emailAddress) {
-      alert("Enter email");
+      alert('Enter email');
       return;
     }
 
@@ -248,16 +252,16 @@ issuccess:boolean=false;
         this.customer = data.data ? data.data : data;
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err)
+      error: (err) => this.handleError(err),
     });
   }
 
   // ✅ Get Orders
   getOrders() {
     if (!this.customerId || this.customerId <= 0) {
-    alert("Enter valid Customer ID first");
-    return;
-  }
+      alert('Enter valid Customer ID first');
+      return;
+    }
     this.resetListsOnly();
 
     this.customersService.getCustomerOrders(this.customerId).subscribe({
@@ -267,17 +271,16 @@ issuccess:boolean=false;
         this.updatePaginatedOrders();
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err)
-      
+      error: (err) => this.handleError(err),
     });
   }
 
   // ✅ Get Shipments
   getShipments() {
     if (!this.customerId || this.customerId <= 0) {
-    alert("Enter valid Customer ID first");
-    return;
-  }
+      alert('Enter valid Customer ID first');
+      return;
+    }
     this.resetListsOnly();
 
     this.customersService.getCustomerShipments(this.customerId).subscribe({
@@ -287,7 +290,7 @@ issuccess:boolean=false;
         this.updatePaginatedShipments();
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err)
+      error: (err) => this.handleError(err),
     });
   }
 
@@ -308,26 +311,29 @@ issuccess:boolean=false;
 
   // 🔥 Error Handler
   handleError(err: any) {
-    console.log("Status:", err.status);
+    console.log('Status:', err.status);
+
+    this.reset();
 
     if (err.status === 404) {
-      this.errorMessage = "Resource not found";
+      this.errorMessage = err.error?.msg || err.error?.message || 'Resource not found';
     } else if (err.status === 500) {
-      this.errorMessage = "Server error";
+      this.errorMessage = err.error?.msg || err.error?.message || 'Server error';
     } else {
-      this.errorMessage = "Something went wrong";
+      this.errorMessage = err.error?.msg || err.error?.message || 'Something went wrong';
     }
- 
+
+    this.change.detectChanges();
+  }
+  resetListsOnly() {
+    this.orders = [];
+    this.shipments = [];
+    this.paginatedOrders = [];
+    this.paginatedShipments = [];
+    this.errorMessage = '';
   }
 
-resetListsOnly() {
-  this.orders = [];
-  this.shipments = [];
-  this.paginatedOrders = [];
-  this.paginatedShipments = [];
-  this.errorMessage = '';
+  private extractErrorMessage(err: any): string {
+    return this.extractErrorMessage(err);
+  }
 }
-
-}
-
-

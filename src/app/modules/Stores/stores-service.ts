@@ -1,46 +1,116 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-interface Store {
-  storeId: number;
-  storeName: string;
-  webAddress: string;
-  physicalAddress: string;
-  latitude: number;
-  longitude: number;
-}
-
+/**
+ * Stores Service - Handles all store-related API calls
+ * Base URL: http://localhost:9090/api/stores
+ * Team Member: Pooja
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class StoresService {
-  http: HttpClient = inject(HttpClient);
+  private http: HttpClient = inject(HttpClient);
+  private readonly BASE_URL = 'http://localhost:9090/api/stores';
 
-  getAllStores() {
-    return this.http.get('http://localhost:9090/api/stores');
+  /**
+   * Get HTTP headers with authentication
+   * Uses session storage or fallback credentials
+   */
+  private getHeaders(): { headers: HttpHeaders; withCredentials: boolean } {
+    const auth = sessionStorage.getItem('authCredentials');
+    const username = sessionStorage.getItem('loggedInUser') || 'pooja';
+    const password = 'poo123';
+    const fallback = btoa(username + ':' + password);
+
+    return {
+      headers: new HttpHeaders({
+        Authorization: 'Basic ' + (auth || fallback),
+      }),
+      withCredentials: true,
+    };
   }
 
-  getStoreById(storeId: number) {
-    return this.http.get(`http://localhost:9090/api/stores/${storeId}`);
+  /**
+   * Get all stores
+   * Endpoint: GET /api/stores
+   */
+  getAllStores(): Observable<any> {
+    return this.http.get(this.BASE_URL, this.getHeaders());
   }
 
-  getStoreInventory(storeId: number) {
-    return this.http.get(`http://localhost:9090/api/stores/${storeId}/inventory`);
+  /**
+   * Get store by ID
+   * Endpoint: GET /api/stores/{storeId}
+   */
+  getStoreById(storeId: number): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/${storeId}`, this.getHeaders());
   }
 
-  getStoreOrders(storeId: number) {
-    return this.http.get(`http://localhost:9090/api/stores/${storeId}/orders`);
+  /**
+   * Get store by name
+   * Endpoint: GET /api/stores/name/{storeName}
+   */
+  getStoreByName(storeName: string): Observable<any> {
+    return this.http.get(`${this.BASE_URL}/name/${encodeURIComponent(storeName)}`, this.getHeaders());
   }
 
-  createStore(store: any) {
-    return this.http.post('http://localhost:9090/api/stores', store);
+  /**
+   * Get store inventory
+   * Endpoint: GET /api/stores/{storeId}/inventory
+   */
+  getStoreInventory(storeId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${storeId}/inventory`,
+      this.getHeaders()
+    );
   }
 
-  updateStore(storeId: number, store: any) {
-    return this.http.put(`http://localhost:9090/api/stores/${storeId}`, store);
+  /**
+   * Get store orders
+   * Endpoint: GET /api/stores/{storeId}/orders
+   */
+  getStoreOrders(storeId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${storeId}/orders`,
+      this.getHeaders()
+    );
   }
 
-  deleteStore(storeId: number) {
-    return this.http.delete(`http://localhost:9090/api/stores/${storeId}`);
+  /**
+   * Get store shipments
+   * Endpoint: GET /api/stores/{storeId}/shipments
+   */
+  getStoreShipments(storeId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${storeId}/shipments`,
+      this.getHeaders()
+    );
+  }
+
+  /**
+   * Create a new store
+   * Endpoint: POST /api/stores
+   * Required field: storeName
+   */
+  createStore(store: any): Observable<any> {
+    return this.http.post(this.BASE_URL, store, this.getHeaders());
+  }
+
+  /**
+   * Update an existing store
+   * Endpoint: PUT /api/stores/{storeId}
+   */
+  updateStore(storeId: number, store: any): Observable<any> {
+    return this.http.put(`${this.BASE_URL}/${storeId}`, store, this.getHeaders());
+  }
+
+  /**
+   * Delete a store
+   * Endpoint: DELETE /api/stores/{storeId}
+   */
+  deleteStore(storeId: number): Observable<any> {
+    return this.http.delete(`${this.BASE_URL}/${storeId}`, this.getHeaders());
   }
 }

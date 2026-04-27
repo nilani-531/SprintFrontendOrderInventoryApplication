@@ -1,54 +1,212 @@
-.container {
-  text-align: center;
-  padding: 40px;
-  background: #f5f7fa;
+.home-bg {
   min-height: 100vh;
-}
-
-.title {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.subtitle {
-  color: gray;
-  margin-bottom: 30px;
-}
-
-.card-container {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #7c3aed 100%);
   display: flex;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 80px;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
 }
 
-.card {
-  background: white;
-  padding: 25px;
+/* Animated background blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: blobFloat 8s ease-in-out infinite;
+}
+
+.blob-1 {
   width: 400px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  height: 400px;
+  background: #a855f7;
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
 }
 
-.name-btn {
+.blob-2 {
+  width: 350px;
+  height: 350px;
+  background: #6366f1;
+  bottom: -80px;
+  right: -80px;
+  animation-delay: 3s;
+}
+
+.blob-3 {
+  width: 250px;
+  height: 250px;
+  background: #ec4899;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 6s;
+}
+
+@keyframes blobFloat {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  33% { transform: scale(1.05) translate(10px, -10px); }
+  66% { transform: scale(0.95) translate(-10px, 10px); }
+}
+
+.home-wrapper {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  background-color: #007bff;
+  max-width: 700px;
+}
+
+/* Hero Header */
+.hero-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.brand-icon {
+  font-size: 16px;
+}
+
+.hero-title {
+  font-size: 42px;
+  font-weight: 700;
   color: white;
-  border: none;
-  border-radius: 6px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #c4b5fd, #f0abfc, #a5f3fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Team Grid */
+.team-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
   cursor: pointer;
-  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+  transition: all 0.25s ease;
 }
 
-.name-btn:hover {
-  background-color: #0056b3;
+.member-card:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(4px);
 }
 
-.module {
-  color: #555;
+.admin-card {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.admin-card:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.member-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 14px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.member-module {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.module-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.admin-tag {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.arrow-icon {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.member-card:hover .arrow-icon {
+  color: white;
+  transform: translateX(4px);
+}
+
+.footer-hint {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
 }

@@ -1,21 +1,92 @@
-<div class="container">
+<div class="home-bg">
+  <!-- Animated background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
 
-  <h1 class="title">Order Inventory Application</h1>
- 
-
-  <div class="card-container">
-
-    <div class="card" >
-
-      <button class="name-btn" (click)="handleClick('abinaya')"> Abinaya (Customers)</button>
-      <button class="name-btn" (click)="handleClick('pooja')">Poojalakshmi (Stores)</button>
-      <button class="name-btn" (click)="handleClick('karthi')"> Karthikeyan (Inventory and Products)</button>
-      <button class="name-btn" (click)="handleClick('nilani')"> Nilani (Order and OrderItems)</button> 
-      <button class="name-btn" (click)="handleClick('yamini')"> Yamini (Shipments)</button>
-       
-
+  <div class="home-wrapper">
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <div class="brand-badge">
+        <span class="brand-icon">📦</span>
+        <span>Order Inventory System</span>
+      </div>
+      <h1 class="hero-title">Welcome to <br><span class="gradient-text">Order Inventory</span></h1>
+      <p class="hero-subtitle">A comprehensive inventory management platform. Choose your team member profile to get
+        started.</p>
     </div>
 
-  </div>
+    <!-- Team Member Cards -->
+    <div class="team-grid">
+      <button class="member-card" (click)="handleClick('abinaya')">
+        <div class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #818cf8)">AB</div>
+        <div class="member-info">
+          <div class="member-name">Abinaya</div>
+          <div class="member-module">
+            <span class="module-tag">👥 Customers</span>
+          </div>
+        </div>
+        <span class="arrow-icon">→</span>
+      </button>
 
+      <button class="member-card" (click)="handleClick('pooja')">
+        <div class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6)">PL</div>
+        <div class="member-info">
+          <div class="member-name">Poojalakshmi</div>
+          <div class="member-module">
+            <span class="module-tag">🏪 Stores</span>
+          </div>
+        </div>
+        <span class="arrow-icon">→</span>
+      </button>
+
+      <button class="member-card" (click)="handleClick('karthi')">
+        <div class="member-avatar" style="background: linear-gradient(135deg, #3b82f6, #60a5fa)">KA</div>
+        <div class="member-info">
+          <div class="member-name">Karthikeyan</div>
+          <div class="member-module">
+            <span class="module-tag">📦 Products</span>
+            <span class="module-tag">📋 Inventory</span>
+          </div>
+        </div>
+        <span class="arrow-icon">→</span>
+      </button>
+
+      <button class="member-card" (click)="handleClick('nilani')">
+        <div class="member-avatar" style="background: linear-gradient(135deg, #10b981, #34d399)">NI</div>
+        <div class="member-info">
+          <div class="member-name">Nilani</div>
+          <div class="member-module">
+            <span class="module-tag">🛒 Orders</span>
+            <span class="module-tag">📝 Order Items</span>
+          </div>
+        </div>
+        <span class="arrow-icon">→</span>
+      </button>
+
+      <button class="member-card" (click)="handleClick('yamini')">
+        <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24)">YA</div>
+        <div class="member-info">
+          <div class="member-name">Yamini</div>
+          <div class="member-module">
+            <span class="module-tag">🚚 Shipments</span>
+          </div>
+        </div>
+        <span class="arrow-icon">→</span>
+      </button>
+
+      <button class="member-card admin-card" (click)="handleClick('admin')">
+        <div class="member-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171)">AD</div>
+        <div class="member-info">
+          <div class="member-name">Admin</div>
+          <div class="member-module">
+            <span class="module-tag admin-tag">⚡ Full Access</span>
+          </div>
+        </div>
+        <span class="arrow-icon">→</span>
+      </button>
+    </div>
+
+    <p class="footer-hint">Select a team member to login with their credentials</p>
+  </div>
 </div>

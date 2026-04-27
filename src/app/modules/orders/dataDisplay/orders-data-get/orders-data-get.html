@@ -1,89 +1,188 @@
+<h2 class="title">Orders Data Dashboard</h2>
+
 <div class="page">
+  <app-order-get-navbar (optionSelected)="onOptionSelected($event)"></app-order-get-navbar>
+  <div class="container" style="max-width: 100%">
+    @if (selectedOption) {
+      <div class="input-section">
+        <div class="input-row">
+          @if (selectedOption === 'getById') {
+            <input
+              type="number"
+              [(ngModel)]="orderId"
+              placeholder="Enter Order ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByCustomer') {
+            <input
+              type="number"
+              [(ngModel)]="customerId"
+              placeholder="Enter Customer ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByStore') {
+            <input
+              type="number"
+              [(ngModel)]="storeId"
+              placeholder="Enter Store ID"
+              class="input-box"
+            />
+          }
+          @if (selectedOption === 'getByStatus') {
+            <select [(ngModel)]="status" class="input-box">
+              <option value="" disabled selected>Select Status</option>
+              <option value="OPEN">OPEN</option>
+              <option value="PAID">PAID</option>
+              <option value="SHIPPED">SHIPPED</option>
+              <option value="COMPLETE">COMPLETE</option>
+              <option value="CANCELLED">CANCELLED</option>
+              <option value="REFUNDED">REFUNDED</option>
+            </select>
+          }
+          @if (selectedOption === 'getByDateRange') {
+            <div style="display: flex; gap: 10px">
+              <input type="date" [(ngModel)]="fromDate" class="input-box" />
+              <input type="date" [(ngModel)]="toDate" class="input-box" />
+            </div>
+          }
+          <button
+            type="button"
+            (click)="fetchData()"
+            [disabled]="!isInputValid() || loading"
+            class="fetch-btn"
+          >
+            {{ loading ? 'Loading...' : 'Fetch Data' }}
+          </button>
+        </div>
+      </div>
+    }
 
-  <div class="container">
-
-    <h2 class="title">Orders Data Fetch</h2>
-
-    <!-- ✅ FORM -->
-    <form [formGroup]="form" class="card">
-
-      <div class="input-row">
-
-        <input
-          type="number"
-          formControlName="orderId"
-          placeholder="Enter Order ID"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getOrderById()" class="btn primary">
-          Get Order
-        </button>
-
-        <button type="button" (click)="getAllOrders()" class="btn secondary">
-          Get All Orders
-        </button>
-
+    <div class="split-layout">
+      <!-- A Place: Detailed Description -->
+      <div class="left-col">
+        <div class="card description-card">
+          <h3>Current Endpoint</h3>
+          @if (selectedOption) {
+            <div class="current-endpoint-box">
+              <span class="method get">GET</span>
+              @if (selectedOption === 'getAll') {
+                <span class="endpoint-path">/api/orders</span>
+              }
+              @if (selectedOption === 'getById') {
+                <span class="endpoint-path">/api/orders/&#123;orderId&#125;</span>
+              }
+              @if (selectedOption === 'getByCustomer') {
+                <span class="endpoint-path">/api/orders/customer/&#123;customerId&#125;</span>
+              }
+              @if (selectedOption === 'getByStore') {
+                <span class="endpoint-path">/api/orders/store/&#123;storeId&#125;</span>
+              }
+              @if (selectedOption === 'getByStatus') {
+                <span class="endpoint-path">/api/orders/status/&#123;status&#125;</span>
+              }
+              @if (selectedOption === 'getByDateRange') {
+                <span class="endpoint-path">/api/orders/date</span>
+              }
+            </div>
+          }
+          <h3>Endpoint Description</h3>
+          @if (selectedOption === 'getAll') {
+            <p>Get all order details from system database</p>
+          }
+          @if (selectedOption === 'getById') {
+            <p>Get order details using given order ID</p>
+          }
+          @if (selectedOption === 'getByCustomer') {
+            <p>Get orders using given customer ID</p>
+          }
+          @if (selectedOption === 'getByStore') {
+            <p>Get orders using given store ID</p>
+          }
+          @if (selectedOption === 'getByStatus') {
+            <p>Get orders using given status</p>
+          }
+          @if (selectedOption === 'getByDateRange') {
+            <p>Get orders using given date range</p>
+          }
+          @if (!selectedOption) {
+            <p class="text-muted" style="color: var(--text-muted); font-style: italic">
+              Select an option from the navbar to view details.
+            </p>
+          }
+        </div>
       </div>
 
-    </form>
+      <!-- B Place: Data Table/Card -->
+      <div class="right-col">
+        @if (loading) {
+          <div class="info">Loading...</div>
+        }
+        @if (error) {
+          <div class="error-box">{{ error }}</div>
+        }
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="info">
-      Loading...
-    </div>
+        <!-- Single Order -->
+        @if (singleOrder) {
+          <div class="card">
+            <h3>Order Details</h3>
+            <div class="grid">
+              <p><strong>Order ID:</strong> {{ singleOrder.orderId }}</p>
+              <p><strong>Customer ID:</strong> {{ singleOrder.customerId }}</p>
+              <p><strong>Store ID:</strong> {{ singleOrder.storeId }}</p>
+              <p><strong>Status:</strong> {{ singleOrder.orderStatusS }}</p>
+              <p><strong>Order Time:</strong> {{ singleOrder.orderTms }}</p>
+            </div>
+          </div>
+        }
 
-    <!-- Error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
-
-    <!-- ✅ Single Order -->
-    <div *ngIf="singleOrder" class="card">
-
-      <h3>Order Details</h3>
-
-      <div class="grid">
-        <p><strong>Order ID:</strong> {{ singleOrder.orderId }}</p>
-        <p><strong>Customer ID:</strong> {{ singleOrder.customerId }}</p>
-        <p><strong>Store ID:</strong> {{ singleOrder.storeId }}</p>
-        <p><strong>Status:</strong> {{ singleOrder.orderStatusS }}</p>
-        <p><strong>Order Time:</strong> {{ singleOrder.orderTms }}</p>
+        <!-- All Orders with Pagination -->
+        @if (allOrders.length > 0) {
+          <div class="card">
+            <h3>All Orders ({{ allOrders.length }} total - Page {{ currentPage }})</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer ID</th>
+                  <th>Store ID</th>
+                  <th>Status</th>
+                  <th>Order Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of paginatedOrders; track order) {
+                  <tr>
+                    <td>{{ order.orderId }}</td>
+                    <td>{{ order.customerId }}</td>
+                    <td>{{ order.storeId }}</td>
+                    <td>{{ order.orderStatusS }}</td>
+                    <td>{{ order.orderTms }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <div class="pagination">
+              <button
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)"
+                class="pagination-btn"
+              >
+                Previous
+              </button>
+              <span class="pagination-info">Page {{ currentPage }} of {{ getTotalPages() }}</span>
+              <button
+                [disabled]="currentPage === getTotalPages()"
+                (click)="goToPage(currentPage + 1)"
+                class="pagination-btn"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        }
       </div>
-
     </div>
-
-    <!-- ✅ All Orders -->
-    <div *ngIf="allOrders.length > 0" class="card">
-
-      <h3>All Orders</h3>
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Customer ID</th>
-            <th>Store ID</th>
-            <th>Status</th>
-            <th>Order Time</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let order of allOrders">
-            <td>{{ order.orderId }}</td>
-            <td>{{ order.customerId }}</td>
-            <td>{{ order.storeId }}</td>
-            <td>{{ order.orderStatusS }}</td>
-            <td>{{ order.orderTms }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
   </div>
-
 </div>

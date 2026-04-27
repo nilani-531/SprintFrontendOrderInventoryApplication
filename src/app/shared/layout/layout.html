@@ -1,0 +1,53 @@
+<div class="app-layout" [ngClass]="{ 'top-nav-layout': !isAdmin }">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">📦</div>
+      <div class="logo-text">
+        <span class="logo-title">OrderInventory</span>
+        <span class="logo-sub">Management System</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a
+        class="sidebar-link"
+        routerLink="/api-dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span class="link-icon">🏠</span>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="sidebar-section-label">My Modules</div>
+
+      @for (link of moduleLinks; track link) {
+        <a class="sidebar-link" [routerLink]="link.route" routerLinkActive="active">
+          <span>{{ link.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">
+          {{ loggedInUser ? loggedInUser.charAt(0).toUpperCase() : 'U' }}
+        </div>
+        <div class="user-details">
+          <div class="user-name">{{ loggedInUser }}</div>
+          <div class="user-role">Team Member</div>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()" id="logout-btn">
+        <span>⎋</span>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
