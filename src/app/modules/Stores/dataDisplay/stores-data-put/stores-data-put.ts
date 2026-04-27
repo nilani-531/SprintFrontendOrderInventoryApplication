@@ -29,7 +29,7 @@ export class StoresDataPut implements OnInit {
     private storesService: StoresService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.storeForm = new FormGroup({

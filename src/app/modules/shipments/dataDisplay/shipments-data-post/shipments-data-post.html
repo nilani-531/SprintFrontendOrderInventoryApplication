@@ -14,7 +14,7 @@
           <input type="number" formControlName="customerId" placeholder="Enter customer ID">
 
           @if(shipmentsForm.controls.customerId.touched && shipmentsForm.controls.customerId.errors){
-            <p class="error">*Customer ID is required</p>
+          <p class="error">*Customer ID is required</p>
           }
         </div>
 
@@ -23,7 +23,7 @@
           <input type="number" formControlName="storeId" placeholder="Enter store ID">
 
           @if(shipmentsForm.controls.storeId.touched && shipmentsForm.controls.storeId.errors){
-            <p class="error">*Store ID is required</p>
+          <p class="error">*Store ID is required</p>
           }
         </div>
 
@@ -32,7 +32,7 @@
           <textarea formControlName="deliveryAddress" placeholder="Enter delivery address"></textarea>
 
           @if(shipmentsForm.controls.deliveryAddress.touched && shipmentsForm.controls.deliveryAddress.errors){
-            <p class="error">*Delivery address is required</p>
+          <p class="error">*Delivery address is required</p>
           }
         </div>
 
@@ -48,17 +48,13 @@
     </div>
 
     @if(error) {
-      <div class="error-box">
-        @if(error) {
-<div class="error-box">{{ error }}</div>
-}
-      </div>
+    <div class="error-box">{{ error }}</div>
     }
 
     @if(success) {
-      <div class="success-box">
-        ✓ {{ success }}
-      </div>
+    <div class="success-box">
+      ✓ {{ success }}
+    </div>
     }
 
   </div>

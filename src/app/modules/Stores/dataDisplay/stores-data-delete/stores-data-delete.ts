@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core'; 
+import { HttpErrorResponse } from '@angular/common/http'; 
 import { StoresService } from '../../stores-service';
 
 @Component({
@@ -20,10 +19,10 @@ export class StoresDataDelete {
   deletedStore: any = null;
 
   constructor(
-    private fb: FormBuilder, 
-    private storesService: StoresService,
-    private cdr: ChangeDetectorRef 
-  , private router: Router) {
+    private readonly fb: FormBuilder, 
+    private readonly storesService: StoresService,
+    private readonly cdr: ChangeDetectorRef 
+  , private readonly router: Router) {
     this.deleteForm = this.fb.group({
       storeId: ['', [Validators.required, Validators.min(1)]]
     });
