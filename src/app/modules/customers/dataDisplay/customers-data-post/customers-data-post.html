@@ -4,6 +4,7 @@
   <div class="content">
 
     <h2 class="title">Create Customer</h2>
+    <p class="page-subtitle">Add a new customer to the system</p>
 
     <div class="card">
 
@@ -50,21 +51,17 @@
             Create
           </button>
 
-          <button type="button" class="btn-secondary">
-            Cancel
-          </button>
+          <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
         </div>
 
       </form>
     </div>
-   @if(error){
-      <div class="error-box" >
-          {{ error }}
-      </div>
+    @if(error) {
+      <div class="error-box">{{ error }}</div>
     }
-   @else {
-      <div class="success-box" >
-          {{ success }}
+    @if(success) {
+      <div class="success-box">
+        ✓ {{ success }}
       </div>
     }
 

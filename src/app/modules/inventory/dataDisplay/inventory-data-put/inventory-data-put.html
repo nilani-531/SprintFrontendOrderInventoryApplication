@@ -3,6 +3,7 @@
 	<div class="content">
 
 		<h2 class="title">Update Inventory</h2>
+		<p class="page-subtitle">Update existing inventory details using inventory ID</p>
 
 		<!-- Toast Notification -->
 		@if(showToast) {
@@ -13,52 +14,80 @@
 
 		<div class="card">
 
-			<form [formGroup]="inventoryForm" (ngSubmit)="handleUpdate()" class="form">
+			<form [formGroup]="inventoryForm" class="form">
 
-				<!-- Inventory ID -->
+				<!-- Inventory ID with Search -->
 				<div class="form-group">
 					<label>Inventory ID *</label>
-					<input type="number" formControlName="inventoryId" placeholder="Enter inventory ID">
-					@if(inventoryForm.get('inventoryId')?.touched && inventoryForm.get('inventoryId')?.errors) {
-						<p class="error">*Inventory ID is required</p>
-					}
-				</div>
 
-				<!-- Store and Product -->
-				<div class="form-row">
-					<div class="form-group half">
-						<label>Store ID *</label>
-						<input type="number" formControlName="storeId" placeholder="Enter store ID">
-						@if(inventoryForm.get('storeId')?.touched && inventoryForm.get('storeId')?.errors) {
-							<p class="error">*Store ID is required</p>
-						}
-					</div>
+					<div class="input-with-btn">
+						<input type="number" formControlName="inventoryId" placeholder="Enter inventory ID">
 
-					<div class="form-group half">
-						<label>Product ID *</label>
-						<input type="number" formControlName="productId" placeholder="Enter product ID">
-						@if(inventoryForm.get('productId')?.touched && inventoryForm.get('productId')?.errors) {
-							<p class="error">*Product ID is required</p>
-						}
+						<button type="button" class="btn-search" (click)="searchInventory()">
+							Search
+						</button>
 					</div>
 				</div>
+
+				<!-- Loading -->
+				@if(loading) {
+					<div class="loading-box">
+						Loading...
+					</div>
+				}
+
+				<!-- Inventory Details -->
+				@if(inventoryDetails && !loading) {
+					<div class="details-box">
+						<h4>Inventory Details</h4>
+						<div class="details-grid">
+							<p><strong>Store ID:</strong> {{ inventoryDetails.stores.storeId }}</p>
+							<p><strong>Store Name:</strong> {{ inventoryDetails.stores.storeName }}</p>
+							<p><strong>Product ID:</strong> {{ inventoryDetails.products.productId }}</p>
+							<p><strong>Product Name:</strong> {{ inventoryDetails.products.productName }}</p>
+							<p><strong>Current Quantity:</strong> {{ inventoryDetails.productInventory }}</p>
+						</div>
+					</div>
+				}
+
+				<!-- Store and Product (Read-only) -->
+				@if(inventoryDetails) {
+					<div class="form-row">
+						<div class="form-group half">
+							<label>Store ID *</label>
+							<input type="number" formControlName="storeId" placeholder="Enter store ID">
+						</div>
+
+						<div class="form-group half">
+							<label>Product ID *</label>
+							<input type="number" formControlName="productId" placeholder="Enter product ID">
+						</div>
+					</div>
+				}
 
 				<!-- Product Inventory -->
-				<div class="form-group">
-					<label>Product Inventory (Quantity) *</label>
-					<input type="number" formControlName="productInventory" placeholder="Enter quantity">
-					@if(inventoryForm.get('productInventory')?.touched && inventoryForm.get('productInventory')?.errors) {
-						<p class="error">*Product inventory is required and must be >= 0</p>
-					}
-				</div>
+				@if(inventoryDetails) {
+					<div class="form-group">
+						<label>Product Inventory (Quantity) *</label>
+						<input type="number" formControlName="productInventory" placeholder="Enter quantity">
+						@if(inventoryForm.get('productInventory')?.touched && inventoryForm.get('productInventory')?.errors) {
+							<p class="error">*Product inventory is required and must be >= 0</p>
+						}
+					</div>
+				}
 
 				<!-- Buttons -->
-				<div class="button-group">
-					<button type="submit" [disabled]="inventoryForm.invalid || loading" class="btn-primary">
-						{{ loading ? 'Updating...' : 'Update' }}
-					</button>
-					<button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
-				</div>
+				@if(inventoryDetails) {
+					<div class="button-group">
+						<button type="button" class="btn-primary" (click)="handleUpdate()">
+							Update
+						</button>
+
+						<button type="button" class="btn-secondary" (click)="goBack()">
+							Cancel
+						</button>
+					</div>
+				}
 
 			</form>
 		</div>

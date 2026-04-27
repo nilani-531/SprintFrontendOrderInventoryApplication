@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,68 +7,47 @@ import {
   Validators,
   AbstractControl
 } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
 
   loginError: string = '';
   loginSuccess: string = '';
   isLoading: boolean = false;
-
-  /**
-   * Maps each known username to the frontend route they should land on after login.
-   * - karthi  → products & inventory (KARTHI role)
-   * - nilani  → orders              (NILANI role)
-   * - pooja   → stores              (POOJA role)
-   * - abinaya → customers           (ABINAYA role)
-   * - yamini  → shipments           (YAMINI role)
-   * - admin   → products (full access, ADMIN role)
-   */
-  private readonly userRouteMap: { [key: string]: string } = {
-    'karthi': '/api-dashboard',
-    'nilani': '/api-dashboard',
-    'pooja': '/api-dashboard',
-    'abinaya': '/api-dashboard',
-    'yamini': '/api-dashboard',
-    'admin': '/api-dashboard'
-  };
-
-  /**
-   * Maps each username to a backend endpoint they are authorised to call.
-   * Used as a credential-validation probe request.
-   * - 200/any 2xx → credentials valid, proceed
-   * - 403          → credentials valid but resource-specific 403; still accepted
-   * - 401          → invalid credentials
-   */
-  private readonly userEndpointMap: { [key: string]: string[] } = {
-    'karthi': ['http://localhost:9090/api/products', 'http://localhost:9090/api/inventory'],
-    'nilani': ['http://localhost:9090/api/orders', 'http://localhost:9090/api/order-items'],
-    'pooja': ['http://localhost:9090/api/stores'],
-    'abinaya': ['http://localhost:9090/api/customers'],
-    'yamini': ['http://localhost:9090/api/shipments'],
-    'admin': ['http://localhost:9090/api/products', 'http://localhost:9090/api/inventory', 'http://localhost:9090/api/orders', 'http://localhost:9090/api/order-items', 'http://localhost:9090/api/stores', 'http://localhost:9090/api/customers', 'http://localhost:9090/api/shipments']
-  };
+  showPassword: boolean = false;
 
   loginForm = new FormGroup({
     userName: new FormControl('', [
       Validators.required,
-      Validators.minLength(5),
+      Validators.minLength(3),
       this.noSpace
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(6)
+      Validators.minLength(3)
     ])
   });
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    // Pre-fill username if user came from home page
+    const selectedUser = sessionStorage.getItem('selectedUser');
+    if (selectedUser) {
+      this.loginForm.patchValue({ userName: selectedUser });
+      sessionStorage.removeItem('selectedUser');
+    }
+  }
 
   /** Validator: reject values that contain spaces. */
   noSpace(control: AbstractControl): ValidationErrors | null {
@@ -79,41 +58,48 @@ export class Login {
     return null;
   }
 
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   onSubmit(): void {
     if (this.loginForm.invalid) return;
 
     const username = this.loginForm.value.userName!.toLowerCase().trim();
     const password = this.loginForm.value.password!;
 
-    // Build the Basic Auth header value: Base64("username:password")
-    const encoded = btoa(`${username}:${password}`);
-    const headers = new HttpHeaders({ 'Authorization': `Basic ${encoded}` });
-
-    // Choose the probe URL (first accessible endpoint); fall back to /products if user is unknown
-    const userEndpoints = this.userEndpointMap[username];
-    const probeUrl = (userEndpoints && userEndpoints.length > 0)
-      ? userEndpoints[0]
-      : 'http://localhost:9090/api/products';
-
     this.isLoading = true;
     this.loginError = '';
     this.loginSuccess = '';
 
-    this.http.get<any>(probeUrl, { headers }).subscribe({
+    this.authService.login(username, password).subscribe({
       next: () => {
-        // 2xx → credentials valid
-        this.storeAndNavigate(username, encoded);
+        // Login successful
+        const encoded = btoa(`${username}:${password}`);
+        this.authService.storeCredentials(username, encoded);
+        this.loginSuccess = 'Login successful! Redirecting...';
+
+        setTimeout(() => {
+          this.isLoading = false;
+          const route = this.authService.getDefaultModuleRoute();
+          this.router.navigate([route]);
+        }, 1500);
       },
       error: (err) => {
         this.isLoading = false;
         if (err.status === 401) {
-          // Wrong username or password
           this.loginError = 'Invalid username or password. Please try again.';
         } else if (err.status === 403) {
-          // Credentials are valid; the endpoint just returned Forbidden for
-          // this specific resource (e.g. ADMIN probing a role-restricted path).
-          // Treat as successful login.
-          this.storeAndNavigate(username, encoded);
+          // Credentials are valid; endpoint returned Forbidden
+          const encoded = btoa(`${username}:${password}`);
+          this.authService.storeCredentials(username, encoded);
+          this.loginSuccess = 'Login successful! Redirecting...';
+
+          setTimeout(() => {
+            this.isLoading = false;
+            const route = this.authService.getDefaultModuleRoute();
+            this.router.navigate([route]);
+          }, 1500);
         } else if (err.status === 0) {
           this.loginError = 'Cannot reach the server. Make sure the backend is running on port 9090.';
         } else {
@@ -122,24 +108,4 @@ export class Login {
       }
     });
   }
-
-  /** Persist credentials for subsequent API calls and navigate to the home route. */
-  private storeAndNavigate(username: string, encodedCredentials: string): void {
-    // Store under a predictable key so HTTP services can pick them up
-    sessionStorage.setItem('authCredentials', encodedCredentials);
-    sessionStorage.setItem('loggedInUser', username);
-    
-    // Store allowed endpoints 
-    const endpoints = this.userEndpointMap[username] || [];
-    sessionStorage.setItem('allowedEndpoints', JSON.stringify(endpoints));
-
-    this.loginSuccess = 'Login successful! Redirecting...';
-
-    setTimeout(() => {
-      this.isLoading = false;
-      const route = this.userRouteMap[username] ?? '/home';
-      this.router.navigate([route]);
-    }, 1500);
-  }
 }
-

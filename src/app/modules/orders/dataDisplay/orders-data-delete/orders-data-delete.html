@@ -1,11 +1,19 @@
 <div class="container">
 
   <h2>Delete Order By ID</h2>
+  <p class="page-subtitle">Delete order record using given order ID</p>
+
+  <!-- Toast Notification -->
+  @if(showToast) {
+    <div [ngClass]="['toast', toastType]">
+      {{ toastMessage }}
+    </div>
+  }
 
   <form [formGroup]="deleteForm" (ngSubmit)="deleteById()">
 
     <div class="input-group">
-      <input 
+      <input
         type="number"
         formControlName="orderId"
         placeholder="Enter Order ID"
@@ -19,12 +27,16 @@
   </form>
 
 </div>
-<div class="message-container">
-  @if (message) {
-    <p class="success show">{{ message }}</p>
-  }
 
-  @if (error) {
-    <p class="error show">{{ error }}</p>
-  }
-</div>
+@if (deletedOrder) {
+  <div class="card deleted-item">
+    <h3>Deleted Order Details</h3>
+    <div class="grid">
+      <p><strong>Order ID:</strong> {{ deletedOrder.orderId }}</p>
+      <p><strong>Order Status:</strong> {{ deletedOrder.orderStatusS }}</p>
+      <p><strong>Customer ID:</strong> {{ deletedOrder.customerId }}</p>
+      <p><strong>Store ID:</strong> {{ deletedOrder.storeId }}</p>
+      <p><strong>Created Timestamp:</strong> {{ deletedOrder.orderTms | date:'medium' }}</p>
+    </div>
+  </div>
+}

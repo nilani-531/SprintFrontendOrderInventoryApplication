@@ -19,18 +19,20 @@ export class InventoryDataPut implements OnInit {
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
   loading = false;
+  inventoryDetails: any = null;
 
   private inventoryService = inject(InventoryDataService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
 
-  constructor() {}
+  constructor() { }
 
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info'): void {
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
-    setTimeout(() => { this.showToast = false; }, 3000);
+    this.cdr.detectChanges();
+    setTimeout(() => { this.showToast = false; this.cdr.detectChanges(); }, 3000);
   }
 
   ngOnInit(): void {
@@ -39,6 +41,40 @@ export class InventoryDataPut implements OnInit {
       storeId: new FormControl('', [Validators.required, Validators.min(1)]),
       productId: new FormControl('', [Validators.required, Validators.min(1)]),
       productInventory: new FormControl('', [Validators.required, Validators.min(0)])
+    });
+  }
+
+  // 🔍 SEARCH INVENTORY
+  searchInventory(): void {
+    const id = this.inventoryForm.get('inventoryId')?.value;
+
+    if (!id) {
+      this.showNotification('Enter valid Inventory ID', 'error');
+      return;
+    }
+
+    this.loading = true;
+
+    this.inventoryService.getInventory(id).subscribe({
+      next: (res: any) => {
+        this.inventoryDetails = res.data;
+
+        this.inventoryForm.patchValue({
+          productInventory: res.data.productInventory
+        });
+
+        this.loading = false;
+        this.cdr.detectChanges();
+        this.showNotification('Inventory loaded successfully', 'info');
+      },
+
+      error: (err) => {
+        console.error(err);
+        this.inventoryDetails = null;
+        this.loading = false;
+        this.cdr.detectChanges();
+        this.showNotification('Inventory not found ❌', 'error');
+      }
     });
   }
 
@@ -60,9 +96,8 @@ export class InventoryDataPut implements OnInit {
     this.inventoryService.updateInventory(inventoryId, storeId, productId, payload).subscribe({
       next: (res) => {
         this.loading = false;
-        this.showNotification(res?.msg || 'Inventory updated successfully', 'success');
+        this.showNotification(`${res?.msg || 'Inventory updated successfully'} (ID: ${inventoryId})`, 'success');
         this.cdr.detectChanges();
-        setTimeout(() => this.router.navigate(['/modules/inventory']), 1500);
       },
       error: (err) => {
         this.loading = false;
@@ -74,7 +109,11 @@ export class InventoryDataPut implements OnInit {
     });
   }
 
-  goBack(): void { 
-    this.router.navigate(['/modules/inventory']); 
+  goBack(): void {
+    this.router.navigate(['/modules/inventory']);
+  }
+
+  private extractErrorMessage(err: any): string {
+    return this.extractErrorMessage(err);
   }
 }

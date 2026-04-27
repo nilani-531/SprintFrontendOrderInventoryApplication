@@ -1,102 +1,232 @@
+<h2 class="title">Stores Data Dashboard</h2>
+
 <div class="page">
-
-  <div class="container">
-
-    <h2 class="title">Stores Data Fetch</h2>
-
-    <!-- FORM -->
-    <form [formGroup]="form" class="card">
-
+  <app-store-get-navbar (optionSelected)="onOptionSelected($event)"></app-store-get-navbar>
+  <div class="container" style="max-width: 100%">
+    @if (selectedOption) {
+    <div class="input-section">
       <div class="input-row">
-
-        <!-- Store ID -->
-        <input
-          type="number"
-          formControlName="storeId"
-          placeholder="Enter Store ID"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getStoreById()" class="btn primary">
-          Get By ID
-        </button>
-
-      </div>
-
-      <div class="input-row" style="margin-top:10px;">
-
-        <!-- NEW: Store Name -->
-        <input
-          type="text"
-          formControlName="storeName"
-          placeholder="Enter Store Name"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getStoreByName()" class="btn primary">
-          Get By Name
-        </button>
-
-      </div>
-
-      <div class="input-row" style="margin-top:10px;">
-        <button type="button" (click)="getAllStores()" class="btn secondary">
-          Get All Stores
+        @if (
+        selectedOption === 'getById' ||
+        selectedOption === 'getStoreInventory' ||
+        selectedOption === 'getStoreOrders' ||
+        selectedOption === 'getStoreShipments'
+        ) {
+        <input type="number" [(ngModel)]="storeId" placeholder="Enter Store ID" class="input-box" />
+        }
+        @if (selectedOption === 'getByName') {
+        <input type="text" [(ngModel)]="storeName" placeholder="Enter Store Name" class="input-box" />
+        }
+        <button type="button" (click)="fetchData()" [disabled]="!isInputValid() || loading" class="fetch-btn">
+          {{ loading ? 'Loading...' : 'Fetch Data' }}
         </button>
       </div>
-
-    </form>
-
-    <!-- Loading -->
-    <div *ngIf="loading" class="info">Loading...</div>
-
-    <!-- Error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
     </div>
+    }
 
-    <!-- Single Store -->
-    <div *ngIf="singleStore" class="card">
-      <h3>Store Details</h3>
+    <div class="split-layout">
+      <!-- A Place: Detailed Description -->
+      <div class="left-col">
+        <div class="card description-card">
+          <h3>Current Endpoint</h3>
+          @if (selectedOption) {
+          <div class="current-endpoint-box">
+            <span class="method get">GET</span>
+            @if (selectedOption === 'getAll') {
+            <span class="endpoint-path">/api/stores</span>
+            }
+            @if (selectedOption === 'getById') {
+            <span class="endpoint-path">/api/stores/&#123;storeId&#125;</span>
+            }
+            @if (selectedOption === 'getByName') {
+            <span class="endpoint-path">/api/stores/name/&#123;storeName&#125;</span>
+            }
+            @if (selectedOption === 'getStoreInventory') {
+            <span class="endpoint-path">/api/stores/&#123;storeId&#125;/inventory</span>
+            }
+            @if (selectedOption === 'getStoreOrders') {
+            <span class="endpoint-path">/api/stores/&#123;storeId&#125;/orders</span>
+            }
+            @if (selectedOption === 'getStoreShipments') {
+            <span class="endpoint-path">/api/stores/&#123;storeId&#125;/shipments</span>
+            }
+          </div>
+          }
+          <h3>Endpoint Description</h3>
+          @if (selectedOption === 'getAll') {
+          <p>Get all store details from system database</p>
+          }
+          @if (selectedOption === 'getById') {
+          <p>Get store details using given store ID</p>
+          }
+          @if (selectedOption === 'getByName') {
+          <p>Get store details using given store name</p>
+          }
+          @if (selectedOption === 'getStoreInventory') {
+          <p>Get store inventory using given store ID</p>
+          }
+          @if (selectedOption === 'getStoreOrders') {
+          <p>Get store orders using given store ID</p>
+          }
+          @if (selectedOption === 'getStoreShipments') {
+          <p>Get store shipments using given store ID</p>
+          }
+          @if (!selectedOption) {
+          <p class="text-muted" style="color: var(--text-muted); font-style: italic">
+            Select an option from the navbar to view details.
+          </p>
+          }
+        </div>
+      </div>
 
-      <div class="grid">
-        <p><strong>ID:</strong> {{ singleStore.storeId }}</p>
-        <p><strong>Name:</strong> {{ singleStore.storeName }}</p>
-        <p><strong>Address:</strong> {{ singleStore.physicalAddress }}</p>
-        <p><strong>Website:</strong> {{ singleStore.webAddress }}</p>
-        <p><strong>Latitude:</strong> {{ singleStore.latitude }}</p>
-        <p><strong>Longitude:</strong> {{ singleStore.longitude }}</p>
+      <!-- B Place: Data Table/Card -->
+      <div class="right-col">
+        @if (loading) {
+        <div class="info">Loading...</div>
+        }
+        @if (error) {
+        <div class="error-box">{{ error }}</div>
+        }
+
+        <!-- Single Store -->
+        @if (singleStore) {
+        <div class="card">
+          <h3>Store Details</h3>
+          <div class="grid">
+            <p><strong>ID:</strong> {{ singleStore.storeId }}</p>
+            <p><strong>Name:</strong> {{ singleStore.storeName }}</p>
+            <p><strong>Address:</strong> {{ singleStore.physicalAddress }}</p>
+            <p><strong>Website:</strong> {{ singleStore.webAddress }}</p>
+            <p><strong>Latitude:</strong> {{ singleStore.latitude }}</p>
+            <p><strong>Longitude:</strong> {{ singleStore.longitude }}</p>
+          </div>
+        </div>
+        }
+
+        <!-- All Stores with Pagination -->
+        @if (allStores.length > 0) {
+        <div class="card">
+          <h3>All Stores ({{ allStores.length }} total - Page {{ currentPage }})</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Website</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (store of paginatedStores; track store) {
+              <tr>
+                <td>{{ store.storeId }}</td>
+                <td>{{ store.storeName }}</td>
+                <td>{{ store.physicalAddress }}</td>
+                <td>{{ store.webAddress }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <div class="pagination">
+            <button [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)" class="pagination-btn">
+              Previous
+            </button>
+            <span class="pagination-info">Page {{ currentPage }} of {{ getTotalPages() }}</span>
+            <button [disabled]="currentPage === getTotalPages()" (click)="goToPage(currentPage + 1)"
+              class="pagination-btn">
+              Next
+            </button>
+          </div>
+        </div>
+        }
+
+        <!-- Inventory Data -->
+        @if (inventoryList.length > 0) {
+        <div class="card">
+          <h3>Store Inventory (Total: {{ inventoryList.length }})</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Inventory ID</th>
+                <th>Stock Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of inventoryList; track item) {
+              <tr>
+                <td>{{ item.inventoryId }}</td>
+                <td>{{ item.productInventory }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        }
+
+        <!-- Orders Data -->
+        @if (ordersList.length > 0) {
+        <div class="card">
+          <h3>Store Orders ({{ ordersList.length }} total - Page {{ ordersPage }})</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer ID</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of paginatedOrders; track order) {
+              <tr>
+                <td>{{ order.orderId }}</td>
+                <td>{{ order.customerId }}</td>
+                <td>{{ order.orderStatusS }}</td>
+                <td>{{ order.orderTms | date: 'medium' }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <div class="pagination">
+            <button [disabled]="ordersPage === 1" (click)="goToOrdersPage(ordersPage - 1)" class="pagination-btn">Previous</button>
+            <span class="pagination-info">Page {{ ordersPage }} of {{ getOrdersTotalPages() }}</span>
+            <button [disabled]="ordersPage === getOrdersTotalPages()" (click)="goToOrdersPage(ordersPage + 1)" class="pagination-btn">Next</button>
+          </div>
+        </div>
+        }
+
+        <!-- Shipments Data -->
+        @if (shipmentsList.length > 0) {
+        <div class="card">
+          <h3>Store Shipments ({{ shipmentsList.length }} total - Page {{ shipmentsPage }})</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Shipment ID</th>
+                <th>Customer ID</th>
+                <th>Delivery Address</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (shipment of paginatedShipments; track shipment) {
+              <tr>
+                <td>{{ shipment.shipmentId }}</td>
+                <td>{{ shipment.customerId }}</td>
+                <td>{{ shipment.deliveryAddress }}</td>
+                <td>{{ shipment.shipmentStatus }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <div class="pagination">
+            <button [disabled]="shipmentsPage === 1" (click)="goToShipmentsPage(shipmentsPage - 1)" class="pagination-btn">Previous</button>
+            <span class="pagination-info">Page {{ shipmentsPage }} of {{ getShipmentsTotalPages() }}</span>
+            <button [disabled]="shipmentsPage === getShipmentsTotalPages()" (click)="goToShipmentsPage(shipmentsPage + 1)" class="pagination-btn">Next</button>
+          </div>
+        </div>
+        }
       </div>
     </div>
-
-    <!-- All Stores -->
-    <div *ngIf="allStores.length > 0" class="card">
-
-      <h3>All Stores</h3>
-
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Website</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let store of allStores">
-            <td>{{ store.storeId }}</td>
-            <td>{{ store.storeName }}</td>
-            <td>{{ store.physicalAddress }}</td>
-            <td>{{ store.webAddress }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
   </div>
-
 </div>

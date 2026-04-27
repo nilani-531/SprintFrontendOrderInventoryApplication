@@ -1,60 +1,62 @@
 <div class="page-container">
-
   <div class="content">
-
     <h2 class="title">Update Shipment</h2>
+    <p class="page-subtitle">Update existing shipment details using shipment ID</p>
 
-    <!-- Toast Notification -->
     @if(showToast) {
-      <div [ngClass]="['toast', toastType]">
-        {{ toastMessage }}
-      </div>
+      <div [ngClass]="['toast', toastType]">{{ toastMessage }}</div>
     }
 
     <div class="card">
+      <form [formGroup]="shipmentsForm" class="form">
 
-      <form [formGroup]="shipmentsForm" (ngSubmit)="handleUpdate()" class="form">
-
-        <!-- Shipment ID -->
         <div class="form-group">
           <label>Shipment ID *</label>
-          <input type="number" formControlName="shipmentId" placeholder="Enter shipment ID">
+          <div class="input-with-btn">
+            <input type="number" formControlName="shipmentId" placeholder="Enter shipment ID">
+            <button type="button" class="btn-search" (click)="loadShipment()">Search</button>
+          </div>
         </div>
 
-        <!-- Customer and Store -->
-        <div class="form-row">
+        @if(loading) { <div class="loading-box">Loading...</div> }
 
-          <div class="form-group half">
-            <label>Customer ID *</label>
-            <input type="number" formControlName="customerId" placeholder="Enter customer ID">
+        @if(shipmentDetails && !loading) {
+          <div class="details-box">
+            <h4>Current Shipment Details</h4>
+            <div class="details-grid">
+              <p><strong>Customer ID:</strong> {{ shipmentDetails.customerId }}</p>
+              <p><strong>Store ID:</strong> {{ shipmentDetails.storeId }}</p>
+              <p><strong>Status:</strong> {{ shipmentDetails.shipmentStatus }}</p>
+              <p><strong>Address:</strong> {{ shipmentDetails.deliveryAddress }}</p>
+            </div>
+          </div>
+        }
+
+        @if(shipmentDetails) {
+          <div class="form-row">
+            <div class="form-group">
+              <label>Customer ID *</label>
+              <input type="number" formControlName="customerId">
+            </div>
+            <div class="form-group">
+              <label>Store ID *</label>
+              <input type="number" formControlName="storeId">
+            </div>
           </div>
 
-          <div class="form-group half">
-            <label>Store ID *</label>
-            <input type="number" formControlName="storeId" placeholder="Enter store ID">
+          <div class="form-group">
+            <label>Delivery Address *</label>
+            <textarea formControlName="deliveryAddress" placeholder="Enter delivery address"></textarea>
           </div>
 
-        </div>
-
-        <!-- Delivery Address -->
-        <div class="form-group">
-          <label>Delivery Address *</label>
-          <textarea formControlName="deliveryAddress" placeholder="Enter delivery address"></textarea>
-        </div>
-
-        <!-- Buttons -->
-        <div class="button-group">
-          <button type="submit" [disabled]="shipmentsForm.invalid" class="btn-primary">
-            Update
-          </button>
-
-          <button type="button" class="btn-secondary" (click)="goBack()">
-            Cancel
-          </button>
-        </div>
-
+          <div class="button-group">
+            <button type="button" class="btn-primary" (click)="handleUpdate()" [disabled]="shipmentsForm.invalid">
+              Update
+            </button>
+            <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
+          </div>
+        }
       </form>
     </div>
-
   </div>
 </div>

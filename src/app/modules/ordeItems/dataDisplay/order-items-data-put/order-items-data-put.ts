@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { OrderItemsService } from '../../orderitems-service';
 
 interface OrderItem {
   lineItemId: number;
@@ -31,12 +31,11 @@ export class OrderItemsDataPut implements OnInit {
   lineItemDetails: OrderItem | null = null;
   loading: boolean = false;
 
-  private baseUrl = 'http://localhost:9090/api/order-items';
-
   constructor(
-    private http: HttpClient,
+    private orderItemsService: OrderItemsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +56,6 @@ export class OrderItemsDataPut implements OnInit {
     }
   }
 
-  // ✅ TOAST FIXED (NO detectChanges)
   showNotification(message: string, type: 'success' | 'error' | 'info' = 'info') {
 
     if (this.toastTimeout) {
@@ -67,9 +65,11 @@ export class OrderItemsDataPut implements OnInit {
     this.toastMessage = message;
     this.toastType = type;
     this.showToast = true;
+    this.cdr.detectChanges();
 
     this.toastTimeout = setTimeout(() => {
       this.showToast = false;
+      this.cdr.detectChanges();
     }, 3000);
   }
 
@@ -86,9 +86,9 @@ export class OrderItemsDataPut implements OnInit {
 
     this.loading = true;
 
-    this.http.get<any>(`${this.baseUrl}/${orderId}`).subscribe({
+    this.orderItemsService.getItemsByOrderId(orderId).subscribe({
 
-      next: (res) => {
+      next: (res: any) => {
 
         const items = res.data || [];
         const found = items.find((i: OrderItem) => i.lineItemId == lineItemId);
@@ -130,13 +130,13 @@ export class OrderItemsDataPut implements OnInit {
 
     this.loading = true;
 
-    this.http.put<any>(
-      `${this.baseUrl}/${orderId}/item/${lineItemId}`,
-      { quantity, unitPrice }
-    ).subscribe({
+    this.orderItemsService.updateOrderItem(orderId, lineItemId, { 
+      quantity: Number(quantity), 
+      unitPrice: Number(unitPrice) 
+    }).subscribe({
 
       next: (res:any) => {
-        this.showNotification('Updated successfully ✅', 'success');
+        this.showNotification(`Updated successfully ✅ (Line Item ID: ${lineItemId})`, 'success');
         this.loading = false;
       },
 
@@ -152,6 +152,6 @@ export class OrderItemsDataPut implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/order-items/get-by-order']);
+    this.router.navigate(['/modules/order-items']);
   }
 }

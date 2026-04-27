@@ -1,3 +1,592 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-@import 'tailwindcss';
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  --primary: #7c3aed;
+  --primary-dark: #4c1d95;
+  --primary-light: #a855f7;
+  --primary-bg: #ede9fe;
+  --primary-border: #ddd6fe;
+  --surface: #ffffff;
+  --bg: #f4f3fb;
+  --text-primary: #1e1b4b;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --success-bg: #d1fae5;
+  --success-text: #065f46;
+  --success-border: #6ee7b7;
+  --error-bg: #fee2e2;
+  --error-text: #991b1b;
+  --error-border: #fca5a5;
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 4px 16px rgba(124, 58, 237, 0.10);
+  --shadow-lg: 0 8px 32px rgba(124, 58, 237, 0.15);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+}
+
+/* ── Reset ─────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text-secondary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s ease;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* ── Dashboard Page Wrapper (.page) ────────────────────── */
+/* Used by all data-get/post/put/delete pages */
+.page {
+  padding: 24px 28px;
+  max-width: 1200px;
+}
+
+/* ── Page Title ────────────────────────────────────────── */
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary-bg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Input Section (above the split layout) ────────────── */
+.input-section {
+  margin-bottom: 20px;
+}
+
+.input-container,
+.input-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input-field,
+.input-box {
+  padding: 9px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  min-width: 190px;
+  background: white;
+  color: var(--text-primary);
+}
+
+.input-field:focus,
+.input-box:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.10);
+}
+
+select.input-box {
+  cursor: pointer;
+}
+
+/* ── Fetch Button ──────────────────────────────────────── */
+.fetch-btn {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  padding: 9px 22px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
+}
+
+.fetch-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #6d28d9, #9333ea);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  transform: translateY(-1px);
+}
+
+.fetch-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Split Layout ──────────────────────────────────────── */
+.split-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.left-col {
+  flex: 0 0 300px;
+}
+
+.right-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Description Card (left column) ───────────────────── */
+.description-card {
+  background: white;
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 16px;
+}
+
+.description-card h3 {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.description-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 14px;
+  background: var(--primary-bg);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+/* ── Current Endpoint Box ──────────────────────────────── */
+.current-endpoint-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  background: #f8f7ff;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--primary-border);
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  word-break: break-all;
+}
+
+.current-endpoint-box .endpoint-path {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+/* ── Method Badges ─────────────────────────────────────── */
+.method {
+  font-weight: 800;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.method.get {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.method.post {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.method.put {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.method.patch {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.method.delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ── Data Cards (right column) ─────────────────────────── */
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 22px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Detail Grid inside a card ─────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.grid div,
+.grid p {
+  color: var(--text-secondary);
+  background: var(--bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.grid b {
+  color: var(--text-primary);
+}
+
+/* ── Tables ────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead tr {
+  background: var(--primary-bg);
+}
+
+th {
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-bottom: 2px solid var(--primary-border);
+}
+
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  color: var(--text-secondary);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: #faf5ff;
+}
+
+/* ── Pagination ────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.pagination-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 7px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.pagination-btn:disabled {
+  background: var(--border);
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ── Forms ─────────────────────────────────────────────── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  background: white;
+  color: var(--text-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.10);
+}
+
+.form-group textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.28);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(90deg, #6d28d9, #9333ea);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* ── Page subtitle ─────────────────────────────────────── */
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+/* ── Back button ───────────────────────────────────────── */
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 0;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: inherit;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+/* ── Inline error / info text ──────────────────────────── */
+.error {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.info {
+  color: var(--primary);
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+/* ── Toast Notifications (fixed bottom-right) ──────────── */
+.error-box,
+.success-box {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  padding: 14px 22px !important;
+  border-radius: var(--radius) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  z-index: 9999 !important;
+  box-shadow: var(--shadow-lg) !important;
+  animation: slideIn 0.3s ease forwards !important;
+  max-width: 380px !important;
+  word-wrap: break-word !important;
+}
+
+.error-box {
+  background: var(--error-bg) !important;
+  color: var(--error-text) !important;
+  border-left: 5px solid var(--error-text) !important;
+  border: 1px solid var(--error-border);
+}
+
+.success-box {
+  background: var(--success-bg) !important;
+  color: var(--success-text) !important;
+  border-left: 5px solid var(--success-text) !important;
+  border: 1px solid var(--success-border);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(100%, 50%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+/* ── Delete page specific ──────────────────────────────── */
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+.deleted-item {
+  margin-top: 16px;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.deleted-item h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+/* ── Loading state ─────────────────────────────────────── */
+.info {
+  color: var(--primary);
+  font-size: 14px;
+  margin: 10px 0;
+}

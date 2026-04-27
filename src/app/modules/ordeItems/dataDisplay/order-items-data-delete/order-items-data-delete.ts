@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef } from '@angular/core'; 
+import { OrderItemsService } from '../../orderitems-service';
 
 @Component({
   selector: 'app-order-items-data-delete',
@@ -14,55 +16,75 @@ export class OrderItemsDataDelete {
   message: string = '';
   error: string = '';
 
-  baseUrl = 'http://localhost:9090/api/order-items';
-
-
   constructor(
     private fb: FormBuilder, 
-    private http: HttpClient,
+    private orderItemsService: OrderItemsService,
     private cdr: ChangeDetectorRef 
-  ) {
+  , private router: Router) {
     this.deleteForm1 = this.fb.group({
-      orderId: ['', [Validators.required, Validators.min(1)]]
+      orderId: ['', [Validators.required, Validators.min(1)]],
+      lineItemId: ['', [Validators.required, Validators.min(1)]]
     });
   }
+
+  deletedItemDetails: any = null;
 
   deleteById() {
     this.message = '';
     this.error = '';
+    this.deletedItemDetails = null;
 
     if (this.deleteForm1.invalid) {
       this.error = "Please enter a valid ID";
       return;
     }
 
-    const id = this.deleteForm1.value.orderId;
+    const orderId = this.deleteForm1.value.orderId;
+    const lineItemId = this.deleteForm1.value.lineItemId;
    
-    this.http.delete(`${this.baseUrl}/${id}`).subscribe({
-        
+    this.orderItemsService.getItemsByOrderId(orderId).subscribe({
       next: (res: any) => {
-        this.message = `ID ${id} is deleted successfully`;
-        this.deleteForm1.reset();
-        this.cdr.detectChanges(); 
+        const items = res.data || [];
+        const itemToDelete = items.find((i: any) => i.lineItemId == lineItemId);
+
+        if (!itemToDelete) {
+          this.error = "Order item not found in the given order";
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.orderItemsService.deleteOrderItem(orderId, lineItemId).subscribe({
+          next: () => {
+            this.message = `Line item ${lineItemId} from order ${orderId} deleted successfully`;
+            this.deletedItemDetails = itemToDelete;
+            this.deleteForm1.reset();
+            this.cdr.detectChanges(); 
+          },
+          error: (err: HttpErrorResponse) => {
+            this.message = ''; 
+            if (err.status === 404) {
+              this.error = err.error?.msg || 'Order item not found';
+            } else if (err.status === 400) {
+               this.error = err.error?.msg || "Invalid Request";
+            } else if (err.status === 0) {
+              this.error = "Server is offline or unreachable";
+            } else {
+              this.error = "An unexpected error occurred";
+            }
+            this.cdr.detectChanges(); 
+          }
+        });
       },
       error: (err: HttpErrorResponse) => {
-        // console.error("Delete Error:", err);
-        this.message = ''; 
-
-        if (err.status === 404) {
-          this.error = err.error?.msg || `ID ${id} not found`;
-        } 
-        else if (err.status === 400) {
-           this.error = err.error?.msg || "Invalid Request";
-        }
-        else if (err.status === 0) {
-          this.error = "Server is offline or unreachable";
-        } 
-        else {
-          this.error = "An unexpected error occurred";
-        }
-        this.cdr.detectChanges(); 
+        this.error = "Failed to fetch item for deletion";
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  goBack() { this.router.navigate(['/modules/order-items']); }
+
+  private extractErrorMessage(err: any): string {
+    return this.extractErrorMessage(err);
   }
 }

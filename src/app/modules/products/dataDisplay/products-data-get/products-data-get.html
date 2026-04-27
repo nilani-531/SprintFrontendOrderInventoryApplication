@@ -1,93 +1,141 @@
+<h2 class="title">Products Data Dashboard</h2>
+
 <div class="page">
+  <app-product-get-navbar (optionSelected)="onOptionSelected($event)"></app-product-get-navbar>
+  <div class="container" style="max-width: 100%">
+    @if (selectedOption) {
+      <div class="input-section">
+        <div class="input-row">
+          @if (selectedOption === 'getById') {
+            <input
+              type="number"
+              [(ngModel)]="productId"
+              placeholder="Enter Product ID"
+              class="input-box"
+            />
+          }
+          <button
+            type="button"
+            (click)="fetchData()"
+            [disabled]="!isInputValid() || loading"
+            class="fetch-btn"
+          >
+            {{ loading ? 'Loading...' : 'Fetch Data' }}
+          </button>
+        </div>
+      </div>
+    }
 
-  <div class="container">
-
-    <h2 class="title">Products Data Fetch</h2>
-
-    <!-- ✅ FORM -->
-    <form [formGroup]="form" class="card">
-
-      <div class="input-row">
-
-        <input
-          type="number"
-          formControlName="productId"
-          placeholder="Enter Product ID"
-          class="input-box"
-        />
-
-        <button type="button" (click)="getProductById()" class="btn primary">
-          Get Product
-        </button>
-
-        <button type="button" (click)="getAllProducts()" class="btn secondary">
-          Get All Products
-        </button>
-
+    <div class="split-layout">
+      <!-- A Place: Detailed Description -->
+      <div class="left-col">
+        <div class="card description-card">
+          <h3>Current Endpoint</h3>
+          @if (selectedOption) {
+            <div class="current-endpoint-box">
+              <span class="method get">GET</span>
+              @if (selectedOption === 'getAll') {
+                <span class="endpoint-path">/api/products</span>
+              }
+              @if (selectedOption === 'getById') {
+                <span class="endpoint-path">/api/products/&#123;productId&#125;</span>
+              }
+            </div>
+          }
+          <h3>Endpoint Description</h3>
+          @if (selectedOption === 'getAll') {
+            <p>Get all product details from system database</p>
+          }
+          @if (selectedOption === 'getById') {
+            <p>Get product details using given product ID</p>
+          }
+          @if (!selectedOption) {
+            <p class="text-muted" style="color: var(--text-muted); font-style: italic">
+              Select an option from the navbar to view details.
+            </p>
+          }
+        </div>
       </div>
 
-    </form>
+      <!-- B Place: Data Table/Card -->
+      <div class="right-col">
+        <!-- Loading -->
+        @if (loading) {
+          <div class="info">Loading...</div>
+        }
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="info">
-      Loading...
-    </div>
+        <!-- Error -->
+        @if (error) {
+          <div class="error-box">
+            {{ error }}
+          </div>
+        }
 
-    <!-- Error -->
-    <div *ngIf="error" class="error">
-      {{ error }}
-    </div>
+        <!-- ✅ Single Product -->
+        @if (singleProduct) {
+          <div class="card">
+            <h3>Product Details</h3>
+            <div class="grid">
+              <p><strong>ID:</strong> {{ singleProduct.productId }}</p>
+              <p><strong>Name:</strong> {{ singleProduct.productName }}</p>
+              <p><strong>Brand:</strong> {{ singleProduct.brand }}</p>
+              <p><strong>Colour:</strong> {{ singleProduct.colour }}</p>
+              <p><strong>Size:</strong> {{ singleProduct.size }}</p>
+              <p><strong>Unit Price:</strong> ${{ singleProduct.unitPrice }}</p>
+              <p><strong>Rating:</strong> {{ singleProduct.rating }}/5</p>
+            </div>
+          </div>
+        }
 
-    <!-- ✅ Single Product -->
-    <div *ngIf="singleProduct" class="card">
-
-      <h3>Product Details</h3>
-
-      <div class="grid">
-        <p><strong>ID:</strong> {{ singleProduct.productId }}</p>
-        <p><strong>Name:</strong> {{ singleProduct.productName }}</p>
-        <p><strong>Brand:</strong> {{ singleProduct.brand }}</p>
-        <p><strong>Colour:</strong> {{ singleProduct.colour }}</p>
-        <p><strong>Size:</strong> {{ singleProduct.size }}</p>
-        <p><strong>Unit Price:</strong> ${{ singleProduct.unitPrice }}</p>
-        <p><strong>Rating:</strong> {{ singleProduct.rating }}/5</p>
+        <!-- ✅ All Products -->
+        @if (allProducts.length > 0) {
+          <div class="card">
+            <h3>All Products ({{ allProducts.length }} total - Page {{ currentPage }})</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Brand</th>
+                  <th>Colour</th>
+                  <th>Price</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (product of paginatedProducts; track product) {
+                  <tr>
+                    <td>{{ product.productId }}</td>
+                    <td>{{ product.productName }}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>{{ product.colour }}</td>
+                    <td>${{ product.unitPrice }}</td>
+                    <td>{{ product.rating }}/5</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            <!-- Pagination Controls -->
+            <div class="pagination">
+              <button
+                [disabled]="currentPage === 1"
+                (click)="goToPage(currentPage - 1)"
+                class="pagination-btn"
+              >
+                Previous
+              </button>
+              <span class="pagination-info"> Page {{ currentPage }} of {{ getTotalPages() }} </span>
+              <button
+                [disabled]="currentPage === getTotalPages()"
+                (click)="goToPage(currentPage + 1)"
+                class="pagination-btn"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        }
       </div>
-
     </div>
-
-    <!-- ✅ All Products -->
-    <div *ngIf="allProducts.length > 0" class="card">
-
-      <h3>All Products</h3>
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Brand</th>
-            <th>Colour</th>
-            <th>Price</th>
-            <th>Rating</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let product of allProducts">
-            <td>{{ product.productId }}</td>
-            <td>{{ product.productName }}</td>
-            <td>{{ product.brand }}</td>
-            <td>{{ product.colour }}</td>
-            <td>${{ product.unitPrice }}</td>
-            <td>{{ product.rating }}/5</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
   </div>
-
 </div>

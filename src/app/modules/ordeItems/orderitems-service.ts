@@ -1,65 +1,85 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-interface OrderItem {
-  lineItemId: number;
-  orderId: number;
-  productId: number;
-  unitPrice: number;
-  quantity: number;
-}
-
+/**
+ * Order Items Service - Handles all order item-related API calls
+ * Base URL: http://localhost:9090/api/orders/{orderId}/items
+ * Team Member: Nilani
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class OrderItemsService {
-  http: HttpClient = inject(HttpClient);
+  private http: HttpClient = inject(HttpClient);
+  private readonly BASE_URL = 'http://localhost:9090/api/orders';
 
-  // Create new order item
-  createOrderItem(item: any) {
+  /**
+   * Get HTTP headers with authentication
+   * Uses session storage or fallback credentials
+   */
+  private getHeaders(): { headers: HttpHeaders; withCredentials: boolean } {
+    const auth = sessionStorage.getItem('authCredentials');
+    const username = sessionStorage.getItem('loggedInUser') || 'nilani';
+    const password = 'nil123';
+    const fallback = btoa(username + ':' + password);
+
+    return {
+      headers: new HttpHeaders({
+        Authorization: 'Basic ' + (auth || fallback),
+      }),
+      withCredentials: true,
+    };
+  }
+
+  /**
+   * Get all items for a specific order
+   * Endpoint: GET /api/orders/{orderId}/items
+   */
+  getItemsByOrderId(orderId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${orderId}/items`,
+      this.getHeaders()
+    );
+  }
+
+  /**
+   * Add a new item to an order
+   * Endpoint: POST /api/orders/{orderId}/items
+   * Required fields: quantity, unitPrice
+   */
+  addItemToOrder(orderId: number, productId: number, item: any): Observable<any> {
     return this.http.post(
-      `http://localhost:9090/api/order-items`,
-      item
+      `${this.BASE_URL}/${orderId}/items?productId=${productId}`,
+      item,
+      this.getHeaders()
     );
   }
 
-  getAllItems() {
-    return this.http.get(`http://localhost:9090/api/order-items`);
-  }
-
-  getItemsByOrderId(orderId: number) {
-    return this.http.get(`http://localhost:9090/api/order-items/order/${orderId}`);
-  }
-
-  updateItem(orderId: number, lineItemId: number, item: any) {
+  /**
+   * Update an existing order item
+   * Endpoint: PUT /api/orders/{orderId}/items/{lineItemId}
+   */
+  updateOrderItem(
+    orderId: number,
+    lineItemId: number,
+    item: any
+  ): Observable<any> {
     return this.http.put(
-      `http://localhost:9090/api/order-items/${orderId}/item/${lineItemId}`,
-      item
+      `${this.BASE_URL}/${orderId}/items/${lineItemId}`,
+      item,
+      this.getHeaders()
     );
   }
 
-  patchItem(lineItemId: number, item: any) {
-    return this.http.patch(
-      `http://localhost:9090/api/order-items/${lineItemId}`,
-      item
-    );
-  }
-
-  deleteItem(orderId: number, lineItemId: number) {
+  /**
+   * Delete an order item
+   * Endpoint: DELETE /api/orders/{orderId}/items/{lineItemId}
+   */
+  deleteOrderItem(orderId: number, lineItemId: number): Observable<any> {
     return this.http.delete(
-      `http://localhost:9090/api/order-items/${orderId}?lineItemId=${lineItemId}`
-    );
-  }
-
-  getItemsByProductId(productId: number) {
-    return this.http.get(
-      `http://localhost:9090/api/order-items/products/${productId}`
-    );
-  }
-
-  getTotalQuantityByProductId(productId: number) {
-    return this.http.get(
-      `http://localhost:9090/api/order-items/products/${productId}/quantity`
+      `${this.BASE_URL}/${orderId}/items/${lineItemId}`,
+      this.getHeaders()
     );
   }
 }

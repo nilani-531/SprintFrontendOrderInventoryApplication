@@ -1,26 +1,29 @@
 <div class="page-container">
-
-  <div class="api-display">
-
-    <h2 class="title">Stores API Dashboard</h2>
-
-    <div class="grid">
-
-      <div class="card" *ngFor="let endpt of endpoints">
-
-        <span class="method-badge">{{ endpt.method }}</span>
-
-        <h3 class="card-title">{{ endpt.name }}</h3>
-
-        <p class="card-desc">{{ endpt.desc }}</p>
-
-        <button class="card-btn" [routerLink]="['/modules/stores', endpt.route]">Open Endpoint</button>
-
+  @if (!isRouteActive()) {
+    <div class="api-display">
+      <button class="back-btn" (click)="goBack()">↩ Dashboard</button>
+      <h2 class="title">Stores API Dashboard</h2>
+      <div class="grid">
+        @for (endpt of endpoints; track endpt) {
+          <div class="card">
+            <span class="method-badge method-{{ endpt.method.toLowerCase() }}">{{ endpt.method }}</span>
+            <h3 class="card-title">{{ endpt.name }}</h3>
+            <p class="card-desc">{{ endpt.desc }}</p>
+            <button class="card-btn" [routerLink]="['/modules/stores', endpt.route]">
+              Open Endpoint
+            </button>
+          </div>
+        }
       </div>
-
     </div>
+  }
 
-  </div>
-
+  <!-- Show child component here -->
+  @if (isRouteActive()) {
+    <div style="margin-bottom: 15px">
+      <button class="back-btn" [routerLink]="['/modules/stores']">↩ Stores Dashboard</button>
+    </div>
+  }
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>
+

@@ -1,49 +1,118 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-interface customers{
-  customerId:number,
-  fullName:String,
-  emailAddress:String,
-  
-
-}
+/**
+ * Customers Service - Handles all customer-related API calls
+ * Base URL: http://localhost:9090/api/customers
+ * Team Member: Abinaya
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class CustomersService {
-http:HttpClient=inject(HttpClient)
+  private http: HttpClient = inject(HttpClient);
+  private readonly BASE_URL = 'http://localhost:9090/api/customers';
 
-getAllCustomers(){
-  return this.http.get("http://localhost:9090/api/customers")
-}
+  /**
+   * Get HTTP headers with authentication
+   * Uses session storage or fallback credentials
+   */
+  private getHeaders(): { headers: HttpHeaders; withCredentials: boolean } {
+    const auth = sessionStorage.getItem('authCredentials');
+    const username = sessionStorage.getItem('loggedInUser') || 'abinaya';
+    const password = 'abi123';
+    const fallback = btoa(username + ':' + password);
 
-getCustomerById(customerId:number){
-  return this.http.get(`http://localhost:9090/api/customers/${customerId}`)
-}
+    return {
+      headers: new HttpHeaders({
+        Authorization: 'Basic ' + (auth || fallback),
+      }),
+      withCredentials: true,
+    };
+  }
 
-getCustomerByEmail(email: string) {
-  return this.http.get(`http://localhost:9090/api/customers/email/${email}`);
-}
+  /**
+   * Get all customers
+   * Endpoint: GET /api/customers
+   */
+  getAllCustomers(): Observable<any> {
+    return this.http.get(this.BASE_URL, this.getHeaders());
+  }
 
-getCustomerOrders(customerId: number) {
-  return this.http.get(`http://localhost:9090/api/customers/${customerId}/orders`);
-}
+  /**
+   * Get customer by ID
+   * Endpoint: GET /api/customers/{customerId}
+   */
+  getCustomerById(customerId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${customerId}`,
+      this.getHeaders()
+    );
+  }
 
-getCustomerShipments(customerId: number) {
-  return this.http.get(`http://localhost:9090/api/customers/${customerId}/shipments`);
-}
+  /**
+   * Get customer by email
+   * Endpoint: GET /api/customers/search
+   */
+  getCustomerByEmail(email: string): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/search?email=${email}`,
+      this.getHeaders()
+    );
+  }
 
-createCustomer(customer: any) {
-  return this.http.post("http://localhost:9090/api/customers", customer);
-}
+  /**
+   * Get customer orders
+   * Endpoint: GET /api/customers/{customerId}/orders
+   */
+  getCustomerOrders(customerId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${customerId}/orders`,
+      this.getHeaders()
+    );
+  }
 
-updateCustomer(customerId: number, customer: any) {
-  return this.http.put(`http://localhost:9090/api/customers/${customerId}`, customer);
-}
+  /**
+   * Get customer shipments
+   * Endpoint: GET /api/customers/{customerId}/shipments
+   */
+  getCustomerShipments(customerId: number): Observable<any> {
+    return this.http.get(
+      `${this.BASE_URL}/${customerId}/shipments`,
+      this.getHeaders()
+    );
+  }
 
-deleteCustomer(customerId: number) {
-  return this.http.delete(`http://localhost:9090/api/customers/${customerId}`);
-}
+  /**
+   * Create a new customer
+   * Endpoint: POST /api/customers
+   * Required fields: fullName, emailAddress
+   */
+  createCustomer(customer: any): Observable<any> {
+    return this.http.post(this.BASE_URL, customer, this.getHeaders());
+  }
 
+  /**
+   * Update an existing customer
+   * Endpoint: PUT /api/customers/{customerId}
+   */
+  updateCustomer(customerId: number, customer: any): Observable<any> {
+    return this.http.put(
+      `${this.BASE_URL}/${customerId}`,
+      customer,
+      this.getHeaders()
+    );
+  }
+
+  /**
+   * Delete a customer
+   * Endpoint: DELETE /api/customers/{customerId}
+   */
+  deleteCustomer(customerId: number): Observable<any> {
+    return this.http.delete(
+      `${this.BASE_URL}/${customerId}`,
+      this.getHeaders()
+    );
+  }
 }

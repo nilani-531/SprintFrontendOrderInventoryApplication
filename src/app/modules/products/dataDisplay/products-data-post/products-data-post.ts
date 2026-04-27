@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductsDataService } from '../products-data.service';
 
@@ -10,6 +11,7 @@ import { ProductsDataService } from '../products-data.service';
 })
 export class ProductsDataPost {
   productsService: ProductsDataService = inject(ProductsDataService);
+  router = inject(Router);
 
   productsForm = new FormGroup({
     productName: new FormControl('', [Validators.required]),
@@ -29,11 +31,9 @@ export class ProductsDataPost {
 
       this.productsService.createProduct(payload).subscribe({
         next: (data: any) => {
-          this.successMessage = 'Product created successfully';
-          alert('Product created successfully');
+          this.successMessage = `Product created successfully! (ID: ${data.data?.productId || ''})`;
           this.productsForm.reset();
           this.error = null;
-          this.successMessage = '';
         },
         error: (err) => {
           if (err.error && err.error.msg) {
@@ -49,5 +49,11 @@ export class ProductsDataPost {
         }
       });
     }
+  }
+
+  goBack() { this.router.navigate(['/modules/products']); }
+
+  private extractErrorMessage(err: any): string {
+    return this.extractErrorMessage(err);
   }
 }

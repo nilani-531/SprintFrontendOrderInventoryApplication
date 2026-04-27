@@ -3,6 +3,7 @@
   <div class="content">
 
     <h2 class="title">Create Store</h2>
+    <p class="page-subtitle">Create new store by providing store name, address and location details</p>
 
     <div class="card">
 
@@ -18,28 +19,22 @@
         </div>
 
         <div class="form-group">
-          <label>Web Address *</label>
+          <label>Web Address <span style="font-size:11px;color:#6b7280">(required if no physical address)</span></label>
           <input type="url" formControlName="webAddress" placeholder="Enter web address (e.g., https://example.com)">
 
-          @if(storeForm.controls.webAddress.touched && storeForm.controls.webAddress.errors){
-            @if(storeForm.get('webAddress')?.errors?.['required']){
-              <p class="error">*Web address is required</p>
-            }
-            @if(storeForm.get('webAddress')?.errors?.['pattern']){
-              <p class="error">*Must start with http:// or https://</p>
-            }
+          @if(storeForm.controls.webAddress.touched && storeForm.get('webAddress')?.errors?.['pattern']){
+            <p class="error">*Must start with http:// or https://</p>
           }
         </div>
 
         <div class="form-group">
-          <label>Physical Address *</label>
+          <label>Physical Address <span style="font-size:11px;color:#6b7280">(required if no web address)</span></label>
           <textarea formControlName="physicalAddress" placeholder="Enter physical address"></textarea>
-
-          @if(storeForm.controls.physicalAddress.touched && storeForm.controls.physicalAddress.errors){
-            <p class="error">*Physical address is required</p>
-          }
         </div>
 
+        @if(storeForm.touched && storeForm.hasError('addressRequired')){
+          <p class="error">*Either web address or physical address is required</p>
+        }
         <div class="form-row">
           <div class="form-group">
             <label>Latitude *</label>
@@ -60,6 +55,33 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-group">
+            <label>Logo Mime Type</label>
+            <input type="text" formControlName="logoMimeType" placeholder="e.g. image/png">
+          </div>
+          <div class="form-group">
+            <label>Logo Filename</label>
+            <input type="text" formControlName="logoFilename" placeholder="e.g. store-logo.png">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Logo Charset</label>
+            <input type="text" formControlName="logoCharset" placeholder="Enter logo charset">
+          </div>
+          <div class="form-group">
+            <label>Logo Last Updated</label>
+            <input type="date" formControlName="logoLastUpdated">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Logo</label>
+          <textarea formControlName="logo" placeholder="Enter logo content or leave blank"></textarea>
+        </div>
+
         <div class="button-group">
           <button type="submit" [disabled]="storeForm.invalid" class="btn-primary">
             Create Store
@@ -73,17 +95,15 @@
       </form>
     </div>
 
-    <div class="error-box">
-      @if(error){
-        {{ error }}
-      }
-    </div>
+    @if(error) {
+      <div class="error-box">{{ error }}</div>
+    }
 
-    <div class="success-box">
-      @if(success){
-        {{ success }}
-      }
-    </div>
+    @if(success) {
+      <div class="success-box">
+        ✓ {{ success }}
+      </div>
+    }
 
   </div>
 </div>
