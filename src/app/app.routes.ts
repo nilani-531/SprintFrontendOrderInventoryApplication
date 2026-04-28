@@ -27,6 +27,7 @@ import { OrdersApiDispaly } from './modules/orders/orders-api-dispaly/orders-api
 import { OrdersDataGet } from './modules/orders/dataDisplay/orders-data-get/orders-data-get';
 import { OrdersDataPost } from './modules/orders/dataDisplay/orders-data-post/orders-data-post';
 import { OrdersDataPut } from './modules/orders/dataDisplay/orders-data-put/orders-data-put';
+import { OrdersDataPatch } from './modules/orders/dataDisplay/orders-data-patch/orders-data-patch';
 import { OrdersDataDelete } from './modules/orders/dataDisplay/orders-data-delete/orders-data-delete';
 
 // Order Items Imports
@@ -116,7 +117,7 @@ export const routes: Routes = [
                     { path: 'get-by-date-range', component: OrdersDataGet },
                     { path: 'create', component: OrdersDataPost },
                     { path: 'update', component: OrdersDataPut },
-                    { path: 'update-status', component: OrdersDataPut },
+                    { path: 'update-status', component: OrdersDataPatch },
                     { path: 'delete', component: OrdersDataDelete }
                 ]
             },

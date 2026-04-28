@@ -23,7 +23,7 @@ export class OrdersDataPut implements OnInit {
   toastType: 'success' | 'error' | 'info' = 'info';
   showToast: boolean = false;
 
-  orderStatuses = ['OPEN', 'PAID', 'SHIPPED', 'COMPLETE', 'CANCELLED', 'REFUNDED'];
+
 
   // Initializes this component and prepares the dependencies used in the file.
   constructor(
@@ -36,7 +36,6 @@ export class OrdersDataPut implements OnInit {
   ngOnInit(): void {
     this.orderForm = new FormGroup({
       orderId: new FormControl('', [Validators.required, Validators.min(1)]),
-      orderStatusS: new FormControl(''),
       storeId: new FormControl(''),
       customerId: new FormControl(''),
       orderDate: new FormControl(''),
@@ -69,7 +68,6 @@ export class OrdersDataPut implements OnInit {
         // orderTms is the real field name in this backend
         const rawDate = this.orderDetails.orderTms;
         this.orderForm.patchValue({
-          orderStatusS: this.orderDetails.orderStatusS,
           storeId: this.orderDetails.storeId,
           customerId: this.orderDetails.customerId,
           orderDate: rawDate ? rawDate.substring(0, 16) : '',
@@ -95,19 +93,17 @@ export class OrdersDataPut implements OnInit {
     }
 
     const orderId = this.orderForm.get('orderId')?.value;
-    const newStatus   = this.orderForm.get('orderStatusS')?.value;
     const newStoreId  = this.orderForm.get('storeId')?.value;
     const newCustomerId = this.orderForm.get('customerId')?.value;
     const newOrderDate = this.orderForm.get('orderDate')?.value; // from datetime-local: "2023-01-18T18:30"
 
     const currentTms = this.orderDetails.orderTms; // e.g. "2023-01-18T10:00:00"
 
-    const statusChanged   = newStatus && newStatus !== this.orderDetails.orderStatusS;
     const storeChanged    = newStoreId && +newStoreId !== this.orderDetails.storeId;
     const customerChanged = newCustomerId && +newCustomerId !== this.orderDetails.customerId;
     const dateChanged     = newOrderDate && newOrderDate !== (currentTms ? currentTms.substring(0, 16) : '');
 
-    if (!statusChanged && !storeChanged && !customerChanged && !dateChanged) {
+    if (!storeChanged && !customerChanged && !dateChanged) {
       this.showNotification('No changes detected to update', 'info');
       return;
     }
@@ -115,10 +111,7 @@ export class OrdersDataPut implements OnInit {
     this.loading = true;
     const updates: Promise<any>[] = [];
 
-    // PATCH status if changed
-    if (statusChanged) {
-      updates.push(this.ordersService.updateOrderStatus(orderId, newStatus).toPromise());
-    }
+
 
     // PUT storeId if changed (separate call — backend handles one at a time)
     if (storeChanged) {
