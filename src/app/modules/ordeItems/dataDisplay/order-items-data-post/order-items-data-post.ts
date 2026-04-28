@@ -19,10 +19,18 @@ export class OrderItemsDataPost {
 
   // Form for creating new order item
   orderItemForm = new FormGroup({
-    orderId: new FormControl('', [Validators.required]),
-    productId: new FormControl('', [Validators.required]),
-    quantity: new FormControl('', [Validators.required, Validators.min(1)]),
-    unitPrice: new FormControl('', [Validators.required, Validators.min(0.01)]),
+    orderId: new FormControl('', [Validators.required, Validators.min(1)]),
+    productId: new FormControl('', [Validators.required, Validators.min(1)]),
+    quantity: new FormControl('', [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(10000)
+    ]),
+    unitPrice: new FormControl('', [
+      Validators.required,
+      Validators.min(0.01),
+      Validators.max(999999)
+    ])
   });
 
   error: any = null;

@@ -52,12 +52,36 @@ export class ProductsDataPut implements OnInit  {
     // Initialize form
     this.productForm = new FormGroup({
       productId: new FormControl('', [Validators.required]),
-      productName: new FormControl('', [Validators.required]),
-      unitPrice: new FormControl('', [Validators.required]),
-      brand: new FormControl(''),
-      colour: new FormControl(''),
-      size: new FormControl(''),
-      rating: new FormControl('')
+      productName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100)
+      ]),
+      unitPrice: new FormControl('', [
+        Validators.required,
+        Validators.min(0.01),
+        Validators.max(999999)
+      ]),
+      brand: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50)
+      ]),
+      colour: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50)
+      ]),
+      size: new FormControl('', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(50)
+      ]),
+      rating: new FormControl('', [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(5)
+      ])
     });
   }
 

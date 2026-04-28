@@ -42,10 +42,14 @@ export class ShipmentsDataPut implements OnInit {
   // Runs when the component loads and prepares the initial data and screen state.
   ngOnInit(): void {
     this.shipmentsForm = new FormGroup({
-      shipmentId: new FormControl('', [Validators.required]),
-      customerId: new FormControl('', [Validators.required]),
-      storeId: new FormControl('', [Validators.required]),
-      deliveryAddress: new FormControl('', [Validators.required])
+      shipmentId: new FormControl('', [Validators.required, Validators.min(1)]),
+      customerId: new FormControl('', [Validators.required, Validators.min(1)]),
+      storeId: new FormControl('', [Validators.required, Validators.min(1)]),
+      deliveryAddress: new FormControl('', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(512)
+      ])
     });
   }
 

@@ -20,10 +20,16 @@ export class CustomersDataPut {
 
   updateForm = new FormGroup({
     customerId: new FormControl('', [Validators.required]),
-    fullName: new FormControl('', [Validators.required]),
-    emailAddress: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl(''),
-    address: new FormControl(''),
+    fullName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100)
+    ]),
+    emailAddress: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(100)
+    ])
   });
 
   error: any = null;
@@ -47,9 +53,7 @@ export class CustomersDataPut {
         this.customerDetails = res.data ? res.data : res;
         this.updateForm.patchValue({
           fullName: this.customerDetails.fullName,
-          emailAddress: this.customerDetails.emailAddress,
-          phoneNumber: this.customerDetails.phoneNumber,
-          address: this.customerDetails.address,
+          emailAddress: this.customerDetails.emailAddress
         });
         this.isLoading = false;
         this.change.detectChanges();
