@@ -19,9 +19,13 @@ export class ShipmentsDataPost {
   cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   shipmentsForm = new FormGroup({
-    customerId: new FormControl('', [Validators.required]),
-    storeId: new FormControl('', [Validators.required]),
-    deliveryAddress: new FormControl('', [Validators.required]),
+    customerId: new FormControl('', [Validators.required, Validators.min(1)]),
+    storeId: new FormControl('', [Validators.required, Validators.min(1)]),
+    deliveryAddress: new FormControl('', [
+      Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(512)
+    ])
   });
 
   success: any = null;

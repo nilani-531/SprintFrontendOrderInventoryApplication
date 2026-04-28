@@ -17,12 +17,36 @@ export class ProductsDataPost {
   router = inject(Router);
 
   productsForm = new FormGroup({
-    productName: new FormControl('', [Validators.required]),
-    unitPrice: new FormControl('', [Validators.required, Validators.min(0)]),
-    colour: new FormControl(''),
-    brand: new FormControl(''),
-    size: new FormControl(''),
-    rating: new FormControl('', [Validators.min(0), Validators.max(5)])
+    productName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(100)
+    ]),
+    unitPrice: new FormControl('', [
+      Validators.required,
+      Validators.min(0.01),
+      Validators.max(999999)
+    ]),
+    colour: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(50)
+    ]),
+    brand: new FormControl('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(50)
+    ]),
+    size: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(50)
+    ]),
+    rating: new FormControl('', [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(5)
+    ])
   });
 
   error: any = null;

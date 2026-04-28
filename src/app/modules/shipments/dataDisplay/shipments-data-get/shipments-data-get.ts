@@ -121,9 +121,13 @@ export class ShipmentsDataGet {
     this.loading = true;
     this.shipmentsService.getAllShipments().subscribe({
       next: (res: any) => {
-        this.allShipments = res.data;
-        this.currentPage = 1;
-        this.updatePaginated();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No shipments found';
+        } else {
+          this.allShipments = res.data;
+          this.currentPage = 1;
+          this.updatePaginated();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -141,9 +145,13 @@ export class ShipmentsDataGet {
     this.loading = true;
     this.shipmentsService.getShipmentsByCustomer(this.customerId).subscribe({
       next: (res: any) => {
-        this.allShipments = res.data;
-        this.currentPage = 1;
-        this.updatePaginated();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No shipments found for this customer';
+        } else {
+          this.allShipments = res.data;
+          this.currentPage = 1;
+          this.updatePaginated();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -161,9 +169,13 @@ export class ShipmentsDataGet {
     this.loading = true;
     this.shipmentsService.getShipmentsByStore(this.storeId).subscribe({
       next: (res: any) => {
-        this.allShipments = res.data;
-        this.currentPage = 1;
-        this.updatePaginated();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No shipments found for this store';
+        } else {
+          this.allShipments = res.data;
+          this.currentPage = 1;
+          this.updatePaginated();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -181,9 +193,13 @@ export class ShipmentsDataGet {
     this.loading = true;
     this.shipmentsService.getShipmentsByStatus(this.statusValue).subscribe({
       next: (res: any) => {
-        this.allShipments = res.data;
-        this.currentPage = 1;
-        this.updatePaginated();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No shipments found with this status';
+        } else {
+          this.allShipments = res.data;
+          this.currentPage = 1;
+          this.updatePaginated();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
