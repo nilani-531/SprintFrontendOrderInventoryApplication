@@ -31,6 +31,13 @@ export class ShipmentsDataGet {
   storeId!: number;
   statusValue = '';
 
+readonly statusOptions = [
+  { value: 'CREATED', label: 'CREATED' },
+  { value: 'SHIPPED', label: 'SHIPPED' },
+  { value: 'IN_TRANSIT', label: 'IN TRANSIT' },
+  { value: 'DELIVERED', label: 'DELIVERED' },
+];
+
   singleShipment: Shipment | null = null;
   allShipments: Shipment[] = [];
   paginatedShipments: Shipment[] = [];
@@ -40,6 +47,7 @@ export class ShipmentsDataGet {
 
   loading = false;
   error = '';
+  success = '';
 
   // Initializes this component and prepares the dependencies used in the file.
   constructor(
@@ -199,6 +207,7 @@ export class ShipmentsDataGet {
           this.allShipments = res.data;
           this.currentPage = 1;
           this.updatePaginated();
+          this.success = 'Shipments fetched successfully';
         }
         this.loading = false;
         this.cdr.detectChanges();

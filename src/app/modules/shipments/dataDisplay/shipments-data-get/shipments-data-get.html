@@ -33,13 +33,17 @@
             />
           }
           @if (selectedOption === 'getByStatus') {
-            <input
-              type="text"
-              [(ngModel)]="statusValue"
-              placeholder="e.g. CREATED / SHIPPED / IN-TRANSIT / DELIVERED"
-              class="input-box"
-            />
+            <select [(ngModel)]="statusValue" class="input-box">
+              <option value="">Select Shipment Status</option>
+              
+              @for (item of statusOptions; track item.value) {
+                <option [value]="item.value">
+                   {{ item.label }}
+                  </option>
+                }
+            </select>
           }
+          
           <button
             type="button"
             (click)="fetchData()"
@@ -108,6 +112,9 @@
         }
         @if (error) {
           <div class="error-box">{{ error }}</div>
+        }
+        @if (success) {
+          <div class="success-box">{{ success }}</div>
         }
 
         <!-- Single Shipment -->
