@@ -24,7 +24,7 @@ export class OrdersDataPost {
   orderForm = new FormGroup({
     customerId: new FormControl('', [Validators.required]),
     storeId: new FormControl('', [Validators.required]),
-    orderStatusS: new FormControl('OPEN', [Validators.required]), // 🔥 FIXED ENUM
+    orderStatusS: new FormControl('OPEN', [Validators.required]),
     orderTms: new FormControl('', [Validators.required]),
   });
 
@@ -90,6 +90,6 @@ export class OrdersDataPost {
 
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
-    return this.extractErrorMessage(err);
+    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
   }
 }

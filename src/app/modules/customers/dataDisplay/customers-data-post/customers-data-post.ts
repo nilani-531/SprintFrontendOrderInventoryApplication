@@ -18,6 +18,7 @@ export class CustomersDataPost {
   change: ChangeDetectorRef = inject(ChangeDetectorRef);
   router = inject(Router);
 
+  // Fields match Customers entity: fullName (@NotBlank), emailAddress (@NotBlank, @Email)
   customerForm = new FormGroup({
     fullName: new FormControl('', [
       Validators.required,
@@ -60,6 +61,6 @@ export class CustomersDataPost {
 
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
-    return this.extractErrorMessage(err);
+    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
   }
 }

@@ -10,96 +10,96 @@
     <div class="split-layout">
       <div class="left-col">
         <!-- Endpoint Info Box -->
-    <div class="card description-card" style="margin-bottom: 20px;">
-      <h3>Current Endpoint</h3>
-      <div class="current-endpoint-box">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/orders</span>
-      </div>
-      <h3>Endpoint Description</h3>
-      <p>Create a new order by providing a customer ID, store ID, order status, and timestamp.</p>
-    </div>
+        <div class="card description-card" style="margin-bottom: 20px;">
+          <h3>Current Endpoint</h3>
+          <div class="current-endpoint-box">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/orders</span>
+          </div>
+          <h3>Endpoint Description</h3>
+          <p>Create a new order by providing a customer ID, store ID, order status, and timestamp.</p>
+        </div>
       </div>
       <div class="right-col">
 
-  @if(error) {
+        @if(error) {
         <div class="error-box">
           @if(error) {
-<div class="error-box">{{ error }}</div>
-}
+          <div class="error-box">{{ error }}</div>
+          }
         </div>
-      }
-  @if(success) {
+        }
+        @if(success) {
         <div class="success-box">
           ✓ {{ success }}
         </div>
-      }
+        }
 
 
-    <div class="card">
+        <div class="card">
 
-      <form [formGroup]="orderForm" (ngSubmit)="handleSubmit()" class="form">
+          <form [formGroup]="orderForm" (ngSubmit)="handleSubmit()" class="form">
 
-        <div class="form-group">
-          <label>Customer ID *</label>
-          <input type="number" formControlName="customerId" placeholder="Enter customer ID">
+            <div class="form-group">
+              <label>Customer ID *</label>
+              <input type="number" formControlName="customerId" placeholder="Enter customer ID">
 
-          @if(orderForm.controls.customerId.touched && orderForm.controls.customerId.errors){
-            <p class="error">*Customer ID is required</p>
-          }
+              @if(orderForm.controls.customerId.touched && orderForm.controls.customerId.errors){
+              <p class="error">*Customer ID is required</p>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Store ID *</label>
+              <input type="number" formControlName="storeId" placeholder="Enter store ID">
+
+              @if(orderForm.controls.storeId.touched && orderForm.controls.storeId.errors){
+              <p class="error">*Store ID is required</p>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Order Status *</label>
+              <select formControlName="orderStatusS">
+                <option value="OPEN">Open</option>
+                <option value="PAID">Paid</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="COMPLETE">Complete</option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="REFUNDED">Refunded</option>
+              </select>
+
+              @if(orderForm.controls.orderStatusS.touched && orderForm.controls.orderStatusS.errors){
+              <p class="error">*Order Status is required</p>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Order Time *</label>
+              <input type="datetime-local" formControlName="orderTms" placeholder="Enter order time">
+
+              @if(orderForm.controls.orderTms.touched && orderForm.controls.orderTms.errors){
+              <p class="error">*Order time is required</p>
+              }
+            </div>
+
+            <div class="button-group">
+              <button type="submit" [disabled]="orderForm.invalid" class="btn-primary">
+                Create
+              </button>
+
+              <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
+            </div>
+
+          </form>
         </div>
 
-        <div class="form-group">
-          <label>Store ID *</label>
-          <input type="number" formControlName="storeId" placeholder="Enter store ID">
 
-          @if(orderForm.controls.storeId.touched && orderForm.controls.storeId.errors){
-            <p class="error">*Store ID is required</p>
-          }
-        </div>
 
-        <div class="form-group">
-          <label>Order Status *</label>
-          <select formControlName="orderStatusS">
-            <option value="OPEN">Open</option>
-            <option value="PAID">Paid</option>
-            <option value="SHIPPED">Shipped</option>
-            <option value="COMPLETE">Complete</option>
-            <option value="CANCELLED">Cancelled</option>
-            <option value="REFUNDED">Refunded</option>
-          </select>
 
-          @if(orderForm.controls.orderStatusS.touched && orderForm.controls.orderStatusS.errors){
-            <p class="error">*Order Status is required</p>
-          }
-        </div>
 
-        <div class="form-group">
-          <label>Order Time *</label>
-          <input type="datetime-local" formControlName="orderTms" placeholder="Enter order time">
 
-          @if(orderForm.controls.orderTms.touched && orderForm.controls.orderTms.errors){
-            <p class="error">*Order time is required</p>
-          }
-        </div>
-
-        <div class="button-group">
-          <button type="submit" [disabled]="orderForm.invalid" class="btn-primary">
-            Create
-          </button>
-
-          <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
-        </div>
-
-      </form>
-    </div>
-
-      
-
-      
-
-  
       </div>
     </div>
-</div>
+  </div>
 </div>
