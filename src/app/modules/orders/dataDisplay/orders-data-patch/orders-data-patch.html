@@ -1,0 +1,96 @@
+<!-- This template contains the form used to update the status of an existing order record. -->
+
+<div class="page-container" style="max-width: 1000px;">
+  <div class="content">
+
+    <h2 class="title">Update Order Status</h2>
+    <p class="page-subtitle">Update only the status for an existing order</p>
+
+    <div class="split-layout">
+      <div class="left-col">
+        <!-- Endpoint Info Box -->
+        <div class="card description-card" style="margin-bottom: 20px;">
+          <h3>Current Endpoint</h3>
+          <div class="current-endpoint-box">
+            <span class="method patch">PATCH</span>
+            <span class="endpoint-path">/api/orders/&#123;orderId&#125;/status</span>
+          </div>
+          <h3>Endpoint Description</h3>
+          <p>Update only the status of an order using the order ID as a path variable and status as a query parameter.</p>
+        </div>
+      </div>
+      <div class="right-col">
+
+        @if(showToast) {
+          <div [ngClass]="['toast', toastType]">
+            {{ toastMessage }}
+          </div>
+        }
+
+        <div class="card">
+          <form [formGroup]="orderForm" class="form">
+
+            <!-- Order ID -->
+            <div class="form-group">
+              <label>Order ID *</label>
+              <div class="input-with-btn">
+                <input type="number" formControlName="orderId" placeholder="Enter Order ID">
+                <button type="button" class="btn-search" (click)="searchOrder()">
+                  Search
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading -->
+            @if(loading) {
+              <div class="loading-box">
+                Loading...
+              </div>
+            }
+
+            <!-- Order Details -->
+            @if(orderDetails && !loading) {
+              <div class="details-box">
+                <h4>Current Order Details</h4>
+                <div class="details-grid">
+                  <p><strong>Order ID:</strong> {{ orderDetails.orderId }}</p>
+                  <p><strong>Customer ID:</strong> {{ orderDetails.customerId }}</p>
+                  <p><strong>Store ID:</strong> {{ orderDetails.storeId }}</p>
+                  <p><strong>Status:</strong> {{ orderDetails.orderStatusS }}</p>
+                  <p><strong>Date/Time:</strong> {{ orderDetails.orderTms }}</p>
+                </div>
+              </div>
+            }
+
+            <!-- Edit Fields (shown after search) -->
+            @if(orderDetails) {
+
+              <!-- Status -->
+              <div class="form-group">
+                <label>Update Status</label>
+                <select formControlName="orderStatusS">
+                  <option value="">Select Status</option>
+                  @for(status of orderStatuses; track status) {
+                    <option [value]="status">{{ status }}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Buttons -->
+              <div class="button-group">
+                <button type="button" class="btn-primary" (click)="handlePatch()">
+                  Update Status
+                </button>
+                <button type="button" class="btn-secondary" (click)="goBack()">
+                  Cancel
+                </button>
+              </div>
+            }
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
