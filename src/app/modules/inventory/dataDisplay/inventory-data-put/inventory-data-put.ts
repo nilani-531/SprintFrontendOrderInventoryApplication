@@ -64,9 +64,12 @@ export class InventoryDataPut implements OnInit {
 
     this.inventoryService.getInventory(id).subscribe({
       next: (res: any) => {
+        console.log('API Response:', res);
         this.inventoryDetails = res.data;
 
         this.inventoryForm.patchValue({
+          storeId: res.data.storeId,
+          productId: res.data.productId,
           productInventory: res.data.productInventory
         });
 
