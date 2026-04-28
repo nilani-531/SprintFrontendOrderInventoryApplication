@@ -83,9 +83,13 @@ export class OrderItemsDataGet {
     this.loading = true;
     this.orderItemsService.getItemsByOrderId(this.form.value.id).subscribe({
       next: (res: any) => {
-        this.orderItems = res.data;
-        this.currentPage = 1;
-        this.updatePaginated();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No order items found for this order id.';
+        } else {
+          this.orderItems = res.data;
+          this.currentPage = 1;
+          this.updatePaginated();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },

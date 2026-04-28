@@ -11,83 +11,83 @@
     <div class="split-layout">
       <div class="left-col">
         <!-- Endpoint Info Box -->
-    <div class="card description-card" style="margin-bottom: 20px;">
-      <h3>Current Endpoint</h3>
-      <div class="current-endpoint-box">
-        <span class="method post">POST</span>
-        <span class="endpoint-path">/api/customers</span>
-      </div>
-      <h3>Endpoint Description</h3>
-      <p>Create a new customer by providing full name, email address, phone number, and address.</p>
-    </div>
+        <div class="card description-card" style="margin-bottom: 20px;">
+          <h3>Current Endpoint</h3>
+          <div class="current-endpoint-box">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/customers</span>
+          </div>
+          <h3>Endpoint Description</h3>
+          <p>Create a new customer by providing full name, email address, phone number, and address.</p>
+        </div>
       </div>
       <div class="right-col">
 
-  @if(error) {
-      <div class="error-box">{{ error }}</div>
-    }
-  @if(success) {
-      <div class="success-box">
-        ✓ {{ success }}
-      </div>
-    }
-
-
-    <div class="card">
-
-      <form [formGroup]="customerForm" (ngSubmit)="handleSubmit()" class="form">
-
-        
-        <div class="form-group">
-          <label>Full Name *</label>
-          <input type="text" formControlName="fullName" placeholder="Enter full name">
-
-          @if(customerForm.controls.fullName.touched && customerForm.controls.fullName.errors){
-            <p class="error">*Name is required</p>
-          }
+        @if(error) {
+        <div class="error-box">{{ error }}</div>
+        }
+        @if(success) {
+        <div class="success-box">
+          ✓ {{ success }}
         </div>
+        }
 
-        <div class="form-group">
-          <label>Email *</label>
-          <input type="email" formControlName="emailAddress" placeholder="Enter email">
 
-          @if(customerForm.controls.emailAddress.touched && customerForm.controls.emailAddress.errors){
-            @if(customerForm.get('emailAddress')?.errors?.['required']){
+        <div class="card">
+
+          <form [formGroup]="customerForm" (ngSubmit)="handleSubmit()" class="form">
+
+
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" formControlName="fullName" placeholder="Enter full name">
+
+              @if(customerForm.controls.fullName.touched && customerForm.controls.fullName.errors){
+              <p class="error">*Name is required</p>
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" formControlName="emailAddress" placeholder="Enter email">
+
+              @if(customerForm.controls.emailAddress.touched && customerForm.controls.emailAddress.errors){
+              @if(customerForm.get('emailAddress')?.errors?.['required']){
               <p class="error">*Email is required</p>
-            }
-            @if(customerForm.get('emailAddress')?.errors?.['email']){
+              }
+              @if(customerForm.get('emailAddress')?.errors?.['email']){
               <p class="error">*Enter valid email</p>
-            }
-          }
+              }
+              }
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" formControlName="phoneNumber" placeholder="Enter phone number">
+            </div>
+
+
+            <div class="form-group">
+              <label>Address</label>
+              <textarea formControlName="address" placeholder="Enter address"></textarea>
+            </div>
+
+
+            <div class="button-group">
+              <button type="submit" [disabled]="customerForm.invalid" class="btn-primary">
+                Create
+              </button>
+
+              <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
+            </div>
+
+          </form>
         </div>
 
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input type="text" formControlName="phoneNumber" placeholder="Enter phone number">
-        </div>
 
-      
-        <div class="form-group">
-          <label>Address</label>
-          <textarea formControlName="address" placeholder="Enter address"></textarea>
-        </div>
 
-    
-        <div class="button-group">
-          <button type="submit" [disabled]="customerForm.invalid" class="btn-primary">
-            Create
-          </button>
 
-          <button type="button" class="btn-secondary" (click)="goBack()">Cancel</button>
-        </div>
-
-      </form>
-    </div>
-    
-    
-
-  
       </div>
     </div>
-</div>
+  </div>
 </div>

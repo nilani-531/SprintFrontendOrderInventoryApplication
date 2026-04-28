@@ -131,7 +131,11 @@ export class StoresDataGet {
     this.loading = true;
     this.storesService.getStoreInventory(id).subscribe({
       next: (res: any) => {
-        this.inventoryList = res.data;
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No inventory data exists for this store id.';
+        } else {
+          this.inventoryList = res.data;
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -147,9 +151,13 @@ export class StoresDataGet {
     this.loading = true;
     this.storesService.getStoreOrders(id).subscribe({
       next: (res: any) => {
-        this.ordersList = res.data;
-        this.ordersPage = 1;
-        this.updatePaginatedOrders();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No orders data exists for this store id.';
+        } else {
+          this.ordersList = res.data;
+          this.ordersPage = 1;
+          this.updatePaginatedOrders();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -165,9 +173,13 @@ export class StoresDataGet {
     this.loading = true;
     this.storesService.getStoreShipments(id).subscribe({
       next: (res: any) => {
-        this.shipmentsList = res.data;
-        this.shipmentsPage = 1;
-        this.updatePaginatedShipments();
+        if (!res.data || res.data.length === 0) {
+          this.error = 'No shipments data exists for this store id.';
+        } else {
+          this.shipmentsList = res.data;
+          this.shipmentsPage = 1;
+          this.updatePaginatedShipments();
+        }
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -267,6 +279,6 @@ export class StoresDataGet {
 
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any): string {
-    return this.extractErrorMessage(err);
+    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
   }
 }
