@@ -117,7 +117,7 @@ export class InventoryDataGet {
     this.inventoryService.getInventory(id).subscribe({
       next: (res) => {
         if (!res.data) {
-          this.error = 'No data found.';
+          this.error = `No data found (ID: ${id})`;
         } else {
           this.singleInventory = res.data;
         }
@@ -126,7 +126,7 @@ export class InventoryDataGet {
       },
       error: (err) => {
         console.error(err);
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, id);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -173,7 +173,7 @@ export class InventoryDataGet {
       next: (res) => {
         const dataList = res.data || [];
         if (dataList.length === 0) {
-          this.error = 'No data found.';
+          this.error = `No data found (Store ID: ${this.storeId})`;
         } else {
           this.allInventories = dataList.map((i: any) => ({
             ...i,
@@ -187,7 +187,7 @@ export class InventoryDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.storeId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -202,7 +202,7 @@ export class InventoryDataGet {
       next: (res) => {
         const dataList = res.data || [];
         if (dataList.length === 0) {
-          this.error = 'No data found.';
+          this.error = `No data found (Product ID: ${this.productId})`;
         } else {
           this.allInventories = dataList.map((i: any) => ({
             ...i,
@@ -216,7 +216,7 @@ export class InventoryDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.productId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -225,8 +225,12 @@ export class InventoryDataGet {
 
   // Extracts a readable error message from the current API response.
   // 🔹 Extract backend error message properly
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+    return message;
   }
 
   // Handles reset data for the current component without changing the workflow.

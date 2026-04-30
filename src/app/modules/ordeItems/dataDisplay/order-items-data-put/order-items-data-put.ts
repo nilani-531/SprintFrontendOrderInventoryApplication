@@ -111,16 +111,24 @@ export class OrderItemsDataPut implements OnInit {
           this.showNotification('Item loaded successfully', 'info');
         } else {
           this.lineItemDetails = null;
-          this.showNotification('Item not found', 'error');
+          this.showNotification(`Item not found (Order: ${orderId}, Line: ${lineItemId})`, 'error');
         }
 
         this.loading = false;
       },
 
-      error: () => {
+      error: (err: any) => {
         this.loading = false;
         this.lineItemDetails = null;
-        this.showNotification('Failed to load item', 'error');
+        const orderId = this.lineItemForm.get('orderId')?.value;
+        const lineItemId = this.lineItemForm.get('lineItemId')?.value;
+        let msg = err?.error?.msg || 'Failed to load item';
+        const idStrOrder = String(orderId);
+        const idStrLine = String(lineItemId);
+        if (orderId && lineItemId && !msg.includes(idStrOrder) && !msg.includes(idStrLine)) {
+          msg = `${msg} (Order: ${idStrOrder}, Line: ${idStrLine})`;
+        }
+        this.showNotification(msg, 'error');
       }
     });
   }
@@ -148,9 +156,17 @@ export class OrderItemsDataPut implements OnInit {
         this.loading = false;
       },
 
-      error: () => {
+      error: (err: any) => {
         this.loading = false;
-        this.showNotification('Update failed ', 'error');
+        const orderId = this.lineItemForm.get('orderId')?.value;
+        const lineItemId = this.lineItemForm.get('lineItemId')?.value;
+        let msg = err?.error?.msg || 'Update failed';
+        const idStrOrder = String(orderId);
+        const idStrLine = String(lineItemId);
+        if (orderId && lineItemId && !msg.includes(idStrOrder) && !msg.includes(idStrLine)) {
+          msg = `${msg} (Order: ${idStrOrder}, Line: ${idStrLine})`;
+        }
+        this.showNotification(msg, 'error');
       }
     });
   }

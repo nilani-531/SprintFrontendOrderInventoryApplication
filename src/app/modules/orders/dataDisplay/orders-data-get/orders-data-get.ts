@@ -126,7 +126,7 @@ export class OrdersDataGet {
       next: (res: any) => {
         const data = res.data;
         if (!data) {
-          this.error = 'No data found.';
+          this.error = `No data found (ID: ${id})`;
         } else {
           data.customerId = data.customerId === 0 ? 'N/A' : data.customerId;
           data.storeId = data.storeId === 0 ? 'N/A' : data.storeId;
@@ -136,7 +136,7 @@ export class OrdersDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, id);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -181,7 +181,7 @@ export class OrdersDataGet {
       next: (res: any) => {
         const dataList = res.data || [];
         if (dataList.length === 0) {
-          this.error = 'No data found.';
+          this.error = `No data found (Customer ID: ${this.customerId})`;
         } else {
           this.allOrders = dataList.map((o: any) => ({
             ...o,
@@ -195,7 +195,7 @@ export class OrdersDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.customerId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -210,7 +210,7 @@ export class OrdersDataGet {
       next: (res: any) => {
         const dataList = res.data || [];
         if (dataList.length === 0) {
-          this.error = 'No data found.';
+          this.error = `No data found (Store ID: ${this.storeId})`;
         } else {
           this.allOrders = dataList.map((o: any) => ({
             ...o,
@@ -224,7 +224,7 @@ export class OrdersDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.storeId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -239,7 +239,7 @@ export class OrdersDataGet {
       next: (res: any) => {
         const dataList = res.data || [];
         if (dataList.length === 0) {
-          this.error = 'No data found.';
+          this.error = `No data found (Status: ${this.status})`;
         } else {
           this.allOrders = dataList.map((o: any) => ({
             ...o,
@@ -253,7 +253,7 @@ export class OrdersDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.status);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -271,7 +271,7 @@ export class OrdersDataGet {
       next: (res: any) => {
         const dataList = res.data || [];
         if (dataList.length === 0) {
-          this.error = 'No data found.';
+          this.error = `No data found (Range: ${this.fromDate} to ${this.toDate})`;
         } else {
           this.allOrders = dataList.map((o: any) => ({
             ...o,
@@ -285,7 +285,8 @@ export class OrdersDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        const dateRangeStr = `${this.fromDate} to ${this.toDate}`;
+        this.error = this.extractErrorMessage(err, dateRangeStr);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -312,8 +313,12 @@ export class OrdersDataGet {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'Orders not found.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'Orders not found.';
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+    return message;
   }
 
   // Handles reset data for the current component without changing the workflow.

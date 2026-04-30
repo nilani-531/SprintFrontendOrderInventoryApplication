@@ -89,7 +89,7 @@ export class OrdersDataDelete {
         if (err.status === 404) {
           this.showNotification(`Order #${id} not found`, 'error');
         } else {
-          this.showNotification('Could not fetch order for deletion', 'error');
+          this.showNotification(`Could not fetch order #${id} for deletion`, 'error');
         }
         this.cdr.detectChanges();
       }

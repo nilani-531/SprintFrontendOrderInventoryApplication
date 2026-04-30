@@ -76,7 +76,17 @@ export class OrdersDataPost {
       error: (err: HttpErrorResponse) => {
         console.error('FULL ERROR:', err);
 
-        this.error = this.extractErrorMessage(err);
+        const rawMsg = err?.error?.msg || err?.message || '';
+        let idContext: any;
+        if (/store/i.test(rawMsg) && payload.storeId !== undefined) {
+          idContext = payload.storeId;
+        } else if (/customer/i.test(rawMsg) && payload.customerId !== undefined) {
+          idContext = payload.customerId;
+        } else {
+          idContext = payload.storeId ?? payload.customerId;
+        }
+
+        this.error = this.extractErrorMessage(err, idContext);
         this.success = null;
         this.change.detectChanges();
       },
@@ -89,7 +99,9 @@ export class OrdersDataPost {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+    if (id !== undefined) message += ` (ID: ${id})`;
+    return message;
   }
 }

@@ -76,9 +76,27 @@ export class OrderItemsDataPost {
 
           this.success = null;
 
+          const orderId = Number(this.orderItemForm.value.orderId);
+          const productId = Number(this.orderItemForm.value.productId);
+
           if (err.error?.msg) {
-            this.error = err.error.msg; // backend message
-          } else this.error = this.extractErrorMessage(err);
+            // Append contextual ID(s) if backend message doesn't already include them
+            let msg = err.error.msg;
+            const idStrOrder = String(orderId);
+            const idStrProduct = String(productId);
+            if (!msg.includes(idStrOrder) && !msg.includes(idStrProduct)) {
+              if (/product/i.test(msg) && productId) {
+                msg = `${msg} (Product: ${idStrProduct})`;
+              } else if (/order/i.test(msg) && orderId) {
+                msg = `${msg} (Order: ${idStrOrder})`;
+              } else {
+                msg = `${msg} (Order: ${idStrOrder}, Product: ${idStrProduct})`;
+              }
+            }
+            this.error = msg;
+          } else {
+            this.error = this.extractErrorMessage(err, `${orderId}-${productId}`);
+          }
           this.success = null;
           this.change.detectChanges();
         },
@@ -91,7 +109,9 @@ export class OrderItemsDataPost {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.message || err?.message || 'An error occurred while processing the request.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.message || err?.message || 'An error occurred while processing the request.';
+    if (id !== undefined) message += ` (ID: ${id})`;
+    return message;
   }
 }

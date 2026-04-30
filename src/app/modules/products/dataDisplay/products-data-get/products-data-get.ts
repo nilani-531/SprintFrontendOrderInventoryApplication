@@ -116,7 +116,7 @@ export class ProductsDataGet {
       },
       error: (err) => {
         console.error(err);
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, id);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -148,12 +148,17 @@ export class ProductsDataGet {
 
   // Extracts a readable error message from the current API response.
   // 🔹 Better Error Message
-  private extractErrorMessage(err: any): string {
-    if (err.status === 401) return 'Unauthorized - Please Login First';
-    if (err.status === 404) return 'Product Not Found';
-    if (err.status === 0) return 'Backend Server Not Running';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message: string;
+    if (err.status === 401) message = 'Unauthorized - Please Login First';
+    else if (err.status === 404) message = 'Product Not Found';
+    else if (err.status === 0) message = 'Backend Server Not Running';
+    else message = err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
 
-    return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+    return message;
   }
 
   // Handles reset data for the current component without changing the workflow.

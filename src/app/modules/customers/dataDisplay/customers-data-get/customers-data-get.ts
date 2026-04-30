@@ -253,7 +253,7 @@ export class CustomersDataGet {
         this.customer = data.data ? data.data : data;
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, this.customerId),
     });
   }
 
@@ -272,7 +272,7 @@ export class CustomersDataGet {
         this.customer = data.data ? data.data : data;
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, this.emailAddress),
     });
   }
 
@@ -292,7 +292,7 @@ export class CustomersDataGet {
         this.updatePaginatedOrders();
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, this.customerId),
     });
   }
 
@@ -312,7 +312,7 @@ export class CustomersDataGet {
         this.updatePaginatedShipments();
         this.change.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, this.customerId),
     });
   }
 
@@ -334,19 +334,25 @@ export class CustomersDataGet {
 
   // Handles error and updates the related state safely.
   // 🔥 Error Handler
-  handleError(err: any) {
+  handleError(err: any, id?: any) {
     console.log('Status:', err.status);
 
     this.reset();
 
+    let message: string;
     if (err.status === 404) {
-      this.errorMessage = err.error?.msg || err.error?.message || 'Resource not found';
+      message = err.error?.msg || err.error?.message || 'Resource not found';
     } else if (err.status === 500) {
-      this.errorMessage = err.error?.msg || err.error?.message || 'Server error';
+      message = err.error?.msg || err.error?.message || 'Server error';
     } else {
-      this.errorMessage = err.error?.msg || err.error?.message || 'Something went wrong';
+      message = err.error?.msg || err.error?.message || 'Something went wrong';
     }
 
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+
+    this.errorMessage = message;
     this.change.detectChanges();
   }
   // Handles reset lists only for the current component without changing the workflow.
@@ -359,7 +365,9 @@ export class CustomersDataGet {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+    if (id !== undefined) message += ` (ID: ${id})`;
+    return message;
   }
 }

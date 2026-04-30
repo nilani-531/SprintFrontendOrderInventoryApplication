@@ -70,7 +70,8 @@ export class OrdersDataPatch implements OnInit {
         this.orderDetails = null;
         this.loading = false;
         this.cdr.detectChanges();
-        this.showNotification('Order not found', 'error');
+        const id = this.orderForm.get('orderId')?.value;
+        this.showNotification(`Order not found (ID: ${id})`, 'error');
       },
     });
   }
