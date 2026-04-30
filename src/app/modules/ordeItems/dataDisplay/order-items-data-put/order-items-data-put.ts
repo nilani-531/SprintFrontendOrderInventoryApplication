@@ -80,7 +80,7 @@ export class OrderItemsDataPut implements OnInit {
   }
 
   // Loads the required order item data before the next screen action runs.
-  // 🔍 LOAD ITEM
+  //  LOAD ITEM
   loadLineItem() {
 
     const orderId = this.lineItemForm.get('orderId')?.value;
@@ -126,7 +126,7 @@ export class OrderItemsDataPut implements OnInit {
   }
 
   // Handles update and updates the related state safely.
-  // ✏️ UPDATE
+  //  UPDATE
   handleUpdate() {
 
     if (this.lineItemForm.invalid || !this.lineItemDetails) {
@@ -144,13 +144,13 @@ export class OrderItemsDataPut implements OnInit {
     }).subscribe({
 
       next: (res:any) => {
-        this.showNotification(`Updated successfully ✅ (Line Item ID: ${lineItemId})`, 'success');
+        this.showNotification(`Updated successfully  (Line Item ID: ${lineItemId})`, 'success');
         this.loading = false;
       },
 
       error: () => {
         this.loading = false;
-        this.showNotification('Update failed ❌', 'error');
+        this.showNotification('Update failed ', 'error');
       }
     });
   }

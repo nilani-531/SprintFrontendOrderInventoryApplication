@@ -121,10 +121,6 @@ export class AuthService {
 
   // Returns the default module route for the current user role.
   getDefaultModuleRoute(): string {
-    const allowedApis = this.getAccessibleApis();
-    if (allowedApis.length > 0) {
-      return this.getApiRoute(allowedApis[0]);
-    }
     return '/api-dashboard';
   }
 
