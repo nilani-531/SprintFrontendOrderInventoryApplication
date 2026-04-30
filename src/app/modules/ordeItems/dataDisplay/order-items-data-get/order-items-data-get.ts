@@ -94,7 +94,7 @@ export class OrderItemsDataGet {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.form.value.id);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -121,8 +121,12 @@ export class OrderItemsDataGet {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'Order items not found.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'Order items not found.';
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+    return message;
   }
 
   // Handles reset data for the current component without changing the workflow.

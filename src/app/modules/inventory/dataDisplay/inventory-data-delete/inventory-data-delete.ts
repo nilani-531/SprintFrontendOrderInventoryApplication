@@ -65,23 +65,14 @@ export class InventoryDataDelete {
           error: (err: HttpErrorResponse) => {
             console.error('Delete Error:', err);
             this.message = '';
-
-            if (err.status === 404) {
-              this.error = err.error?.msg || `Inventory ID ${id} not found`;
-            } else if (err.status === 400) {
-              this.error = err.error?.msg || 'Invalid Request';
-            } else if (err.status === 0) {
-              this.error = 'Server is offline or unreachable';
-            } else {
-              this.error = 'An unexpected error occurred';
-            }
+            this.error = this.extractErrorMessage(err, id);
             this.cdr.detectChanges();
           },
         });
       },
       error: (err: HttpErrorResponse) => {
         console.error('Fetch Error:', err);
-        this.error = 'Could not fetch inventory for deletion';
+        this.error = `Could not fetch inventory #${id} for deletion`;
         this.cdr.detectChanges();
       },
     });
@@ -93,7 +84,9 @@ export class InventoryDataDelete {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+    if (id !== undefined) message += ` (ID: ${id})`;
+    return message;
   }
 }

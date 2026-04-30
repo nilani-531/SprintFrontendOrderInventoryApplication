@@ -59,42 +59,50 @@ export class StoresDataDelete {
             console.error("Delete Error:", err);
             this.message = '';
 
+            let msg = '';
             if (err.status === 404) {
-              this.error = err.error?.msg || `ID ${id} not found`;
+              msg = err.error?.msg || `ID ${id} not found`;
             }
             else if (err.status === 400) {
-              this.error = err.error?.msg || "Invalid Request";
+              msg = err.error?.msg || "Invalid Request";
             }
             else if (err.status === 0) {
-              this.error = "Server is offline or unreachable";
+              msg = "Server is offline or unreachable";
             }
             else if (err.status === 500) {
-              this.error = err.error?.msg || "Cannot delete: store is referenced by existing orders";
+              msg = err.error?.msg || "Cannot delete: store is referenced by existing orders";
             }
             else {
-              this.error = err.error?.msg || "An unexpected error occurred";
+              msg = err.error?.msg || "An unexpected error occurred";
             }
+
+            // Append ID context if not already present
+            const idStr = String(id);
+            if (id !== undefined && id !== null && !msg.includes(idStr)) {
+              msg = `${msg} (ID: ${idStr})`;
+            }
+
+            this.error = msg;
             this.cdr.detectChanges();
           }
         });
       },
       error: (err: HttpErrorResponse) => {
         console.error("Fetch Error:", err);
+        let msg = '';
         if (err.status === 404) {
-          this.error = err.error?.msg || `ID ${id} not found`;
+          msg = err.error?.msg || `ID ${id} not found`;
         } else {
-          this.error = 'Could not fetch store for deletion';
+          msg = `Could not fetch store #${id} for deletion`;
         }
+        const idStr = String(id);
+        if (id !== undefined && id !== null && !msg.includes(idStr)) {
+          msg = `${msg} (ID: ${idStr})`;
+        }
+        this.error = msg;
         this.cdr.detectChanges();
       }
     });
   }
 
-  // Returns to the previous screen or parent module page.
-  goBack() { this.router.navigate(['/modules/stores']); }
-
-  // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
-  }
 }

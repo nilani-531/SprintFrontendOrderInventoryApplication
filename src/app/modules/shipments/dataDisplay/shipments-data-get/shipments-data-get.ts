@@ -116,7 +116,7 @@ readonly statusOptions = [
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.shipmentId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -164,7 +164,7 @@ readonly statusOptions = [
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.customerId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -188,7 +188,7 @@ readonly statusOptions = [
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.storeId);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -213,7 +213,7 @@ readonly statusOptions = [
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = this.extractErrorMessage(err);
+        this.error = this.extractErrorMessage(err, this.statusValue);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -240,8 +240,12 @@ readonly statusOptions = [
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+    return message;
   }
 
   // Handles reset data for the current component without changing the workflow.

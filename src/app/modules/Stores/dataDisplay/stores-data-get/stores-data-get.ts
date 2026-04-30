@@ -104,7 +104,7 @@ export class StoresDataGet {
     this.loading = true;
     this.storesService.getStoreById(id).subscribe({
       next: (res: any) => { this.singleStore = res.data; this.loading = false; this.cdr.detectChanges(); },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, id),
     });
   }
 
@@ -116,7 +116,7 @@ export class StoresDataGet {
     this.loading = true;
     this.storesService.getStoreByName(name).subscribe({
       next: (res: any) => { this.singleStore = res.data; this.loading = false; this.cdr.detectChanges(); },
-      error: (err: any) => this.handleError(err),
+      error: (err: any) => this.handleError(err, name),
     });
   }
 
@@ -139,7 +139,7 @@ export class StoresDataGet {
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, id),
     });
   }
 
@@ -161,7 +161,7 @@ export class StoresDataGet {
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, id),
     });
   }
 
@@ -183,7 +183,7 @@ export class StoresDataGet {
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err) => this.handleError(err),
+      error: (err) => this.handleError(err, id),
     });
   }
 
@@ -255,9 +255,13 @@ export class StoresDataGet {
   }
 
   // Handles error and updates the related state safely.
-  private handleError(err: any) {
+  private handleError(err: any, id?: any) {
     this.loading = false;
-    this.error = err.error?.msg || err.message || 'Something went wrong';
+    let message = err.error?.msg || err.message || 'Something went wrong';
+    if (id !== undefined) {
+      message += ` (ID: ${id})`;
+    }
+    this.error = message;
     this.cdr.detectChanges();
   }
 
@@ -278,7 +282,9 @@ export class StoresDataGet {
   }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+    if (id !== undefined) message += ` (ID: ${id})`;
+    return message;
   }
 }

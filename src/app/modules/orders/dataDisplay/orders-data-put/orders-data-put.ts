@@ -80,7 +80,8 @@ export class OrdersDataPut implements OnInit {
         this.orderDetails = null;
         this.loading = false;
         this.cdr.detectChanges();
-        this.showNotification('Order not found', 'error');
+        const id = this.orderForm.get('orderId')?.value;
+        this.showNotification(`Order not found (ID: ${id})`, 'error');
       },
     });
   }
@@ -141,8 +142,22 @@ export class OrdersDataPut implements OnInit {
       .catch((err) => {
         this.loading = false;
         this.cdr.detectChanges();
+
+        // Build contextual ID info based on which update likely failed
+        const storeIdAttempt = newStoreId;
+        const custIdAttempt = newCustomerId;
+        const rawMsg = err?.error?.msg || err?.error?.message || err?.message || '';
+        let ctx = '';
+        if (/store/i.test(rawMsg) && storeIdAttempt) {
+          ctx = ` (Store: ${storeIdAttempt})`;
+        } else if (/customer/i.test(rawMsg) && custIdAttempt) {
+          ctx = ` (Customer: ${custIdAttempt})`;
+        } else if (storeIdAttempt || custIdAttempt) {
+          ctx = ` (Store: ${storeIdAttempt ?? 'N/A'}, Customer: ${custIdAttempt ?? 'N/A'})`;
+        }
+
         this.showNotification(
-          'Update failed: ' + (err?.error?.msg || err?.error?.message || err?.message || 'Unknown error'),
+          'Update failed: ' + (rawMsg || 'Unknown error') + ctx,
           'error'
         );
       });

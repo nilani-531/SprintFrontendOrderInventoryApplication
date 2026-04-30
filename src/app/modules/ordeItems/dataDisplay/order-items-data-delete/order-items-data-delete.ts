@@ -53,7 +53,7 @@ export class OrderItemsDataDelete {
         const itemToDelete = items.find((i: any) => i.lineItemId == lineItemId);
 
         if (!itemToDelete) {
-          this.error = "Order item not found in the given order";
+          this.error = `Order item not found in the given order (Order: ${orderId}, Line: ${lineItemId})`;
           this.cdr.detectChanges();
           return;
         }
@@ -66,22 +66,26 @@ export class OrderItemsDataDelete {
             this.cdr.detectChanges(); 
           },
           error: (err: HttpErrorResponse) => {
-            this.message = ''; 
-            if (err.status === 404) {
-              this.error = err.error?.msg || 'Order item not found';
+            this.message = '';
+            const ctx = `${orderId}-${lineItemId}`;
+            // Prefer backend message when available, otherwise provide a contextual message
+            if (err.error?.msg) {
+              this.error = err.error.msg + ` (Order: ${orderId}, Line: ${lineItemId})`;
+            } else if (err.status === 404) {
+              this.error = this.extractErrorMessage(err, ctx);
             } else if (err.status === 400) {
-               this.error = err.error?.msg || "Invalid Request";
+              this.error = this.extractErrorMessage(err, ctx);
             } else if (err.status === 0) {
-              this.error = "Server is offline or unreachable";
+              this.error = this.extractErrorMessage(err, ctx);
             } else {
-              this.error = "An unexpected error occurred";
+              this.error = this.extractErrorMessage(err, ctx);
             }
-            this.cdr.detectChanges(); 
+            this.cdr.detectChanges();
           }
         });
       },
       error: (err: HttpErrorResponse) => {
-        this.error = "Failed to fetch item for deletion";
+        this.error = `Failed to fetch item for deletion (Order: ${orderId}, Line: ${lineItemId})`;
         this.cdr.detectChanges();
       }
     });
@@ -91,7 +95,9 @@ export class OrderItemsDataDelete {
   goBack() { this.router.navigate(['/modules/order-items']); }
 
   // Extracts a readable error message from the current API response.
-  private extractErrorMessage(err: any): string {
-    return err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+  private extractErrorMessage(err: any, id?: any): string {
+    let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+    if (id !== undefined) message += ` (ID: ${id})`;
+    return message;
   }
 }

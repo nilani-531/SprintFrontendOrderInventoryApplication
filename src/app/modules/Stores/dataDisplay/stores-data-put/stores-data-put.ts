@@ -84,7 +84,7 @@ export class StoresDataPut implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         this.storeDetails = null;
-        this.error = err.error?.msg || 'Store not found';
+        this.error = err.error?.msg ? `${err.error.msg} (ID: ${id})` : `Store not found (ID: ${id})`;
         this.cdr.detectChanges();
       },
     });
