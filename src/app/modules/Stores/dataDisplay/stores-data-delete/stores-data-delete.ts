@@ -78,9 +78,6 @@ export class StoresDataDelete {
 
             // Append ID context if not already present
             const idStr = String(id);
-            if (id !== undefined && id !== null && !msg.includes(idStr)) {
-              msg = `${msg} (ID: ${idStr})`;
-            }
 
             this.error = msg;
             this.cdr.detectChanges();
@@ -96,9 +93,6 @@ export class StoresDataDelete {
           msg = `Could not fetch store #${id} for deletion`;
         }
         const idStr = String(id);
-        if (id !== undefined && id !== null && !msg.includes(idStr)) {
-          msg = `${msg} (ID: ${idStr})`;
-        }
         this.error = msg;
         this.cdr.detectChanges();
       }

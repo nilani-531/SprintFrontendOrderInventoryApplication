@@ -75,7 +75,7 @@ export class OrdersDataDelete {
           error: (err: HttpErrorResponse) => {
             const msg = err.error?.msg || err.error?.message || err.message || '';
             if (err.status === 404) {
-              this.showNotification(`Order #${id} not found`, 'error');
+              this.showNotification(err.error?.msg || `Order #${id} not found`, 'error');
             } else if (err.status === 0) {
               this.showNotification('Server is offline or unreachable', 'error');
             } else {
@@ -87,9 +87,9 @@ export class OrdersDataDelete {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 404) {
-          this.showNotification(`Order #${id} not found`, 'error');
+          this.showNotification(err.error?.msg || `Order #${id} not found`, 'error');
         } else {
-          this.showNotification(`Could not fetch order #${id} for deletion`, 'error');
+          this.showNotification(err.error?.msg || `Could not fetch order #${id} for deletion`, 'error');
         }
         this.cdr.detectChanges();
       }

@@ -66,12 +66,12 @@ export class OrdersDataPatch implements OnInit {
         this.cdr.detectChanges();
         this.showNotification('Order loaded successfully', 'info');
       },
-      error: () => {
+      error: (err: any) => {
         this.orderDetails = null;
         this.loading = false;
         this.cdr.detectChanges();
-        const id = this.orderForm.get('orderId')?.value;
-        this.showNotification(`Order not found (ID: ${id})`, 'error');
+        const msg = err.error?.msg || 'Order not found';
+        this.showNotification(msg, 'error');
       },
     });
   }

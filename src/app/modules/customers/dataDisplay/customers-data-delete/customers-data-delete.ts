@@ -46,7 +46,7 @@ export class CustomersDataDelete {
             },
             error: (err) => {
               if (err.error && err.error.msg) {
-                this.error = err.error.msg + ` (ID: ${custid})`;
+                this.error = err.error.msg;
               } else this.error = this.extractErrorMessage(err, custid);
               this.success = null;
               this.change.detectChanges();
@@ -55,7 +55,7 @@ export class CustomersDataDelete {
         },
         error: (err) => {
           if (err.error && err.error.msg) {
-            this.error = err.error.msg + ` (ID: ${custid})`;
+            this.error = err.error.msg;
           } else {
             this.error = `Could not fetch customer #${custid} for deletion`;
           }
@@ -72,7 +72,6 @@ export class CustomersDataDelete {
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any, id?: any): string {
     let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
-    if (id !== undefined) message += ` (ID: ${id})`;
     return message;
   }
 }
