@@ -227,9 +227,6 @@ export class InventoryDataGet {
   // 🔹 Extract backend error message properly
   private extractErrorMessage(err: any, id?: any): string {
     let message = err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
-    if (id !== undefined) {
-      message += ` (ID: ${id})`;
-    }
     return message;
   }
 

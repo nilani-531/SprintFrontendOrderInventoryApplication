@@ -77,8 +77,8 @@ export class ShipmentsDataPut implements OnInit {
         this.loading = false;
         this.shipmentDetails = null;
         this.cdr.detectChanges();
-        const id = this.shipmentsForm.get('shipmentId')?.value;
-        this.showNotification(`Shipment not found (ID: ${id})`, 'error');
+        const msg = err.error?.msg || 'Shipment not found';
+        this.showNotification(msg, 'error');
       }
     });
   }
@@ -112,8 +112,7 @@ export class ShipmentsDataPut implements OnInit {
 
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any, id?: any): string {
-    let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
-    if (id !== undefined) message += ` (ID: ${id})`;
-    return message;
+     let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
+     return message;
   }
 }

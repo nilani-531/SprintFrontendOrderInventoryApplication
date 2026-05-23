@@ -123,9 +123,6 @@ export class OrderItemsDataGet {
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any, id?: any): string {
     let message = err?.error?.msg || err?.error?.data || err?.message || 'Order items not found.';
-    if (id !== undefined) {
-      message += ` (ID: ${id})`;
-    }
     return message;
   }
 

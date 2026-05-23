@@ -70,7 +70,7 @@ export class OrderItemsDataDelete {
             const ctx = `${orderId}-${lineItemId}`;
             // Prefer backend message when available, otherwise provide a contextual message
             if (err.error?.msg) {
-              this.error = err.error.msg + ` (Order: ${orderId}, Line: ${lineItemId})`;
+              this.error = err.error.msg;
             } else if (err.status === 404) {
               this.error = this.extractErrorMessage(err, ctx);
             } else if (err.status === 400) {
@@ -97,7 +97,6 @@ export class OrderItemsDataDelete {
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any, id?: any): string {
     let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
-    if (id !== undefined) message += ` (ID: ${id})`;
     return message;
   }
 }

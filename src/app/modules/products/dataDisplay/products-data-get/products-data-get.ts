@@ -151,13 +151,10 @@ export class ProductsDataGet {
   private extractErrorMessage(err: any, id?: any): string {
     let message: string;
     if (err.status === 401) message = 'Unauthorized - Please Login First';
-    else if (err.status === 404) message = 'Product Not Found';
+    else if (err.status === 404) message = err?.error?.msg || 'Product Not Found';
     else if (err.status === 0) message = 'Backend Server Not Running';
     else message = err?.error?.msg || err?.error?.data || err?.message || 'Something went wrong';
 
-    if (id !== undefined) {
-      message += ` (ID: ${id})`;
-    }
     return message;
   }
 

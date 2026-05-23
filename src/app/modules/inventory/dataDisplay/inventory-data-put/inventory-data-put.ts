@@ -128,7 +128,6 @@ export class InventoryDataPut implements OnInit {
   // Extracts a readable error message from the current API response.
   private extractErrorMessage(err: any, id?: any): string {
     let message = err?.error?.msg || err?.error?.data || err?.message || 'An error occurred while processing the request.';
-    if (id !== undefined) message += ` (ID: ${id})`;
     return message;
   }
 }
